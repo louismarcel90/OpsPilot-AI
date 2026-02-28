@@ -1,4 +1,4 @@
-# 📌 OpsPilot AI — *Enterprise-Grade AI SaaS Platform*
+# OpsPilot AI — *Enterprise-Grade AI SaaS Platform*
 
 
 ## 1. 🧠 What is OpsPilot AI / Why It Exists
