@@ -86,7 +86,7 @@ This project focuses on governance, scalability, and compliance, not AI “demo 
 ---
 
 
-## 8. 🏛️ Why OpsPilot AI Matters
+## 7. 🏛️ Why OpsPilot AI Matters
 
 
 Most AI projects optimize for capability.
