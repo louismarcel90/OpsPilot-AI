@@ -92,4 +92,4 @@ This project focuses on governance, scalability, and compliance, not AI “demo 
 Most AI projects optimize for capability.
 
 
-OpsPilot AI optimizes for safety, clarity, and long-term maintainability
+OpsPilot AI optimizes for safety, clarity, and long-term maintainability.
