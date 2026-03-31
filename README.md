@@ -1,4 +1,4 @@
-# OpsPilot AI — *Enterprise-Grade AI SaaS Platform*
+# OpsPilot AI — _Assured Autonomous AI Systems Platform_
 
 ## 🧰 Technologies Used in Practice
 
