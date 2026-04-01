@@ -17,7 +17,7 @@
 <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/opentelemetry/opentelemetry-original.svg" width="40" height="40"/>
 </p>
 
->  Embedded AI systems into enterprise operations
+> Embedded AI systems into enterprise operations
 
 ![node](https://img.shields.io/badge/node-%3E%3D18-green)
 ![license](https://img.shields.io/badge/license-MIT-blue)
@@ -28,31 +28,24 @@
 
 ## 🧠 What is OpsPilot-AI / Why It Exists
 
-
 ## ⚡ Real World Scenario
-
 
 ## 🧩 System Thinking
 
-
 ## 🏗 System Architecture
-
 
 ## 🏛️ Project Structure
 
-
 ## ⚖️ Trade-offs
-
 
 ## ⚠️ Failure Modes
 
-
 ## 🧭 Principles
-
 
 ## 🚀 Quick Start
 
 ### 📦 1. Installation
+
 📋 Prerequisites
 
 ### ⚙️ 2. Clone & Install
@@ -66,7 +59,6 @@
 ### 🚀 5.Start application
 
 ### 🎬 6. Verify System
-
 
 ## 📡 Runtime Reality
 
@@ -82,12 +74,10 @@
 
 ### ✅ Verification
 
-
 ## 🔐 Security
-
 
 ## 👨‍💻 Author
 
-
 ## 📄 License
+
 MIT License
