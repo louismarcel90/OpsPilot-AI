@@ -5,4 +5,6 @@ export interface LogContext {
   readonly actorId?: string;
   readonly tenantId?: string;
   readonly workspaceId?: string;
+  readonly httpMethod?: string;
+  readonly httpPath?: string;
 }
