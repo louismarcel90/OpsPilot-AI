@@ -2,13 +2,13 @@
 
 ## 🧰 Technologies Used in Practice
 
-
 <p align="left">
 <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/typescript/typescript-original.svg" width="40" height="40"/>
 <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/react/react-original-wordmark.svg" width="40" height="40"/>
 <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/nextjs/nextjs-original.svg" alt="nextjs" width="40" height="40"/>
 <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/tailwindcss/tailwindcss-original.svg" width="40" height="40"/>
 <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/nodejs/nodejs-original-wordmark.svg" width="40" height="40"/>
+<img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/nestjs/nestjs-original.svg" alt="nestjs" width="40" height="40"/>
 <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/go/go-original.svg" width="40" height="40"/>
 <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/postgresql/postgresql-original-wordmark.svg" width="40" height="40"/>
 <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/redis/redis-original-wordmark.svg" width="40" height="40"/>
@@ -17,79 +17,77 @@
 <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/opentelemetry/opentelemetry-original.svg" width="40" height="40"/>
 </p>
 
----
+>  Embedded AI systems into enterprise operations
 
-## 1. 🧠 What is OpsPilot AI / Why It Exists
-
-
-OpsPilot AI is a secure, audit-ready SaaS platform designed to demonstrate how AI can be safely embedded into enterprise operations.
-
-
-This project focuses on governance, scalability, and compliance, not AI “demo features”.
-
+![node](https://img.shields.io/badge/node-%3E%3D18-green)
+![license](https://img.shields.io/badge/license-MIT-blue)
+![interface](https://img.shields.io/badge/interface-Web%20App-black)
+![architecture](https://img.shields.io/badge/architecture-Event--Driven-purple)
 
 ---
 
-
-## 2. ⚠️ Problems OpsPilot AI Solves
-
-
-- Uncontrolled AI usage in sensitive enterprise workflows
-- Lack of authorization, isolation, and audit trails in automation
-- Operational risk caused by manual or ad-hoc internal tooling
+## 🧠 What is OpsPilot-AI / Why It Exists
 
 
----
+## ⚡ Real World Scenario
 
 
-## 3. 🧪 What OpsPilot AI Demonstrates
+## 🧩 System Thinking
 
 
-- System design shaped by explicit risk assessment, constraints, and long-term trade-offs
-- Governed AI integration with validation, observability, and auditability built in
-- End-to-end ownership through vertical slices, with a clear and enforceable Definition of Done
+## 🏗 System Architecture
 
 
----
+## 🏛️ Project Structure
 
 
-## 4. 🧱 Core Capabilities
+## ⚖️ Trade-offs
 
 
-- Stateless authentication with fine-grained RBAC
-- Deterministic workflows enhanced by AI-assisted steps
-- Immutable audit logging for human and AI-driven actions
+## ⚠️ Failure Modes
 
 
----
+## 🧭 Principles
 
 
-## 5. 📐 Scale & Constraints
+## 🚀 Quick Start
+
+### 📦 1. Installation
+📋 Prerequisites
+
+### ⚙️ 2. Clone & Install
+
+### 🐳 3. Start Infrastructure
+
+### 🧬 4. Database Setup
+
+### 🧪 Run Tests
+
+### 🚀 5.Start application
+
+### 🎬 6. Verify System
 
 
-- Enterprise internal tooling, reducing misuse and ambiguity by 50–70% through constrained, explicit workflows
-- AI gated by permissions and guardrails, with 100% audited actions, 0 silent side effects, and <1% policy violations
-- Safety, trust, explainability over hype, delivering 95%+ action-level explainability and 2–3× higher operator confidence
+## 📡 Runtime Reality
+
+### 📊 Performance (simulated)
+
+### ⚠️ Constraints
+
+### 🧨 Failure Model
+
+### 🛡️ Safety
+
+### 📐 Guarantees
+
+### ✅ Verification
 
 
----
+## 🔐 Security
 
 
-## 6. ⚙️ Key Engineering Features
+## 👨‍💻 Author
 
 
-- Explicit permission gating for AI access
-- Shared Zod-based contracts across frontend and backend
-- Production-grade logging, health checks, and CI enforcement
-
-
----
-
-
-## 7. 🏛️ Why OpsPilot AI Matters
-
-
-Most AI projects optimize for capability.
-
-
-OpsPilot AI optimizes for safety, clarity, and long-term maintainability.
+## 📄 License
+MIT License
