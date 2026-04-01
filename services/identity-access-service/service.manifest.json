@@ -1,0 +1,26 @@
+{
+  "serviceName": "identity-access-service",
+  "displayName": "Identity Access Service",
+  "boundedContext": "identity-and-access",
+  "serviceType": "backend-service",
+  "language": "typescript",
+  "runtime": "nodejs",
+  "entryPoint": "src/main.ts",
+  "defaultPort": 3001,
+  "healthEndpoint": "/health",
+  "owner": "platform-engineering",
+  "lifecycleStage": "foundation",
+  "status": "active",
+  "capabilities": ["service-bootstrap", "health-check", "structured-logging", "graceful-shutdown"],
+  "dependencies": {
+    "internalPackages": [
+      "@opspilot/config",
+      "@opspilot/contracts",
+      "@opspilot/http-kit",
+      "@opspilot/logger",
+      "@opspilot/observability",
+      "@opspilot/types"
+    ],
+    "externalServices": []
+  }
+}
