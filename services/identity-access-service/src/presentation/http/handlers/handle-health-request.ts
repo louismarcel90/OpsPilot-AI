@@ -4,12 +4,7 @@ import type { AppConfig } from '@opspilot/config';
 import type { AppLogger } from '@opspilot/logger';
 
 import { getHealthCheckResponse } from '../../../application/health/get-health-check-response.js';
-
-function writeJsonResponse(response: ServerResponse, statusCode: number, payload: object): void {
-  response.statusCode = statusCode;
-  response.setHeader('Content-Type', 'application/json; charset=utf-8');
-  response.end(JSON.stringify(payload));
-}
+import { writeJson } from '../../../infrastructure/http/responses/write-json.js';
 
 export function handleHealthRequest(
   response: ServerResponse,
@@ -17,13 +12,14 @@ export function handleHealthRequest(
   logger: AppLogger,
   correlationId: string,
 ): void {
+  const payload = getHealthCheckResponse(config.serviceName);
+
   logger.info('Handling health check request', {
     correlationId,
     serviceName: config.serviceName,
     operationName: 'handleHealthRequest',
+    httpStatusCode: payload.statusCode,
   });
 
-  const payload = getHealthCheckResponse(config.serviceName);
-
-  writeJsonResponse(response, 200, payload);
+  writeJson(response, payload);
 }

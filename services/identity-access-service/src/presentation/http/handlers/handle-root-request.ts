@@ -4,12 +4,7 @@ import type { AppConfig } from '@opspilot/config';
 import type { AppLogger } from '@opspilot/logger';
 
 import { createRootRouteResponse } from '../../../infrastructure/http/routes/create-root-route-response.js';
-
-function writeJsonResponse(response: ServerResponse, statusCode: number, payload: object): void {
-  response.statusCode = statusCode;
-  response.setHeader('Content-Type', 'application/json; charset=utf-8');
-  response.end(JSON.stringify(payload));
-}
+import { writeJson } from '../../../infrastructure/http/responses/write-json.js';
 
 export function handleRootRequest(
   response: ServerResponse,
@@ -17,13 +12,14 @@ export function handleRootRequest(
   logger: AppLogger,
   correlationId: string,
 ): void {
+  const payload = createRootRouteResponse(config.serviceName, correlationId);
+
   logger.info('Handling root route request', {
     correlationId,
     serviceName: config.serviceName,
     operationName: 'handleRootRequest',
+    httpStatusCode: payload.statusCode,
   });
 
-  const payload = createRootRouteResponse(config.serviceName, correlationId);
-
-  writeJsonResponse(response, 200, payload);
+  writeJson(response, payload);
 }

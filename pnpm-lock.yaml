@@ -72,6 +72,12 @@ importers:
         specifier: workspace:*
         version: link:../types
 
+  packages/http-kit:
+    dependencies:
+      '@opspilot/contracts':
+        specifier: workspace:*
+        version: link:../contracts
+
   packages/logger: {}
 
   packages/observability: {}
@@ -86,6 +92,9 @@ importers:
       '@opspilot/contracts':
         specifier: workspace:*
         version: link:../../packages/contracts
+      '@opspilot/http-kit':
+        specifier: workspace:*
+        version: link:../../packages/http-kit
       '@opspilot/logger':
         specifier: workspace:*
         version: link:../../packages/logger

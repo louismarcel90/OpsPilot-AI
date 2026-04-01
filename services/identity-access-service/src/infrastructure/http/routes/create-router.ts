@@ -7,18 +7,8 @@ import { createCorrelationId } from '@opspilot/observability';
 
 import { handleHealthRequest } from '../../../presentation/http/handlers/handle-health-request.js';
 import { handleRootRequest } from '../../../presentation/http/handlers/handle-root-request.js';
-
-function writeNotFoundResponse(response: ServerResponse, correlationId: string): void {
-  response.statusCode = 404;
-  response.setHeader('Content-Type', 'application/json; charset=utf-8');
-  response.end(
-    JSON.stringify({
-      code: 'ROUTE_NOT_FOUND',
-      message: 'The requested route does not exist.',
-      correlationId,
-    }),
-  );
-}
+import { writeRouteNotFoundResponse } from '../responses/write-route-not-found-response.js';
+import { writeUnexpectedErrorResponse } from '../responses/write-unexpected-error-response.js';
 
 function resolvePath(request: IncomingMessage): string {
   const requestUrl = request.url ?? '/';
@@ -40,24 +30,41 @@ export function createRouter(config: AppConfig, logger: AppLogger) {
       httpPath: path,
     });
 
-    if (method === 'GET' && path === '/') {
-      handleRootRequest(response, config, logger, correlationId);
-      return;
+    try {
+      if (method === 'GET' && path === '/') {
+        handleRootRequest(response, config, logger, correlationId);
+        return;
+      }
+
+      if (method === 'GET' && path === '/health') {
+        handleHealthRequest(response, config, logger, correlationId);
+        return;
+      }
+
+      logger.warn('Route not found', {
+        correlationId,
+        serviceName: config.serviceName,
+        operationName: 'routeNotFound',
+        httpMethod: method,
+        httpPath: path,
+        httpStatusCode: 404,
+      });
+
+      writeRouteNotFoundResponse(response, correlationId);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown unexpected error';
+
+      logger.error('Unhandled route error', {
+        correlationId,
+        serviceName: config.serviceName,
+        operationName: 'routeDispatch',
+        httpMethod: method,
+        httpPath: path,
+        httpStatusCode: 500,
+        errorMessage,
+      });
+
+      writeUnexpectedErrorResponse(response, correlationId);
     }
-
-    if (method === 'GET' && path === '/health') {
-      handleHealthRequest(response, config, logger, correlationId);
-      return;
-    }
-
-    logger.warn('Route not found', {
-      correlationId,
-      serviceName: config.serviceName,
-      operationName: 'routeNotFound',
-      httpMethod: method,
-      httpPath: path,
-    });
-
-    writeNotFoundResponse(response, correlationId);
   };
 }

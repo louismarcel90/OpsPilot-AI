@@ -7,4 +7,7 @@ export interface LogContext {
   readonly workspaceId?: string;
   readonly httpMethod?: string;
   readonly httpPath?: string;
+  readonly httpStatusCode?: number;
+  readonly signalName?: string;
+  readonly errorMessage?: string;
 }

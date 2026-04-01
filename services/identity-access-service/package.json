@@ -18,6 +18,7 @@
   "dependencies": {
     "@opspilot/config": "workspace:*",
     "@opspilot/contracts": "workspace:*",
+    "@opspilot/http-kit": "workspace:*",
     "@opspilot/logger": "workspace:*",
     "@opspilot/observability": "workspace:*",
     "@opspilot/types": "workspace:*"

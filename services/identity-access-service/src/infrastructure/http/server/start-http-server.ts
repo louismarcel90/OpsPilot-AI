@@ -1,17 +1,25 @@
-import { createServer } from 'node:http';
+import type { Server } from 'node:http';
 
 import type { AppConfig } from '@opspilot/config';
 import type { AppLogger } from '@opspilot/logger';
 
-import { createRouter } from '../routes/create-router.js';
+export function startHttpServer(
+  server: Server,
+  config: AppConfig,
+  logger: AppLogger,
+): Promise<void> {
+  return new Promise<void>((resolve, reject) => {
+    server.once('error', (error: Error) => {
+      reject(error);
+    });
 
-export function startHttpServer(config: AppConfig, logger: AppLogger): void {
-  const server = createServer(createRouter(config, logger));
+    server.listen(config.port, () => {
+      logger.info('HTTP server started', {
+        serviceName: config.serviceName,
+        operationName: 'startHttpServer',
+      });
 
-  server.listen(config.port, () => {
-    logger.info('HTTP server started', {
-      serviceName: config.serviceName,
-      operationName: 'startHttpServer',
+      resolve();
     });
   });
 }
