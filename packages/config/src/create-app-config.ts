@@ -16,6 +16,7 @@ const appEnvironmentSchema = z.object({
     })
     .default(3000),
   LOG_LEVEL: z.enum(['debug', 'info', 'warn', 'error']).default('info'),
+  DATABASE_URL: z.string().trim().min(1),
 });
 
 interface EnvironmentSource {
@@ -23,6 +24,7 @@ interface EnvironmentSource {
   readonly NODE_ENV?: string;
   readonly PORT?: string;
   readonly LOG_LEVEL?: string;
+  readonly DATABASE_URL?: string;
 }
 
 export function createAppConfig(environment: EnvironmentSource = process.env): AppConfig {
@@ -33,5 +35,8 @@ export function createAppConfig(environment: EnvironmentSource = process.env): A
     nodeEnv: parsedEnvironment.NODE_ENV,
     port: parsedEnvironment.PORT,
     logLevel: parsedEnvironment.LOG_LEVEL,
+    database: {
+      databaseUrl: parsedEnvironment.DATABASE_URL,
+    },
   };
 }
