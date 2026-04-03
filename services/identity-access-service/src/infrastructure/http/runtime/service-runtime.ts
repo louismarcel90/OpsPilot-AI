@@ -1,6 +1,7 @@
 import type { Server } from 'node:http';
 
 import type { AppConfig } from '@opspilot/config';
+import type { PostgresConnection } from '@opspilot/db';
 import type { AppLogger } from '@opspilot/logger';
 
 import { startHttpServer } from '../server/start-http-server.js';
@@ -18,6 +19,7 @@ export class IdentityAccessServiceRuntime implements ServiceRuntime {
 
   public constructor(
     private readonly server: Server,
+    private readonly databaseConnection: PostgresConnection,
     private readonly config: AppConfig,
     private readonly logger: AppLogger,
   ) {}
@@ -40,8 +42,9 @@ export class IdentityAccessServiceRuntime implements ServiceRuntime {
     });
 
     await stopHttpServer(this.server);
+    await this.databaseConnection.close();
 
-    this.logger.info('HTTP server stopped cleanly', {
+    this.logger.info('Service stopped cleanly', {
       serviceName: this.config.serviceName,
       operationName: 'shutdown',
       signalName,

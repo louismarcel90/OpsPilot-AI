@@ -6,19 +6,23 @@ import type { HealthStatus } from '../../domain/health/health-status.js';
 
 export function getHealthCheckResponse(
   serviceName: string,
-  status: HealthStatus = 'healthy',
+  databaseIsHealthy: boolean,
 ): JsonResponse<HealthCheckResponseContract> {
-  const check: HealthCheckStatus = {
-    serviceName,
-    status,
-    checkedAtIso: new Date().toISOString(),
-  };
+  const overallStatus: HealthStatus = databaseIsHealthy ? 'healthy' : 'unhealthy';
+
+  const checks: HealthCheckStatus[] = [
+    {
+      serviceName,
+      status: overallStatus,
+      checkedAtIso: new Date().toISOString(),
+    },
+  ];
 
   return {
-    statusCode: HTTP_STATUS_CODE.ok,
+    statusCode: databaseIsHealthy ? HTTP_STATUS_CODE.ok : HTTP_STATUS_CODE.internalServerError,
     body: {
-      overallStatus: status,
-      checks: [check],
+      overallStatus,
+      checks,
     },
   };
 }

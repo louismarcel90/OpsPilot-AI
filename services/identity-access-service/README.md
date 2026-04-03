@@ -32,7 +32,10 @@ Returns a basic service status response.
 
 ### `GET /health`
 
-Returns a basic health check payload for the service.
+Returns a health response that includes database readiness status.
+
+- `200` when the database is reachable
+- `500` when the database check fails
 
 ## Local Development
 

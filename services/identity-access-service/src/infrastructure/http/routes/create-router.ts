@@ -2,6 +2,7 @@ import type { IncomingMessage, ServerResponse } from 'node:http';
 
 import type { AppConfig } from '@opspilot/config';
 import type { AppLogger } from '@opspilot/logger';
+import type { PostgresConnection } from '@opspilot/db';
 
 import { createCorrelationId } from '@opspilot/observability';
 
@@ -16,8 +17,8 @@ function resolvePath(request: IncomingMessage): string {
   return url.pathname;
 }
 
-export function createRouter(config: AppConfig, logger: AppLogger) {
-  return (request: IncomingMessage, response: ServerResponse): void => {
+export function createRouter(config: AppConfig, logger: AppLogger, connection: PostgresConnection) {
+  return async (request: IncomingMessage, response: ServerResponse): Promise<void> => {
     const method = request.method ?? 'GET';
     const path = resolvePath(request);
     const correlationId = createCorrelationId();
@@ -37,7 +38,7 @@ export function createRouter(config: AppConfig, logger: AppLogger) {
       }
 
       if (method === 'GET' && path === '/health') {
-        handleHealthRequest(response, config, logger, correlationId);
+        await handleHealthRequest(response, config, logger, correlationId, connection);
         return;
       }
 

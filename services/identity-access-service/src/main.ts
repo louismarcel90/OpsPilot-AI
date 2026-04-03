@@ -1,4 +1,5 @@
 import { createAppConfig } from '@opspilot/config';
+import { createPostgresConnection } from '@opspilot/db';
 
 import { createHttpServer } from './infrastructure/http/server/create-http-server.js';
 import { registerProcessSignalHandlers } from './infrastructure/http/server/register-process-signal-handlers.js';
@@ -23,8 +24,9 @@ async function bootstrap(): Promise<void> {
     operationName: 'bootstrap',
   });
 
-  const server = createHttpServer(config, logger);
-  const runtime = new IdentityAccessServiceRuntime(server, config, logger);
+  const databaseConnection = createPostgresConnection(config.database);
+  const server = createHttpServer(config, logger, databaseConnection);
+  const runtime = new IdentityAccessServiceRuntime(server, databaseConnection, config, logger);
 
   registerProcessSignalHandlers(runtime, config, logger);
 

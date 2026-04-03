@@ -8,6 +8,7 @@ import { databaseSchema } from './database-schema.js';
 export interface PostgresConnection {
   readonly pool: Pool;
   readonly db: NodePgDatabase<typeof databaseSchema>;
+  close(): Promise<void>;
 }
 
 export function createPostgresConnection(config: DatabaseConfig): PostgresConnection {
@@ -22,5 +23,8 @@ export function createPostgresConnection(config: DatabaseConfig): PostgresConnec
   return {
     pool,
     db,
+    async close(): Promise<void> {
+      await pool.end();
+    },
   };
 }
