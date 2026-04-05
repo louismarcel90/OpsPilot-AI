@@ -2,6 +2,20 @@ import type { ApiErrorContract } from '@opspilot/contracts';
 
 import { HTTP_STATUS_CODE, type JsonResponse } from './http-status-code.js';
 
+export function createBadRequestErrorResponse(
+  correlationId: string,
+  message: string = 'The request is invalid.',
+): JsonResponse<ApiErrorContract> {
+  return {
+    statusCode: HTTP_STATUS_CODE.badRequest,
+    body: {
+      code: 'BAD_REQUEST',
+      message,
+      correlationId,
+    },
+  };
+}
+
 export function createNotFoundErrorResponse(
   correlationId: string,
   message: string = 'The requested route does not exist.',

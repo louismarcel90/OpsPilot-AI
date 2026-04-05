@@ -4,12 +4,14 @@ import type { AppConfig } from '@opspilot/config';
 import type { AppLogger } from '@opspilot/logger';
 import type { PostgresConnection } from '@opspilot/db';
 
+import type { ServiceDependencies } from '../runtime/service-dependencies.js';
 import { createRouter } from '../routes/create-router.js';
 
 export function createHttpServer(
   config: AppConfig,
   logger: AppLogger,
   connection: PostgresConnection,
+  dependencies: ServiceDependencies,
 ): Server {
-  return createServer(createRouter(config, logger, connection));
+  return createServer(createRouter(config, logger, connection, dependencies));
 }

@@ -1,5 +1,6 @@
 export { createPostgresConnection } from './postgres/create-postgres-connection.js';
 export type { PostgresConnection } from './postgres/create-postgres-connection.js';
+export { seedIdentityFoundation } from './postgres/seeds/seed-identity-foundation.js';
 export { databaseSchema } from './postgres/database-schema.js';
 export { membershipsTable } from './postgres/schema/memberships.table.js';
 export { tenantsTable } from './postgres/schema/tenants.table.js';

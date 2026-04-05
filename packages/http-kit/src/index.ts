@@ -1,4 +1,5 @@
 export {
+  createBadRequestErrorResponse,
   createInternalServerErrorResponse,
   createNotFoundErrorResponse,
 } from './error-response.js';

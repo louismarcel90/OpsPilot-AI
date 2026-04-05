@@ -15,6 +15,7 @@
     "clean": "turbo run clean && pnpm exec rimraf node_modules",
     "db:generate": "drizzle-kit generate --config=drizzle.config.mts",
     "db:migrate": "drizzle-kit migrate --config=drizzle.config.mts",
+    "db:seed:identity": "tsx scripts/seed-identity-foundation.mts",
     "dev": "turbo run dev --parallel",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
