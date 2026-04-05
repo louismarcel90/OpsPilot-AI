@@ -1,19 +1,19 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
 
 import type { AppConfig } from '@opspilot/config';
-import type { AppLogger } from '@opspilot/logger';
 import type { PostgresConnection } from '@opspilot/db';
-
+import type { AppLogger } from '@opspilot/logger';
 import { createCorrelationId } from '@opspilot/observability';
 
-import type { ServiceDependencies } from '../runtime/service-dependencies.js';
 import { handleHealthRequest } from '../../../presentation/http/handlers/handle-health-request.js';
+import { handleResolveAccessContextRequest } from '../../../presentation/http/handlers/handle-resolve-access-context-request.js';
 import { handleResolveTenantBySlugRequest } from '../../../presentation/http/handlers/handle-resolve-tenant-by-slug-request.js';
 import { handleResolveUserByEmailRequest } from '../../../presentation/http/handlers/handle-resolve-user-by-email-request.js';
 import { handleResolveWorkspaceMembershipRequest } from '../../../presentation/http/handlers/handle-resolve-workspace-membership-request.js';
 import { handleRootRequest } from '../../../presentation/http/handlers/handle-root-request.js';
 import { writeRouteNotFoundResponse } from '../responses/write-route-not-found-response.js';
 import { writeUnexpectedErrorResponse } from '../responses/write-unexpected-error-response.js';
+import type { ServiceDependencies } from '../runtime/service-dependencies.js';
 
 function resolvePath(request: IncomingMessage): string {
   const requestUrl = request.url ?? '/';
@@ -80,6 +80,17 @@ export function createRouter(
           logger,
           correlationId,
           dependencies.resolveWorkspaceMembershipUseCase,
+        );
+        return;
+      }
+
+      if (method === 'GET' && path === '/access-context/resolve') {
+        await handleResolveAccessContextRequest(
+          request,
+          response,
+          logger,
+          correlationId,
+          dependencies.resolveAccessContextUseCase,
         );
         return;
       }

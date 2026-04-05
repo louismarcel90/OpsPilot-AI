@@ -4,25 +4,17 @@
 
 The Identity Access Service is the first backend service bootstrap for OpsPilot AI.
 
-At this stage, it provides:
+At this stage, the service provides:
 
 - service startup and runtime lifecycle
 - health check endpoint
 - standardized JSON responses
 - structured logging
 - graceful shutdown behavior
-- a clean service template for future backend services
-
-It does **not** yet provide:
-
-- authentication
-- authorization
-- tenant resolution
-- workspace resolution
-- RBAC enforcement
-- identity persistence
-
-Those capabilities will be added in later steps.
+- database connectivity
+- seed-backed identity read endpoints
+- first access context resolution
+- a clean backend service template for future services
 
 ## Current Endpoints
 
@@ -36,6 +28,10 @@ Returns a health response that includes database readiness status.
 
 - `200` when the database is reachable
 - `500` when the database check fails
+
+### `GET /access-context/resolve?email=...&tenantSlug=...&workspaceSlug=...`
+
+Resolves the first access context object for a user in a specific tenant and workspace scope.
 
 ## Local Development
 

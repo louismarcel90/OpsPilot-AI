@@ -55,3 +55,15 @@ Contains router creation, HTTP server lifecycle, logging wiring, and runtime orc
 This service exists early because OpsPilot AI cannot support governed execution later without first establishing a clean backend service pattern.
 
 The goal is to standardize service construction before adding identity-specific business logic.
+
+## Current Access Context Capability
+
+The service now supports a first access context resolution flow:
+
+1. resolve actor by email
+2. resolve tenant by slug
+3. resolve workspace by tenant and workspace slug
+4. resolve membership by workspace and actor
+5. assemble an access context result
+
+This is the first structural step toward future authorization, RBAC, and policy-aware execution.

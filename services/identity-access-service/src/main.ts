@@ -4,6 +4,7 @@ import { createPostgresConnection } from '@opspilot/db';
 import { DrizzleTenantReadRepository } from './infrastructure/db/repositories/drizzle-tenant-read-repository.js';
 import { DrizzleUserReadRepository } from './infrastructure/db/repositories/drizzle-user-read-repository.js';
 import { DrizzleWorkspaceMembershipReadRepository } from './infrastructure/db/repositories/drizzle-workspace-membership-read-repository.js';
+import { DrizzleWorkspaceReadRepository } from './infrastructure/db/repositories/drizzle-workspace-read-repository.js';
 import { createHttpServer } from './infrastructure/http/server/create-http-server.js';
 import { registerProcessSignalHandlers } from './infrastructure/http/server/register-process-signal-handlers.js';
 import { createServiceDependencies } from './infrastructure/http/runtime/service-dependencies.js';
@@ -32,6 +33,7 @@ async function bootstrap(): Promise<void> {
 
   const userReadRepository = new DrizzleUserReadRepository(databaseConnection);
   const tenantReadRepository = new DrizzleTenantReadRepository(databaseConnection);
+  const workspaceReadRepository = new DrizzleWorkspaceReadRepository(databaseConnection);
   const workspaceMembershipReadRepository = new DrizzleWorkspaceMembershipReadRepository(
     databaseConnection,
   );
@@ -39,6 +41,7 @@ async function bootstrap(): Promise<void> {
   const dependencies = createServiceDependencies(
     userReadRepository,
     tenantReadRepository,
+    workspaceReadRepository,
     workspaceMembershipReadRepository,
   );
 

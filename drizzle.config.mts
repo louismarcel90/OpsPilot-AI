@@ -10,8 +10,8 @@ if (!databaseUrl) {
 
 export default defineConfig({
   dialect: 'postgresql',
-schema: './packages/db/src/postgres/schema/*.ts',  
-out: './infra/migrations',
+  schema: './packages/db/src/postgres/schema/*.ts',
+  out: './infra/migrations',
   dbCredentials: {
     url: databaseUrl,
   },
