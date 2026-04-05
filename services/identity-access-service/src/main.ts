@@ -78,6 +78,12 @@ async function bootstrap(): Promise<void> {
     throw new Error(buildBootstrapParityErrorMessage(bootstrapValidationResult.parityReport));
   }
 
+  dependencies.authorizationBootstrapValidationStore.setDiagnostic({
+    checkedAtIso: new Date().toISOString(),
+    isAligned: bootstrapValidationResult.parityReport.isAligned,
+    parityReport: bootstrapValidationResult.parityReport,
+  });
+
   logger.info('Workspace authorization catalog parity check passed', {
     serviceName: config.serviceName,
     operationName: 'bootstrap',

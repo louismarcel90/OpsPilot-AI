@@ -6,12 +6,15 @@ import type { WorkspaceReadRepository } from '../../../application/repositories/
 import { CheckWorkspaceAccessUseCase } from '../../../application/use-cases/check-workspace-access.use-case.js';
 import { CheckWorkspaceCapabilityUseCase } from '../../../application/use-cases/check-workspace-capability.use-case.js';
 import { EnforceProtectedWorkspaceRequestUseCase } from '../../../application/use-cases/enforce-protected-workspace-request.use-case.js';
+import { GetAuthorizationParityDiagnosticUseCase } from '../../../application/use-cases/get-authorization-parity-diagnostic.use-case.js';
 import { GetWorkspaceAuthorizationCatalogUseCase } from '../../../application/use-cases/get-workspace-authorization-catalog.use-case.js';
 import { ResolveAccessContextUseCase } from '../../../application/use-cases/resolve-access-context.use-case.js';
 import { ResolveTenantBySlugUseCase } from '../../../application/use-cases/resolve-tenant-by-slug.use-case.js';
 import { ResolveUserByEmailUseCase } from '../../../application/use-cases/resolve-user-by-email.use-case.js';
 import { ResolveWorkspaceMembershipUseCase } from '../../../application/use-cases/resolve-workspace-membership.use-case.js';
 import { ValidateWorkspaceAuthorizationBootstrapUseCase } from '../../../application/use-cases/validate-workspace-authorization-bootstrap.use-case.js';
+import type { AuthorizationBootstrapValidationStore } from '../../authorization/authorization-bootstrap-validation-store.js';
+import { InMemoryAuthorizationBootstrapValidationStore } from '../../authorization/authorization-bootstrap-validation-store.js';
 
 export interface ServiceDependencies {
   readonly resolveUserByEmailUseCase: ResolveUserByEmailUseCase;
@@ -23,6 +26,8 @@ export interface ServiceDependencies {
   readonly enforceProtectedWorkspaceRequestUseCase: EnforceProtectedWorkspaceRequestUseCase;
   readonly getWorkspaceAuthorizationCatalogUseCase: GetWorkspaceAuthorizationCatalogUseCase;
   readonly validateWorkspaceAuthorizationBootstrapUseCase: ValidateWorkspaceAuthorizationBootstrapUseCase;
+  readonly getAuthorizationParityDiagnosticUseCase: GetAuthorizationParityDiagnosticUseCase;
+  readonly authorizationBootstrapValidationStore: AuthorizationBootstrapValidationStore;
 }
 
 export function createServiceDependencies(
@@ -32,6 +37,8 @@ export function createServiceDependencies(
   workspaceMembershipReadRepository: WorkspaceMembershipReadRepository,
   authorizationCatalogReadRepository: AuthorizationCatalogReadRepository,
 ): ServiceDependencies {
+  const authorizationBootstrapValidationStore = new InMemoryAuthorizationBootstrapValidationStore();
+
   const resolveAccessContextUseCase = new ResolveAccessContextUseCase(
     userReadRepository,
     tenantReadRepository,
@@ -60,5 +67,9 @@ export function createServiceDependencies(
     ),
     validateWorkspaceAuthorizationBootstrapUseCase:
       new ValidateWorkspaceAuthorizationBootstrapUseCase(authorizationCatalogReadRepository),
+    getAuthorizationParityDiagnosticUseCase: new GetAuthorizationParityDiagnosticUseCase(
+      authorizationBootstrapValidationStore,
+    ),
+    authorizationBootstrapValidationStore,
   };
 }

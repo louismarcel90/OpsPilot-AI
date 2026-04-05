@@ -166,3 +166,9 @@ This improves startup safety and reduces the risk of silent authorization drift 
 
 - runtime code-based authorization assumptions
 - persisted authorization catalog state
+
+## Current Authorization Parity Visibility
+
+The service now exposes the latest authorization parity diagnostic through a dedicated runtime endpoint.
+
+This makes bootstrap validation observable after startup and provides a first operational visibility layer for authorization catalog consistency.

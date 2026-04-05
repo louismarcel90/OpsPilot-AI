@@ -20,6 +20,7 @@ At this stage, the service provides:
 - persisted workspace role and scope catalog foundation
 - normalized membership role references
 - startup authorization catalog parity validation between runtime and persisted catalog
+- visible authorization parity diagnostics endpoint
 
 ## Bootstrap Safety Checks
 
@@ -60,6 +61,10 @@ Checks whether a resolved actor has a specific workspace scope derived from the 
 ### `GET /protected/workspace-admin`
 
 A demonstration protected route that requires actor context headers and the `workspace.admin` scope.
+
+### `GET /diagnostics/authorization-parity`
+
+Returns the latest in-memory authorization parity diagnostic captured during bootstrap validation.
 
 ## Actor Context Headers
 

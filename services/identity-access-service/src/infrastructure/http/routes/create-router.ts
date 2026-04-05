@@ -18,6 +18,7 @@ import { writeRouteNotFoundResponse } from '../responses/write-route-not-found-r
 import { writeUnexpectedErrorResponse } from '../responses/write-unexpected-error-response.js';
 import type { ServiceDependencies } from '../runtime/service-dependencies.js';
 import { handleGetWorkspaceAuthorizationCatalogRequest } from '../../../presentation/http/handlers/handle-get-workspace-authorization-catalog-request.js';
+import { handleGetAuthorizationParityDiagnosticRequest } from '../../../presentation/http/handlers/handle-get-authorization-parity-diagnostic-request.js';
 
 function resolvePath(request: IncomingMessage): string {
   const requestUrl = request.url ?? '/';
@@ -138,6 +139,16 @@ export function createRouter(
           logger,
           correlationId,
           dependencies.getWorkspaceAuthorizationCatalogUseCase,
+        );
+        return;
+      }
+
+      if (method === 'GET' && path === '/diagnostics/authorization-parity') {
+        await handleGetAuthorizationParityDiagnosticRequest(
+          response,
+          logger,
+          correlationId,
+          dependencies.getAuthorizationParityDiagnosticUseCase,
         );
         return;
       }
