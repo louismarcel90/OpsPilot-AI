@@ -17,6 +17,7 @@ import { handleRootRequest } from '../../../presentation/http/handlers/handle-ro
 import { writeRouteNotFoundResponse } from '../responses/write-route-not-found-response.js';
 import { writeUnexpectedErrorResponse } from '../responses/write-unexpected-error-response.js';
 import type { ServiceDependencies } from '../runtime/service-dependencies.js';
+import { handleGetWorkspaceAuthorizationCatalogRequest } from '../../../presentation/http/handlers/handle-get-workspace-authorization-catalog-request.js';
 
 function resolvePath(request: IncomingMessage): string {
   const requestUrl = request.url ?? '/';
@@ -127,6 +128,16 @@ export function createRouter(
           logger,
           correlationId,
           dependencies.enforceProtectedWorkspaceRequestUseCase,
+        );
+        return;
+      }
+
+      if (method === 'GET' && path === '/authorization/workspace-catalog') {
+        await handleGetWorkspaceAuthorizationCatalogRequest(
+          response,
+          logger,
+          correlationId,
+          dependencies.getWorkspaceAuthorizationCatalogUseCase,
         );
         return;
       }

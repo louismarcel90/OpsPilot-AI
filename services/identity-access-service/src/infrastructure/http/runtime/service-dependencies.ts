@@ -1,3 +1,4 @@
+import type { AuthorizationCatalogReadRepository } from '../../../application/repositories/authorization-catalog-read-repository.js';
 import type { TenantReadRepository } from '../../../application/repositories/tenant-read-repository.js';
 import type { UserReadRepository } from '../../../application/repositories/user-read-repository.js';
 import type { WorkspaceMembershipReadRepository } from '../../../application/repositories/workspace-membership-read-repository.js';
@@ -5,6 +6,7 @@ import type { WorkspaceReadRepository } from '../../../application/repositories/
 import { CheckWorkspaceAccessUseCase } from '../../../application/use-cases/check-workspace-access.use-case.js';
 import { CheckWorkspaceCapabilityUseCase } from '../../../application/use-cases/check-workspace-capability.use-case.js';
 import { EnforceProtectedWorkspaceRequestUseCase } from '../../../application/use-cases/enforce-protected-workspace-request.use-case.js';
+import { GetWorkspaceAuthorizationCatalogUseCase } from '../../../application/use-cases/get-workspace-authorization-catalog.use-case.js';
 import { ResolveAccessContextUseCase } from '../../../application/use-cases/resolve-access-context.use-case.js';
 import { ResolveTenantBySlugUseCase } from '../../../application/use-cases/resolve-tenant-by-slug.use-case.js';
 import { ResolveUserByEmailUseCase } from '../../../application/use-cases/resolve-user-by-email.use-case.js';
@@ -18,6 +20,7 @@ export interface ServiceDependencies {
   readonly checkWorkspaceAccessUseCase: CheckWorkspaceAccessUseCase;
   readonly checkWorkspaceCapabilityUseCase: CheckWorkspaceCapabilityUseCase;
   readonly enforceProtectedWorkspaceRequestUseCase: EnforceProtectedWorkspaceRequestUseCase;
+  readonly getWorkspaceAuthorizationCatalogUseCase: GetWorkspaceAuthorizationCatalogUseCase;
 }
 
 export function createServiceDependencies(
@@ -25,6 +28,7 @@ export function createServiceDependencies(
   tenantReadRepository: TenantReadRepository,
   workspaceReadRepository: WorkspaceReadRepository,
   workspaceMembershipReadRepository: WorkspaceMembershipReadRepository,
+  authorizationCatalogReadRepository: AuthorizationCatalogReadRepository,
 ): ServiceDependencies {
   const resolveAccessContextUseCase = new ResolveAccessContextUseCase(
     userReadRepository,
@@ -48,6 +52,9 @@ export function createServiceDependencies(
     checkWorkspaceCapabilityUseCase,
     enforceProtectedWorkspaceRequestUseCase: new EnforceProtectedWorkspaceRequestUseCase(
       checkWorkspaceCapabilityUseCase,
+    ),
+    getWorkspaceAuthorizationCatalogUseCase: new GetWorkspaceAuthorizationCatalogUseCase(
+      authorizationCatalogReadRepository,
     ),
   };
 }

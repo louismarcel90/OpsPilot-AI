@@ -5,6 +5,7 @@ import { membershipsTable } from '../schema/memberships.table.js';
 import { tenantsTable } from '../schema/tenants.table.js';
 import { usersTable } from '../schema/users.table.js';
 import { workspacesTable } from '../schema/workspaces.table.js';
+import { seedWorkspaceAuthorizationCatalog } from './seed-workspace-authorization-catalog.js';
 
 const SEED_IDS = {
   userAlice: 'usr_alice_001',
@@ -17,6 +18,8 @@ const SEED_IDS = {
 } as const;
 
 export async function seedIdentityFoundation(connection: PostgresConnection): Promise<void> {
+  await seedWorkspaceAuthorizationCatalog(connection);
+
   await connection.db
     .insert(usersTable)
     .values([

@@ -1,6 +1,7 @@
 import { createAppConfig } from '@opspilot/config';
 import { createPostgresConnection } from '@opspilot/db';
 
+import { DrizzleAuthorizationCatalogReadRepository } from './application/repositories/drizzle-authorization-catalog-read-repository.js';
 import { DrizzleTenantReadRepository } from './infrastructure/db/repositories/drizzle-tenant-read-repository.js';
 import { DrizzleUserReadRepository } from './infrastructure/db/repositories/drizzle-user-read-repository.js';
 import { DrizzleWorkspaceMembershipReadRepository } from './infrastructure/db/repositories/drizzle-workspace-membership-read-repository.js';
@@ -37,12 +38,16 @@ async function bootstrap(): Promise<void> {
   const workspaceMembershipReadRepository = new DrizzleWorkspaceMembershipReadRepository(
     databaseConnection,
   );
+  const authorizationCatalogReadRepository = new DrizzleAuthorizationCatalogReadRepository(
+    databaseConnection,
+  );
 
   const dependencies = createServiceDependencies(
     userReadRepository,
     tenantReadRepository,
     workspaceReadRepository,
     workspaceMembershipReadRepository,
+    authorizationCatalogReadRepository,
   );
 
   const server = createHttpServer(config, logger, databaseConnection, dependencies);

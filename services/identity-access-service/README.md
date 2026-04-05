@@ -17,6 +17,8 @@ At this stage, the service provides:
 - a clean backend service template for future services
 - first RBAC primitives based on workspace role comparison
 - first capability-level permission checks derived from role scopes
+- persisted workspace role and scope catalog foundation
+- normalized membership role references
 
 ## Current Endpoints
 
@@ -56,6 +58,10 @@ Protected routes currently expect the following request headers:
 - `x-workspace-slug`
 
 These headers are currently used as a development-stage actor context transport mechanism before real authentication is introduced.
+
+### `GET /authorization/workspace-catalog`
+
+Returns the persisted workspace authorization catalog, including roles, scopes, and role-to-scope mappings.
 
 ## Local Development
 

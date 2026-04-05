@@ -132,3 +132,20 @@ These diagnostics make it possible to explain:
 - what scopes were effectively granted
 
 This prepares the service for future policy-oriented decision explanation.
+
+## Current Persisted Authorization Catalog Capability
+
+The service now relies on a persisted workspace authorization catalog model.
+
+This includes:
+
+- `workspace_roles`
+- `workspace_scopes`
+- `workspace_role_scopes`
+
+The current runtime authorization logic remains code-driven, but memberships are now normalized against a persisted role catalog.
+
+This is an important transition point between:
+
+- code-defined authorization foundations
+- future persisted and governable authorization control models

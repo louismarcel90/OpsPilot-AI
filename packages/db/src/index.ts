@@ -1,9 +1,13 @@
+export { eq } from 'drizzle-orm';
 export { createPostgresConnection } from './postgres/create-postgres-connection.js';
 export type { PostgresConnection } from './postgres/create-postgres-connection.js';
 export { seedIdentityFoundation } from './postgres/seeds/seed-identity-foundation.js';
+export { seedWorkspaceAuthorizationCatalog } from './postgres/seeds/seed-workspace-authorization-catalog.js';
 export { databaseSchema } from './postgres/database-schema.js';
 export { membershipsTable } from './postgres/schema/memberships.table.js';
 export { tenantsTable } from './postgres/schema/tenants.table.js';
 export { usersTable } from './postgres/schema/users.table.js';
+export { workspaceRoleScopesTable } from './postgres/schema/workspace-role-scopes.table.js';
+export { workspaceRolesTable } from './postgres/schema/workspace-roles.table.js';
+export { workspaceScopesTable } from './postgres/schema/workspace-scopes.table.js';
 export { workspacesTable } from './postgres/schema/workspaces.table.js';
-export { eq } from 'drizzle-orm';
