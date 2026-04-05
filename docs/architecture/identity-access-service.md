@@ -67,3 +67,21 @@ The service now supports a first access context resolution flow:
 5. assemble an access context result
 
 This is the first structural step toward future authorization, RBAC, and policy-aware execution.
+
+## Current RBAC Foundation Capability
+
+The service now includes a first RBAC foundation based on workspace roles.
+
+Current workspace role catalog:
+
+- `workspace_viewer`
+- `workspace_operator`
+- `workspace_admin`
+
+Current access checks support:
+
+- context resolution
+- role validation
+- minimum required role comparison
+
+This is still a coarse-grained authorization model and does not yet include scopes or capability-level authorization.

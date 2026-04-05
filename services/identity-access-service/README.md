@@ -15,6 +15,7 @@ At this stage, the service provides:
 - seed-backed identity read endpoints
 - first access context resolution
 - a clean backend service template for future services
+- first RBAC primitives based on workspace role comparison
 
 ## Current Endpoints
 
@@ -32,6 +33,10 @@ Returns a health response that includes database readiness status.
 ### `GET /access-context/resolve?email=...&tenantSlug=...&workspaceSlug=...`
 
 Resolves the first access context object for a user in a specific tenant and workspace scope.
+
+### `GET /workspace-access/check?email=...&tenantSlug=...&workspaceSlug=...&requiredRole=...`
+
+Checks whether a resolved actor has at least the required workspace role in the target workspace.
 
 ## Local Development
 

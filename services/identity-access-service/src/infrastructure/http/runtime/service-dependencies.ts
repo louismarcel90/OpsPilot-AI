@@ -2,6 +2,7 @@ import type { TenantReadRepository } from '../../../application/repositories/ten
 import type { UserReadRepository } from '../../../application/repositories/user-read-repository.js';
 import type { WorkspaceMembershipReadRepository } from '../../../application/repositories/workspace-membership-read-repository.js';
 import type { WorkspaceReadRepository } from '../../../application/repositories/workspace-read-repository.js';
+import { CheckWorkspaceAccessUseCase } from '../../../application/use-cases/check-workspace-access.use-case.js';
 import { ResolveAccessContextUseCase } from '../../../application/use-cases/resolve-access-context.use-case.js';
 import { ResolveTenantBySlugUseCase } from '../../../application/use-cases/resolve-tenant-by-slug.use-case.js';
 import { ResolveUserByEmailUseCase } from '../../../application/use-cases/resolve-user-by-email.use-case.js';
@@ -12,6 +13,7 @@ export interface ServiceDependencies {
   readonly resolveTenantBySlugUseCase: ResolveTenantBySlugUseCase;
   readonly resolveWorkspaceMembershipUseCase: ResolveWorkspaceMembershipUseCase;
   readonly resolveAccessContextUseCase: ResolveAccessContextUseCase;
+  readonly checkWorkspaceAccessUseCase: CheckWorkspaceAccessUseCase;
 }
 
 export function createServiceDependencies(
@@ -20,17 +22,20 @@ export function createServiceDependencies(
   workspaceReadRepository: WorkspaceReadRepository,
   workspaceMembershipReadRepository: WorkspaceMembershipReadRepository,
 ): ServiceDependencies {
+  const resolveAccessContextUseCase = new ResolveAccessContextUseCase(
+    userReadRepository,
+    tenantReadRepository,
+    workspaceReadRepository,
+    workspaceMembershipReadRepository,
+  );
+
   return {
     resolveUserByEmailUseCase: new ResolveUserByEmailUseCase(userReadRepository),
     resolveTenantBySlugUseCase: new ResolveTenantBySlugUseCase(tenantReadRepository),
     resolveWorkspaceMembershipUseCase: new ResolveWorkspaceMembershipUseCase(
       workspaceMembershipReadRepository,
     ),
-    resolveAccessContextUseCase: new ResolveAccessContextUseCase(
-      userReadRepository,
-      tenantReadRepository,
-      workspaceReadRepository,
-      workspaceMembershipReadRepository,
-    ),
+    resolveAccessContextUseCase,
+    checkWorkspaceAccessUseCase: new CheckWorkspaceAccessUseCase(resolveAccessContextUseCase),
   };
 }

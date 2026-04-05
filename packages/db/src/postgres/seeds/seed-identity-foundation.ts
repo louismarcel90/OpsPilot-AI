@@ -90,7 +90,7 @@ export async function seedIdentityFoundation(connection: PostgresConnection): Pr
         tenantId: SEED_IDS.tenantAcme,
         workspaceId: SEED_IDS.workspaceSecurity,
         userId: SEED_IDS.userBob,
-        roleCode: 'workspace_viewer',
+        roleCode: 'workspace_operator',
         createdByActorId: SEED_IDS.userAlice,
         updatedByActorId: SEED_IDS.userAlice,
       },
