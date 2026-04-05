@@ -1,3 +1,4 @@
+import type { AuthorizationDiagnostic } from './authorization-diagnostic.js';
 import type { AccessContext } from '../identity/access-context.js';
 import type { WorkspaceRoleCode } from './role-catalog.js';
 import type { WorkspaceScope } from './workspace-scope-catalog.js';
@@ -17,6 +18,7 @@ export interface AllowedWorkspaceCapabilityDecision {
   readonly actualRole: WorkspaceRoleCode;
   readonly grantedScopes: WorkspaceScope[];
   readonly requiredScope: WorkspaceScope;
+  readonly diagnostic: AuthorizationDiagnostic;
 }
 
 export interface DeniedWorkspaceCapabilityDecision {
@@ -30,6 +32,7 @@ export interface DeniedWorkspaceCapabilityDecision {
   readonly requiredScope: WorkspaceScope;
   readonly actualRole?: string;
   readonly grantedScopes?: WorkspaceScope[];
+  readonly diagnostic: AuthorizationDiagnostic;
 }
 
 export type WorkspaceCapabilityDecision =

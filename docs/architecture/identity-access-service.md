@@ -107,14 +107,14 @@ Current permission checks support:
 
 This remains a coarse-grained permission model and is still narrower than the future policy decision layer.
 
-## Current Protected Route Pattern
+## Current Protected Route Shape
 
-The service now supports a first protected route pattern:
+The service now includes a first protected route pattern based on:
 
-1. extract actor context headers from the request
-2. resolve access context
-3. evaluate required workspace scope
-4. allow or deny the protected route
+1. request context extraction
+2. workspace header extraction
+3. access context resolution
+4. capability enforcement
+5. protected handler execution
 
-This pattern is intentionally simple and currently relies on request headers rather than authenticated identities.
-It exists to standardize the protected route flow before introducing real authentication.
+This establishes the shape that future protected routes can follow before the broader policy layer is introduced.

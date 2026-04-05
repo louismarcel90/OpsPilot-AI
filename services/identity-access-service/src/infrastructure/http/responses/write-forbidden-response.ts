@@ -1,6 +1,6 @@
 import type { ServerResponse } from 'node:http';
 
-import { createForbiddenErrorResponse } from '@opspilot/http-kit/src/error-response.js';
+import { createForbiddenErrorResponse } from '@opspilot/http-kit';
 
 import { writeJson } from './write-json.js';
 

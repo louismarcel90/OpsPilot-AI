@@ -28,22 +28,50 @@ export class CheckWorkspaceAccessUseCase {
         return {
           status: 'denied_user_not_found',
           requiredRole: input.requiredRole,
+          actualRole: 'unknown',
+          diagnostic: {
+            reasonCode: 'USER_NOT_FOUND',
+            reasonMessage: 'The user could not be found.',
+            requiredRole: input.requiredRole,
+          },
         };
+
       case 'tenant_not_found':
         return {
           status: 'denied_tenant_not_found',
           requiredRole: input.requiredRole,
+          actualRole: 'unknown',
+          diagnostic: {
+            reasonCode: 'TENANT_NOT_FOUND',
+            reasonMessage: 'The tenant could not be found.',
+            requiredRole: input.requiredRole,
+          },
         };
+
       case 'workspace_not_found':
         return {
           status: 'denied_workspace_not_found',
           requiredRole: input.requiredRole,
+          actualRole: 'unknown',
+          diagnostic: {
+            reasonCode: 'WORKSPACE_NOT_FOUND',
+            reasonMessage: 'The workspace could not be found.',
+            requiredRole: input.requiredRole,
+          },
         };
+
       case 'membership_not_found':
         return {
           status: 'denied_membership_not_found',
           requiredRole: input.requiredRole,
+          actualRole: 'unknown',
+          diagnostic: {
+            reasonCode: 'MEMBERSHIP_NOT_FOUND',
+            reasonMessage: 'No workspace membership was found for this user.',
+            requiredRole: input.requiredRole,
+          },
         };
+
       case 'resolved':
         break;
     }
@@ -55,6 +83,12 @@ export class CheckWorkspaceAccessUseCase {
         status: 'denied_invalid_role',
         requiredRole: input.requiredRole,
         actualRole: membershipRole,
+        diagnostic: {
+          reasonCode: 'INVALID_ROLE_CODE',
+          reasonMessage: 'The membership role is not a valid workspace role code.',
+          requiredRole: input.requiredRole,
+          actualRole: membershipRole,
+        },
       };
     }
 
@@ -63,6 +97,12 @@ export class CheckWorkspaceAccessUseCase {
         status: 'denied_insufficient_role',
         requiredRole: input.requiredRole,
         actualRole: membershipRole,
+        diagnostic: {
+          reasonCode: 'INSUFFICIENT_ROLE',
+          reasonMessage: 'The membership role does not satisfy the required workspace role.',
+          requiredRole: input.requiredRole,
+          actualRole: membershipRole,
+        },
       };
     }
 
@@ -71,6 +111,12 @@ export class CheckWorkspaceAccessUseCase {
       accessContext,
       actualRole: membershipRole,
       requiredRole: input.requiredRole,
+      diagnostic: {
+        reasonCode: 'ACCESS_GRANTED',
+        reasonMessage: 'Workspace access granted.',
+        requiredRole: input.requiredRole,
+        actualRole: membershipRole,
+      },
     };
   }
 }

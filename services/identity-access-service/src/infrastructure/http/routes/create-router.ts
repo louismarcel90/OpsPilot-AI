@@ -126,7 +126,7 @@ export function createRouter(
           response,
           logger,
           correlationId,
-          dependencies.enforceProtectedWorkspaceScopeUseCase,
+          dependencies.enforceProtectedWorkspaceRequestUseCase,
         );
         return;
       }
