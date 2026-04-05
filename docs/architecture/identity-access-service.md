@@ -106,3 +106,15 @@ Current permission checks support:
 - capability-level allow or deny decisions
 
 This remains a coarse-grained permission model and is still narrower than the future policy decision layer.
+
+## Current Protected Route Pattern
+
+The service now supports a first protected route pattern:
+
+1. extract actor context headers from the request
+2. resolve access context
+3. evaluate required workspace scope
+4. allow or deny the protected route
+
+This pattern is intentionally simple and currently relies on request headers rather than authenticated identities.
+It exists to standardize the protected route flow before introducing real authentication.

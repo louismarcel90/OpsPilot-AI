@@ -16,6 +16,20 @@ export function createBadRequestErrorResponse(
   };
 }
 
+export function createForbiddenErrorResponse(
+  correlationId: string,
+  message: string = 'Access to the requested resource is forbidden.',
+): JsonResponse<ApiErrorContract> {
+  return {
+    statusCode: HTTP_STATUS_CODE.forbidden,
+    body: {
+      code: 'FORBIDDEN',
+      message,
+      correlationId,
+    },
+  };
+}
+
 export function createNotFoundErrorResponse(
   correlationId: string,
   message: string = 'The requested route does not exist.',

@@ -43,6 +43,20 @@ Checks whether a resolved actor has at least the required workspace role in the 
 
 Checks whether a resolved actor has a specific workspace scope derived from the role catalog.
 
+### `GET /protected/workspace-admin`
+
+A demonstration protected route that requires actor context headers and the `workspace.admin` scope.
+
+## Actor Context Headers
+
+Protected routes currently expect the following request headers:
+
+- `x-actor-email`
+- `x-tenant-slug`
+- `x-workspace-slug`
+
+These headers are currently used as a development-stage actor context transport mechanism before real authentication is introduced.
+
 ## Local Development
 
 ### Start the service

@@ -8,6 +8,7 @@ import { createCorrelationId } from '@opspilot/observability';
 import { handleCheckWorkspaceAccessRequest } from '../../../presentation/http/handlers/handle-check-workspace-access-request.js';
 import { handleCheckWorkspaceCapabilityRequest } from '../../../presentation/http/handlers/handle-check-workspace-capability-request.js';
 import { handleHealthRequest } from '../../../presentation/http/handlers/handle-health-request.js';
+import { handleProtectedWorkspaceAdminRequest } from '../../../presentation/http/handlers/handle-protected-workspace-admin-request.js';
 import { handleResolveAccessContextRequest } from '../../../presentation/http/handlers/handle-resolve-access-context-request.js';
 import { handleResolveTenantBySlugRequest } from '../../../presentation/http/handlers/handle-resolve-tenant-by-slug-request.js';
 import { handleResolveUserByEmailRequest } from '../../../presentation/http/handlers/handle-resolve-user-by-email-request.js';
@@ -115,6 +116,17 @@ export function createRouter(
           logger,
           correlationId,
           dependencies.checkWorkspaceCapabilityUseCase,
+        );
+        return;
+      }
+
+      if (method === 'GET' && path === '/protected/workspace-admin') {
+        await handleProtectedWorkspaceAdminRequest(
+          request,
+          response,
+          logger,
+          correlationId,
+          dependencies.enforceProtectedWorkspaceScopeUseCase,
         );
         return;
       }
