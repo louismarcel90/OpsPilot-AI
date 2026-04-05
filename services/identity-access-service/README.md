@@ -16,6 +16,7 @@ At this stage, the service provides:
 - first access context resolution
 - a clean backend service template for future services
 - first RBAC primitives based on workspace role comparison
+- first capability-level permission checks derived from role scopes
 
 ## Current Endpoints
 
@@ -37,6 +38,10 @@ Resolves the first access context object for a user in a specific tenant and wor
 ### `GET /workspace-access/check?email=...&tenantSlug=...&workspaceSlug=...&requiredRole=...`
 
 Checks whether a resolved actor has at least the required workspace role in the target workspace.
+
+### `GET /workspace-capabilities/check?email=...&tenantSlug=...&workspaceSlug=...&requiredScope=...`
+
+Checks whether a resolved actor has a specific workspace scope derived from the role catalog.
 
 ## Local Development
 

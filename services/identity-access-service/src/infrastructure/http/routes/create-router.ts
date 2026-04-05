@@ -6,6 +6,7 @@ import type { AppLogger } from '@opspilot/logger';
 import { createCorrelationId } from '@opspilot/observability';
 
 import { handleCheckWorkspaceAccessRequest } from '../../../presentation/http/handlers/handle-check-workspace-access-request.js';
+import { handleCheckWorkspaceCapabilityRequest } from '../../../presentation/http/handlers/handle-check-workspace-capability-request.js';
 import { handleHealthRequest } from '../../../presentation/http/handlers/handle-health-request.js';
 import { handleResolveAccessContextRequest } from '../../../presentation/http/handlers/handle-resolve-access-context-request.js';
 import { handleResolveTenantBySlugRequest } from '../../../presentation/http/handlers/handle-resolve-tenant-by-slug-request.js';
@@ -103,6 +104,17 @@ export function createRouter(
           logger,
           correlationId,
           dependencies.checkWorkspaceAccessUseCase,
+        );
+        return;
+      }
+
+      if (method === 'GET' && path === '/workspace-capabilities/check') {
+        await handleCheckWorkspaceCapabilityRequest(
+          request,
+          response,
+          logger,
+          correlationId,
+          dependencies.checkWorkspaceCapabilityUseCase,
         );
         return;
       }

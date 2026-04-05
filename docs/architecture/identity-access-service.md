@@ -85,3 +85,24 @@ Current access checks support:
 - minimum required role comparison
 
 This is still a coarse-grained authorization model and does not yet include scopes or capability-level authorization.
+
+## Current Permission Model Capability
+
+The service now supports a first permission model based on role-derived scopes.
+
+Current workspace scopes:
+
+- `workspace.read`
+- `workspace.operate`
+- `workspace.members.read`
+- `workspace.members.manage`
+- `workspace.admin`
+
+Current permission checks support:
+
+- actor, tenant, and workspace context resolution
+- membership role validation
+- role-derived scope evaluation
+- capability-level allow or deny decisions
+
+This remains a coarse-grained permission model and is still narrower than the future policy decision layer.

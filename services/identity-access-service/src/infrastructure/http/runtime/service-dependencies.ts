@@ -3,6 +3,7 @@ import type { UserReadRepository } from '../../../application/repositories/user-
 import type { WorkspaceMembershipReadRepository } from '../../../application/repositories/workspace-membership-read-repository.js';
 import type { WorkspaceReadRepository } from '../../../application/repositories/workspace-read-repository.js';
 import { CheckWorkspaceAccessUseCase } from '../../../application/use-cases/check-workspace-access.use-case.js';
+import { CheckWorkspaceCapabilityUseCase } from '../../../application/use-cases/check-workspace-capability.use-case.js';
 import { ResolveAccessContextUseCase } from '../../../application/use-cases/resolve-access-context.use-case.js';
 import { ResolveTenantBySlugUseCase } from '../../../application/use-cases/resolve-tenant-by-slug.use-case.js';
 import { ResolveUserByEmailUseCase } from '../../../application/use-cases/resolve-user-by-email.use-case.js';
@@ -14,6 +15,7 @@ export interface ServiceDependencies {
   readonly resolveWorkspaceMembershipUseCase: ResolveWorkspaceMembershipUseCase;
   readonly resolveAccessContextUseCase: ResolveAccessContextUseCase;
   readonly checkWorkspaceAccessUseCase: CheckWorkspaceAccessUseCase;
+  readonly checkWorkspaceCapabilityUseCase: CheckWorkspaceCapabilityUseCase;
 }
 
 export function createServiceDependencies(
@@ -37,5 +39,8 @@ export function createServiceDependencies(
     ),
     resolveAccessContextUseCase,
     checkWorkspaceAccessUseCase: new CheckWorkspaceAccessUseCase(resolveAccessContextUseCase),
+    checkWorkspaceCapabilityUseCase: new CheckWorkspaceCapabilityUseCase(
+      resolveAccessContextUseCase,
+    ),
   };
 }
