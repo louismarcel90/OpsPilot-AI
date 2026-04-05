@@ -1,10 +1,12 @@
-import {
-  getWorkspaceRoleScopes,
-  hasWorkspaceScope,
-} from '../../domain/authorization/workspace-scope-mapping.js';
-import { isWorkspaceRoleCode } from '../../domain/authorization/role-catalog.js';
-import type { WorkspaceScope } from '../../domain/authorization/workspace-scope-catalog.js';
+import { hasWorkspaceScope } from '../../domain/authorization/workspace-scope-mapping.js';
 import type { WorkspaceCapabilityDecision } from '../../domain/authorization/workspace-capability-decision.js';
+import type { WorkspaceRoleCode } from '../../domain/authorization/role-catalog.js';
+import type { WorkspaceScope } from '../../domain/authorization/workspace-scope-catalog.js';
+import {
+  createAllowedAuthorizationDiagnostic,
+  createDeniedAuthorizationDiagnostic,
+  resolveRoleCapabilities,
+} from '../../domain/authorization/authorization-helpers.js';
 import type {
   ResolveAccessContextInput,
   ResolveAccessContextUseCase,
@@ -29,101 +31,109 @@ export class CheckWorkspaceCapabilityUseCase {
         return {
           status: 'denied_user_not_found',
           requiredScope: input.requiredScope,
-          actualRole: 'unknown',
-          diagnostic: {
-            reasonCode: 'USER_NOT_FOUND',
-            reasonMessage: 'The user could not be found.',
-            requiredScope: input.requiredScope,
-          },
+          diagnostic: createDeniedAuthorizationDiagnostic(
+            'USER_NOT_FOUND',
+            'No actor could be resolved for the supplied email.',
+            {
+              requiredScope: input.requiredScope,
+            },
+          ),
         };
 
       case 'tenant_not_found':
         return {
           status: 'denied_tenant_not_found',
           requiredScope: input.requiredScope,
-          actualRole: 'unknown',
-          diagnostic: {
-            reasonCode: 'TENANT_NOT_FOUND',
-            reasonMessage: 'The tenant could not be found.',
-            requiredScope: input.requiredScope,
-          },
+          diagnostic: createDeniedAuthorizationDiagnostic(
+            'TENANT_NOT_FOUND',
+            'No tenant could be resolved for the supplied tenant slug.',
+            {
+              requiredScope: input.requiredScope,
+            },
+          ),
         };
 
       case 'workspace_not_found':
         return {
           status: 'denied_workspace_not_found',
           requiredScope: input.requiredScope,
-          actualRole: 'unknown',
-          diagnostic: {
-            reasonCode: 'WORKSPACE_NOT_FOUND',
-            reasonMessage: 'The workspace could not be found.',
-            requiredScope: input.requiredScope,
-          },
+          diagnostic: createDeniedAuthorizationDiagnostic(
+            'WORKSPACE_NOT_FOUND',
+            'No workspace could be resolved for the supplied tenant and workspace slugs.',
+            {
+              requiredScope: input.requiredScope,
+            },
+          ),
         };
 
       case 'membership_not_found':
         return {
           status: 'denied_membership_not_found',
           requiredScope: input.requiredScope,
-          actualRole: 'unknown',
-          diagnostic: {
-            reasonCode: 'MEMBERSHIP_NOT_FOUND',
-            reasonMessage: 'No workspace membership was found for this user.',
-            requiredScope: input.requiredScope,
-          },
+          diagnostic: createDeniedAuthorizationDiagnostic(
+            'MEMBERSHIP_NOT_FOUND',
+            'The actor does not have a membership in the target workspace.',
+            {
+              requiredScope: input.requiredScope,
+            },
+          ),
         };
 
       case 'resolved':
         break;
     }
 
-    const membershipRole = accessContext.membership.roleCode;
+    const resolvedRole = resolveRoleCapabilities(accessContext.membership.roleCode);
 
-    if (!isWorkspaceRoleCode(membershipRole)) {
+    if (!resolvedRole.isValid) {
       return {
         status: 'denied_invalid_role',
         requiredScope: input.requiredScope,
-        actualRole: membershipRole,
-        diagnostic: {
-          reasonCode: 'INVALID_ROLE_CODE',
-          reasonMessage: 'The membership role is not a valid workspace role code.',
-          requiredScope: input.requiredScope,
-          actualRole: membershipRole,
-        },
+        actualRole: resolvedRole.actualRole,
+        diagnostic: createDeniedAuthorizationDiagnostic(
+          'INVALID_ROLE_CODE',
+          'The membership contains a role code that is not recognized by the role catalog.',
+          {
+            requiredScope: input.requiredScope,
+            actualRole: resolvedRole.actualRole,
+            grantedScopes: resolvedRole.grantedScopes,
+          },
+        ),
       };
     }
 
-    const grantedScopes = getWorkspaceRoleScopes(membershipRole);
+    const actualRole = resolvedRole.actualRole as WorkspaceRoleCode;
 
-    if (!hasWorkspaceScope(membershipRole, input.requiredScope)) {
+    if (!hasWorkspaceScope(actualRole, input.requiredScope)) {
       return {
         status: 'denied_missing_scope',
         requiredScope: input.requiredScope,
-        actualRole: membershipRole,
-        grantedScopes,
-        diagnostic: {
-          reasonCode: 'MISSING_REQUIRED_SCOPE',
-          reasonMessage: 'The membership role does not grant the required workspace scope.',
-          requiredScope: input.requiredScope,
-          actualRole: membershipRole,
-          grantedScopes,
-        },
+        actualRole,
+        grantedScopes: resolvedRole.grantedScopes,
+        diagnostic: createDeniedAuthorizationDiagnostic(
+          'MISSING_REQUIRED_SCOPE',
+          'The actor role does not grant the required workspace scope.',
+          {
+            requiredScope: input.requiredScope,
+            actualRole,
+            grantedScopes: resolvedRole.grantedScopes,
+          },
+        ),
       };
     }
 
     return {
       status: 'allowed',
       accessContext,
-      actualRole: membershipRole,
-      grantedScopes,
+      actualRole,
+      grantedScopes: resolvedRole.grantedScopes,
       requiredScope: input.requiredScope,
-      diagnostic: {
-        reasonCode: 'ACCESS_GRANTED',
-        reasonMessage: 'Workspace capability granted.',
-        requiredScope: input.requiredScope,
-        actualRole: membershipRole,
-        grantedScopes,
-      },
+      diagnostic: createAllowedAuthorizationDiagnostic(
+        actualRole,
+        resolvedRole.grantedScopes,
+        input.requiredScope,
+        undefined,
+      ),
     };
   }
 }

@@ -118,3 +118,17 @@ The service now includes a first protected route pattern based on:
 5. protected handler execution
 
 This establishes the shape that future protected routes can follow before the broader policy layer is introduced.
+
+## Current Authorization Diagnostics Capability
+
+Authorization decisions now include structured diagnostics.
+
+These diagnostics make it possible to explain:
+
+- why access was granted
+- why access was denied
+- what role was observed
+- what scope was required
+- what scopes were effectively granted
+
+This prepares the service for future policy-oriented decision explanation.
