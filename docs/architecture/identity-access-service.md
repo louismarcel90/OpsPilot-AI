@@ -149,3 +149,20 @@ This is an important transition point between:
 
 - code-defined authorization foundations
 - future persisted and governable authorization control models
+
+## Current Authorization Bootstrap Validation
+
+The service now validates runtime and persisted authorization catalog parity at startup.
+
+This validation checks:
+
+- workspace roles
+- workspace scopes
+- workspace role-to-scope mappings
+
+The service fails fast when parity is broken.
+
+This improves startup safety and reduces the risk of silent authorization drift between:
+
+- runtime code-based authorization assumptions
+- persisted authorization catalog state

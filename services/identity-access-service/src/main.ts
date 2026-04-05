@@ -12,6 +12,25 @@ import { createServiceDependencies } from './infrastructure/http/runtime/service
 import { IdentityAccessServiceRuntime } from './infrastructure/http/runtime/service-runtime.js';
 import { createServiceLogger } from './infrastructure/logging/create-service-logger.js';
 
+function buildBootstrapParityErrorMessage(details: {
+  readonly missingPersistedRoles: string[];
+  readonly unexpectedPersistedRoles: string[];
+  readonly missingPersistedScopes: string[];
+  readonly unexpectedPersistedScopes: string[];
+  readonly missingPersistedRoleScopes: string[];
+  readonly unexpectedPersistedRoleScopes: string[];
+}): string {
+  return [
+    'Workspace authorization catalog parity check failed.',
+    `missingPersistedRoles=${details.missingPersistedRoles.join(',') || 'none'}`,
+    `unexpectedPersistedRoles=${details.unexpectedPersistedRoles.join(',') || 'none'}`,
+    `missingPersistedScopes=${details.missingPersistedScopes.join(',') || 'none'}`,
+    `unexpectedPersistedScopes=${details.unexpectedPersistedScopes.join(',') || 'none'}`,
+    `missingPersistedRoleScopes=${details.missingPersistedRoleScopes.join(',') || 'none'}`,
+    `unexpectedPersistedRoleScopes=${details.unexpectedPersistedRoleScopes.join(',') || 'none'}`,
+  ].join(' ');
+}
+
 async function bootstrap(): Promise<void> {
   const config = createAppConfig({
     SERVICE_NAME: 'identity-access-service',
@@ -49,6 +68,20 @@ async function bootstrap(): Promise<void> {
     workspaceMembershipReadRepository,
     authorizationCatalogReadRepository,
   );
+
+  const bootstrapValidationResult =
+    await dependencies.validateWorkspaceAuthorizationBootstrapUseCase.execute();
+
+  if (!bootstrapValidationResult.parityReport.isAligned) {
+    await databaseConnection.close();
+
+    throw new Error(buildBootstrapParityErrorMessage(bootstrapValidationResult.parityReport));
+  }
+
+  logger.info('Workspace authorization catalog parity check passed', {
+    serviceName: config.serviceName,
+    operationName: 'bootstrap',
+  });
 
   const server = createHttpServer(config, logger, databaseConnection, dependencies);
   const runtime = new IdentityAccessServiceRuntime(server, databaseConnection, config, logger);

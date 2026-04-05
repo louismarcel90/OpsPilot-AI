@@ -11,6 +11,7 @@ import { ResolveAccessContextUseCase } from '../../../application/use-cases/reso
 import { ResolveTenantBySlugUseCase } from '../../../application/use-cases/resolve-tenant-by-slug.use-case.js';
 import { ResolveUserByEmailUseCase } from '../../../application/use-cases/resolve-user-by-email.use-case.js';
 import { ResolveWorkspaceMembershipUseCase } from '../../../application/use-cases/resolve-workspace-membership.use-case.js';
+import { ValidateWorkspaceAuthorizationBootstrapUseCase } from '../../../application/use-cases/validate-workspace-authorization-bootstrap.use-case.js';
 
 export interface ServiceDependencies {
   readonly resolveUserByEmailUseCase: ResolveUserByEmailUseCase;
@@ -21,6 +22,7 @@ export interface ServiceDependencies {
   readonly checkWorkspaceCapabilityUseCase: CheckWorkspaceCapabilityUseCase;
   readonly enforceProtectedWorkspaceRequestUseCase: EnforceProtectedWorkspaceRequestUseCase;
   readonly getWorkspaceAuthorizationCatalogUseCase: GetWorkspaceAuthorizationCatalogUseCase;
+  readonly validateWorkspaceAuthorizationBootstrapUseCase: ValidateWorkspaceAuthorizationBootstrapUseCase;
 }
 
 export function createServiceDependencies(
@@ -56,5 +58,7 @@ export function createServiceDependencies(
     getWorkspaceAuthorizationCatalogUseCase: new GetWorkspaceAuthorizationCatalogUseCase(
       authorizationCatalogReadRepository,
     ),
+    validateWorkspaceAuthorizationBootstrapUseCase:
+      new ValidateWorkspaceAuthorizationBootstrapUseCase(authorizationCatalogReadRepository),
   };
 }

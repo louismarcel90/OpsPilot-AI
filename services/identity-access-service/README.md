@@ -19,6 +19,18 @@ At this stage, the service provides:
 - first capability-level permission checks derived from role scopes
 - persisted workspace role and scope catalog foundation
 - normalized membership role references
+- startup authorization catalog parity validation between runtime and persisted catalog
+
+## Bootstrap Safety Checks
+
+At startup, the service validates that the runtime authorization catalog matches the persisted workspace authorization catalog.
+
+The service will fail fast if:
+
+- a runtime role is missing in the database
+- a runtime scope is missing in the database
+- a runtime role-to-scope mapping is missing in the database
+- unexpected persisted catalog entries create a parity mismatch
 
 ## Current Endpoints
 
