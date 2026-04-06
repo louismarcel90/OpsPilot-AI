@@ -19,6 +19,7 @@ import { writeUnexpectedErrorResponse } from '../responses/write-unexpected-erro
 import type { ServiceDependencies } from '../runtime/service-dependencies.js';
 import { handleGetWorkspaceAuthorizationCatalogRequest } from '../../../presentation/http/handlers/handle-get-workspace-authorization-catalog-request.js';
 import { handleGetAuthorizationParityDiagnosticRequest } from '../../../presentation/http/handlers/handle-get-authorization-parity-diagnostic-request.js';
+import { handleRevalidateAuthorizationParityRequest } from '../../../presentation/http/handlers/handle-revalidate-authorization-parity-request.js';
 
 function resolvePath(request: IncomingMessage): string {
   const requestUrl = request.url ?? '/';
@@ -149,6 +150,16 @@ export function createRouter(
           logger,
           correlationId,
           dependencies.getAuthorizationParityDiagnosticUseCase,
+        );
+        return;
+      }
+
+      if (method === 'POST' && path === '/diagnostics/authorization-parity/revalidate') {
+        await handleRevalidateAuthorizationParityRequest(
+          response,
+          logger,
+          correlationId,
+          dependencies.revalidateAuthorizationParityUseCase,
         );
         return;
       }

@@ -21,6 +21,7 @@ At this stage, the service provides:
 - normalized membership role references
 - startup authorization catalog parity validation between runtime and persisted catalog
 - visible authorization parity diagnostics endpoint
+- manual runtime revalidation hook for authorization parity
 
 ## Bootstrap Safety Checks
 
@@ -79,6 +80,10 @@ These headers are currently used as a development-stage actor context transport 
 ### `GET /authorization/workspace-catalog`
 
 Returns the persisted workspace authorization catalog, including roles, scopes, and role-to-scope mappings.
+
+### `POST /diagnostics/authorization-parity/revalidate`
+
+Triggers a manual runtime revalidation of authorization catalog parity and updates the in-memory diagnostic state.
 
 ## Local Development
 

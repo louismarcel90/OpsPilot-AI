@@ -172,3 +172,15 @@ This improves startup safety and reduces the risk of silent authorization drift 
 The service now exposes the latest authorization parity diagnostic through a dedicated runtime endpoint.
 
 This makes bootstrap validation observable after startup and provides a first operational visibility layer for authorization catalog consistency.
+
+## Current Runtime Authorization Revalidation Capability
+
+The service now supports manual runtime revalidation of authorization parity.
+
+This allows the system to:
+
+- recompute runtime versus persisted catalog parity
+- refresh the in-memory diagnostic state
+- distinguish bootstrap validation from manual revalidation
+
+This is a foundational step toward more dynamic authorization catalog governance.

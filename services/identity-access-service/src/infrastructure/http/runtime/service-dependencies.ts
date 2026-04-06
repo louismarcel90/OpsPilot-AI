@@ -8,6 +8,7 @@ import { CheckWorkspaceCapabilityUseCase } from '../../../application/use-cases/
 import { EnforceProtectedWorkspaceRequestUseCase } from '../../../application/use-cases/enforce-protected-workspace-request.use-case.js';
 import { GetAuthorizationParityDiagnosticUseCase } from '../../../application/use-cases/get-authorization-parity-diagnostic.use-case.js';
 import { GetWorkspaceAuthorizationCatalogUseCase } from '../../../application/use-cases/get-workspace-authorization-catalog.use-case.js';
+import { RevalidateAuthorizationParityUseCase } from '../../../application/use-cases/revalidate-authorization-parity.use-case.js';
 import { ResolveAccessContextUseCase } from '../../../application/use-cases/resolve-access-context.use-case.js';
 import { ResolveTenantBySlugUseCase } from '../../../application/use-cases/resolve-tenant-by-slug.use-case.js';
 import { ResolveUserByEmailUseCase } from '../../../application/use-cases/resolve-user-by-email.use-case.js';
@@ -27,6 +28,7 @@ export interface ServiceDependencies {
   readonly getWorkspaceAuthorizationCatalogUseCase: GetWorkspaceAuthorizationCatalogUseCase;
   readonly validateWorkspaceAuthorizationBootstrapUseCase: ValidateWorkspaceAuthorizationBootstrapUseCase;
   readonly getAuthorizationParityDiagnosticUseCase: GetAuthorizationParityDiagnosticUseCase;
+  readonly revalidateAuthorizationParityUseCase: RevalidateAuthorizationParityUseCase;
   readonly authorizationBootstrapValidationStore: AuthorizationBootstrapValidationStore;
 }
 
@@ -68,6 +70,10 @@ export function createServiceDependencies(
     validateWorkspaceAuthorizationBootstrapUseCase:
       new ValidateWorkspaceAuthorizationBootstrapUseCase(authorizationCatalogReadRepository),
     getAuthorizationParityDiagnosticUseCase: new GetAuthorizationParityDiagnosticUseCase(
+      authorizationBootstrapValidationStore,
+    ),
+    revalidateAuthorizationParityUseCase: new RevalidateAuthorizationParityUseCase(
+      authorizationCatalogReadRepository,
       authorizationBootstrapValidationStore,
     ),
     authorizationBootstrapValidationStore,

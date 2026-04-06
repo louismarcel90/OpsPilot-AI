@@ -2,7 +2,6 @@ import { createAppConfig } from '@opspilot/config';
 import { createPostgresConnection } from '@opspilot/db';
 
 import { DrizzleAuthorizationCatalogReadRepository } from './application/repositories/drizzle-authorization-catalog-read-repository.js';
-import { DrizzleTenantReadRepository } from './infrastructure/db/repositories/drizzle-tenant-read-repository.js';
 import { DrizzleUserReadRepository } from './infrastructure/db/repositories/drizzle-user-read-repository.js';
 import { DrizzleWorkspaceMembershipReadRepository } from './infrastructure/db/repositories/drizzle-workspace-membership-read-repository.js';
 import { DrizzleWorkspaceReadRepository } from './infrastructure/db/repositories/drizzle-workspace-read-repository.js';
@@ -11,6 +10,7 @@ import { registerProcessSignalHandlers } from './infrastructure/http/server/regi
 import { createServiceDependencies } from './infrastructure/http/runtime/service-dependencies.js';
 import { IdentityAccessServiceRuntime } from './infrastructure/http/runtime/service-runtime.js';
 import { createServiceLogger } from './infrastructure/logging/create-service-logger.js';
+import { DrizzleTenantReadRepository } from './infrastructure/db/repositories/drizzle-tenant-read-repository.js';
 
 function buildBootstrapParityErrorMessage(details: {
   readonly missingPersistedRoles: string[];
@@ -81,6 +81,7 @@ async function bootstrap(): Promise<void> {
   dependencies.authorizationBootstrapValidationStore.setDiagnostic({
     checkedAtIso: new Date().toISOString(),
     isAligned: bootstrapValidationResult.parityReport.isAligned,
+    source: 'bootstrap',
     parityReport: bootstrapValidationResult.parityReport,
   });
 
