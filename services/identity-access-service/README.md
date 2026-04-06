@@ -22,6 +22,8 @@ At this stage, the service provides:
 - startup authorization catalog parity validation between runtime and persisted catalog
 - visible authorization parity diagnostics endpoint
 - manual runtime revalidation hook for authorization parity
+- protected diagnostics endpoints with differentiated read and revalidation access
+- stale-state signaling for runtime authorization parity diagnostics
 
 ## Bootstrap Safety Checks
 
@@ -65,7 +67,17 @@ A demonstration protected route that requires actor context headers and the `wor
 
 ### `GET /diagnostics/authorization-parity`
 
-Returns the latest in-memory authorization parity diagnostic captured during bootstrap validation.
+Returns the latest authorization parity runtime state.
+
+Required headers:
+
+- `x-actor-email`
+- `x-tenant-slug`
+- `x-workspace-slug`
+
+Required capability:
+
+- `workspace.members.read`
 
 ## Actor Context Headers
 
@@ -84,6 +96,16 @@ Returns the persisted workspace authorization catalog, including roles, scopes, 
 ### `POST /diagnostics/authorization-parity/revalidate`
 
 Triggers a manual runtime revalidation of authorization catalog parity and updates the in-memory diagnostic state.
+
+Required headers:
+
+- `x-actor-email`
+- `x-tenant-slug`
+- `x-workspace-slug`
+
+Required capability:
+
+- `workspace.admin`
 
 ## Local Development
 

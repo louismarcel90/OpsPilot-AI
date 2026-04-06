@@ -7,6 +7,7 @@ import { CheckWorkspaceAccessUseCase } from '../../../application/use-cases/chec
 import { CheckWorkspaceCapabilityUseCase } from '../../../application/use-cases/check-workspace-capability.use-case.js';
 import { EnforceProtectedWorkspaceRequestUseCase } from '../../../application/use-cases/enforce-protected-workspace-request.use-case.js';
 import { GetAuthorizationParityDiagnosticUseCase } from '../../../application/use-cases/get-authorization-parity-diagnostic.use-case.js';
+import { GetAuthorizationParityRuntimeStateUseCase } from '../../../application/use-cases/get-authorization-parity-runtime-state.use-case.js';
 import { GetWorkspaceAuthorizationCatalogUseCase } from '../../../application/use-cases/get-workspace-authorization-catalog.use-case.js';
 import { RevalidateAuthorizationParityUseCase } from '../../../application/use-cases/revalidate-authorization-parity.use-case.js';
 import { ResolveAccessContextUseCase } from '../../../application/use-cases/resolve-access-context.use-case.js';
@@ -28,6 +29,7 @@ export interface ServiceDependencies {
   readonly getWorkspaceAuthorizationCatalogUseCase: GetWorkspaceAuthorizationCatalogUseCase;
   readonly validateWorkspaceAuthorizationBootstrapUseCase: ValidateWorkspaceAuthorizationBootstrapUseCase;
   readonly getAuthorizationParityDiagnosticUseCase: GetAuthorizationParityDiagnosticUseCase;
+  readonly getAuthorizationParityRuntimeStateUseCase: GetAuthorizationParityRuntimeStateUseCase;
   readonly revalidateAuthorizationParityUseCase: RevalidateAuthorizationParityUseCase;
   readonly authorizationBootstrapValidationStore: AuthorizationBootstrapValidationStore;
 }
@@ -70,6 +72,9 @@ export function createServiceDependencies(
     validateWorkspaceAuthorizationBootstrapUseCase:
       new ValidateWorkspaceAuthorizationBootstrapUseCase(authorizationCatalogReadRepository),
     getAuthorizationParityDiagnosticUseCase: new GetAuthorizationParityDiagnosticUseCase(
+      authorizationBootstrapValidationStore,
+    ),
+    getAuthorizationParityRuntimeStateUseCase: new GetAuthorizationParityRuntimeStateUseCase(
       authorizationBootstrapValidationStore,
     ),
     revalidateAuthorizationParityUseCase: new RevalidateAuthorizationParityUseCase(

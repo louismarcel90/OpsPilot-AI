@@ -146,19 +146,23 @@ export function createRouter(
 
       if (method === 'GET' && path === '/diagnostics/authorization-parity') {
         await handleGetAuthorizationParityDiagnosticRequest(
+          request,
           response,
           logger,
           correlationId,
-          dependencies.getAuthorizationParityDiagnosticUseCase,
+          dependencies.enforceProtectedWorkspaceRequestUseCase,
+          dependencies.getAuthorizationParityRuntimeStateUseCase,
         );
         return;
       }
 
       if (method === 'POST' && path === '/diagnostics/authorization-parity/revalidate') {
         await handleRevalidateAuthorizationParityRequest(
+          request,
           response,
           logger,
           correlationId,
+          dependencies.enforceProtectedWorkspaceRequestUseCase,
           dependencies.revalidateAuthorizationParityUseCase,
         );
         return;

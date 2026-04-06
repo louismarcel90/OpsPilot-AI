@@ -184,3 +184,16 @@ This allows the system to:
 - distinguish bootstrap validation from manual revalidation
 
 This is a foundational step toward more dynamic authorization catalog governance.
+
+## Current Diagnostics Protection and Freshness Capability
+
+Authorization parity diagnostics are now protected and freshness-aware.
+
+The service now supports:
+
+- protected read access for diagnostics
+- stronger protected access for diagnostic revalidation
+- availability signaling when no diagnostic exists
+- freshness signaling to identify stale runtime state
+
+This improves the operational credibility of the diagnostics layer and prepares it for future control-plane usage.
