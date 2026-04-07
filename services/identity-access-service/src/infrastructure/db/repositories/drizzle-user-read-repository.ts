@@ -1,4 +1,5 @@
-import { eq, usersTable, type PostgresConnection } from '@opspilot/db';
+import { usersTable, type PostgresConnection } from '@opspilot/db';
+import { eq } from 'drizzle-orm';
 import type { UserReadRepository } from '../../../application/repositories/user-read-repository.js';
 import type { UserSummary } from '../../../domain/identity/user-summary.js';
 

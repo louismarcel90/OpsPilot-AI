@@ -1,4 +1,5 @@
 import type { AuthorizationCatalogReadRepository } from '../../../application/repositories/authorization-catalog-read-repository.js';
+import type { AuthorizationAuditEventRepository } from '../../../application/repositories/authorization-audit-event-repository.js';
 import type { TenantReadRepository } from '../../../application/repositories/tenant-read-repository.js';
 import type { UserReadRepository } from '../../../application/repositories/user-read-repository.js';
 import type { WorkspaceMembershipReadRepository } from '../../../application/repositories/workspace-membership-read-repository.js';
@@ -7,6 +8,7 @@ import { CheckWorkspaceAccessUseCase } from '../../../application/use-cases/chec
 import { CheckWorkspaceCapabilityUseCase } from '../../../application/use-cases/check-workspace-capability.use-case.js';
 import { EnforceProtectedWorkspaceRequestUseCase } from '../../../application/use-cases/enforce-protected-workspace-request.use-case.js';
 import { GetAuthorizationParityDiagnosticUseCase } from '../../../application/use-cases/get-authorization-parity-diagnostic.use-case.js';
+import { GetAuthorizationParityHistoryUseCase } from '../../../application/use-cases/get-authorization-parity-history.use-case.js';
 import { GetAuthorizationParityRuntimeStateUseCase } from '../../../application/use-cases/get-authorization-parity-runtime-state.use-case.js';
 import { GetWorkspaceAuthorizationCatalogUseCase } from '../../../application/use-cases/get-workspace-authorization-catalog.use-case.js';
 import { RevalidateAuthorizationParityUseCase } from '../../../application/use-cases/revalidate-authorization-parity.use-case.js';
@@ -17,6 +19,8 @@ import { ResolveWorkspaceMembershipUseCase } from '../../../application/use-case
 import { ValidateWorkspaceAuthorizationBootstrapUseCase } from '../../../application/use-cases/validate-workspace-authorization-bootstrap.use-case.js';
 import type { AuthorizationBootstrapValidationStore } from '../../authorization/authorization-bootstrap-validation-store.js';
 import { InMemoryAuthorizationBootstrapValidationStore } from '../../authorization/authorization-bootstrap-validation-store.js';
+import type { AuthorizationDiagnosticsHistoryStore } from '../../authorization/authorization-diagnostics-history-store.js';
+import { InMemoryAuthorizationDiagnosticsHistoryStore } from '../../authorization/authorization-diagnostics-history-store.js';
 
 export interface ServiceDependencies {
   readonly resolveUserByEmailUseCase: ResolveUserByEmailUseCase;
@@ -30,8 +34,10 @@ export interface ServiceDependencies {
   readonly validateWorkspaceAuthorizationBootstrapUseCase: ValidateWorkspaceAuthorizationBootstrapUseCase;
   readonly getAuthorizationParityDiagnosticUseCase: GetAuthorizationParityDiagnosticUseCase;
   readonly getAuthorizationParityRuntimeStateUseCase: GetAuthorizationParityRuntimeStateUseCase;
+  readonly getAuthorizationParityHistoryUseCase: GetAuthorizationParityHistoryUseCase;
   readonly revalidateAuthorizationParityUseCase: RevalidateAuthorizationParityUseCase;
   readonly authorizationBootstrapValidationStore: AuthorizationBootstrapValidationStore;
+  readonly authorizationDiagnosticsHistoryStore: AuthorizationDiagnosticsHistoryStore;
 }
 
 export function createServiceDependencies(
@@ -40,8 +46,10 @@ export function createServiceDependencies(
   workspaceReadRepository: WorkspaceReadRepository,
   workspaceMembershipReadRepository: WorkspaceMembershipReadRepository,
   authorizationCatalogReadRepository: AuthorizationCatalogReadRepository,
+  authorizationAuditEventRepository: AuthorizationAuditEventRepository,
 ): ServiceDependencies {
   const authorizationBootstrapValidationStore = new InMemoryAuthorizationBootstrapValidationStore();
+  const authorizationDiagnosticsHistoryStore = new InMemoryAuthorizationDiagnosticsHistoryStore();
 
   const resolveAccessContextUseCase = new ResolveAccessContextUseCase(
     userReadRepository,
@@ -77,10 +85,16 @@ export function createServiceDependencies(
     getAuthorizationParityRuntimeStateUseCase: new GetAuthorizationParityRuntimeStateUseCase(
       authorizationBootstrapValidationStore,
     ),
+    getAuthorizationParityHistoryUseCase: new GetAuthorizationParityHistoryUseCase(
+      authorizationDiagnosticsHistoryStore,
+    ),
     revalidateAuthorizationParityUseCase: new RevalidateAuthorizationParityUseCase(
       authorizationCatalogReadRepository,
       authorizationBootstrapValidationStore,
+      authorizationDiagnosticsHistoryStore,
+      authorizationAuditEventRepository,
     ),
     authorizationBootstrapValidationStore,
+    authorizationDiagnosticsHistoryStore,
   };
 }

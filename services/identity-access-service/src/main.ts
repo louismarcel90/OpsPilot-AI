@@ -1,7 +1,14 @@
+import { randomUUID } from 'node:crypto';
+
 import { createAppConfig } from '@opspilot/config';
 import { createPostgresConnection } from '@opspilot/db';
 
+import type { AuthorizationAuditEvent } from './domain/authorization/authorization-audit-event.js';
+import type { AuthorizationParityDiagnostic } from './domain/authorization/authorization-parity-diagnostic.js';
+
+import { DrizzleAuthorizationAuditEventRepository } from './infrastructure/db/repositories/drizzle-authorization-audit-event-repository.js';
 import { DrizzleAuthorizationCatalogReadRepository } from './application/repositories/drizzle-authorization-catalog-read-repository.js';
+import { DrizzleTenantReadRepository } from './infrastructure/db/repositories/drizzle-tenant-read-repository.js';
 import { DrizzleUserReadRepository } from './infrastructure/db/repositories/drizzle-user-read-repository.js';
 import { DrizzleWorkspaceMembershipReadRepository } from './infrastructure/db/repositories/drizzle-workspace-membership-read-repository.js';
 import { DrizzleWorkspaceReadRepository } from './infrastructure/db/repositories/drizzle-workspace-read-repository.js';
@@ -10,7 +17,6 @@ import { registerProcessSignalHandlers } from './infrastructure/http/server/regi
 import { createServiceDependencies } from './infrastructure/http/runtime/service-dependencies.js';
 import { IdentityAccessServiceRuntime } from './infrastructure/http/runtime/service-runtime.js';
 import { createServiceLogger } from './infrastructure/logging/create-service-logger.js';
-import { DrizzleTenantReadRepository } from './infrastructure/db/repositories/drizzle-tenant-read-repository.js';
 
 function buildBootstrapParityErrorMessage(details: {
   readonly missingPersistedRoles: string[];
@@ -60,6 +66,9 @@ async function bootstrap(): Promise<void> {
   const authorizationCatalogReadRepository = new DrizzleAuthorizationCatalogReadRepository(
     databaseConnection,
   );
+  const authorizationAuditEventRepository = new DrizzleAuthorizationAuditEventRepository(
+    databaseConnection,
+  );
 
   const dependencies = createServiceDependencies(
     userReadRepository,
@@ -67,6 +76,7 @@ async function bootstrap(): Promise<void> {
     workspaceReadRepository,
     workspaceMembershipReadRepository,
     authorizationCatalogReadRepository,
+    authorizationAuditEventRepository,
   );
 
   const bootstrapValidationResult =
@@ -78,12 +88,33 @@ async function bootstrap(): Promise<void> {
     throw new Error(buildBootstrapParityErrorMessage(bootstrapValidationResult.parityReport));
   }
 
+  const bootstrapCheckedAtIso = new Date().toISOString();
+
   dependencies.authorizationBootstrapValidationStore.setDiagnostic({
-    checkedAtIso: new Date().toISOString(),
+    checkedAtIso: bootstrapCheckedAtIso,
     isAligned: bootstrapValidationResult.parityReport.isAligned,
     source: 'bootstrap',
     parityReport: bootstrapValidationResult.parityReport,
   });
+
+  const bootstrapDiagnostic: AuthorizationParityDiagnostic = {
+    checkedAtIso: bootstrapCheckedAtIso,
+    isAligned: bootstrapValidationResult.parityReport.isAligned,
+    source: 'bootstrap',
+    parityReport: bootstrapValidationResult.parityReport,
+  };
+
+  const bootstrapAuditEvent: AuthorizationAuditEvent = {
+    eventId: randomUUID(),
+    eventType: 'bootstrap_validation_completed',
+    createdAt: new Date(bootstrapCheckedAtIso),
+    source: 'bootstrap',
+    isAligned: bootstrapValidationResult.parityReport.isAligned,
+    parityReport: bootstrapValidationResult.parityReport,
+  };
+
+  dependencies.authorizationDiagnosticsHistoryStore.append(bootstrapDiagnostic);
+  await authorizationAuditEventRepository.append(bootstrapAuditEvent);
 
   logger.info('Workspace authorization catalog parity check passed', {
     serviceName: config.serviceName,

@@ -18,7 +18,7 @@ import { writeRouteNotFoundResponse } from '../responses/write-route-not-found-r
 import { writeUnexpectedErrorResponse } from '../responses/write-unexpected-error-response.js';
 import type { ServiceDependencies } from '../runtime/service-dependencies.js';
 import { handleGetWorkspaceAuthorizationCatalogRequest } from '../../../presentation/http/handlers/handle-get-workspace-authorization-catalog-request.js';
-import { handleGetAuthorizationParityDiagnosticRequest } from '../../../presentation/http/handlers/handle-get-authorization-parity-diagnostic-request.js';
+import { handleGetAuthorizationParityHistoryRequest } from '../../../presentation/http/handlers/handle-get-authorization-parity-history-request.js';
 import { handleRevalidateAuthorizationParityRequest } from '../../../presentation/http/handlers/handle-revalidate-authorization-parity-request.js';
 
 function resolvePath(request: IncomingMessage): string {
@@ -144,14 +144,14 @@ export function createRouter(
         return;
       }
 
-      if (method === 'GET' && path === '/diagnostics/authorization-parity') {
-        await handleGetAuthorizationParityDiagnosticRequest(
+      if (method === 'GET' && path === '/diagnostics/authorization-parity/history') {
+        await handleGetAuthorizationParityHistoryRequest(
           request,
           response,
           logger,
           correlationId,
           dependencies.enforceProtectedWorkspaceRequestUseCase,
-          dependencies.getAuthorizationParityRuntimeStateUseCase,
+          dependencies.getAuthorizationParityHistoryUseCase,
         );
         return;
       }

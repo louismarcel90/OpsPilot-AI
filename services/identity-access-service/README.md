@@ -24,6 +24,9 @@ At this stage, the service provides:
 - manual runtime revalidation hook for authorization parity
 - protected diagnostics endpoints with differentiated read and revalidation access
 - stale-state signaling for runtime authorization parity diagnostics
+- persisted append-only authorization diagnostics event history foundation
+
+The authorization parity history endpoint now reads persisted diagnostic events from durable storage.
 
 ## Bootstrap Safety Checks
 

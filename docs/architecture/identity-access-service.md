@@ -197,3 +197,14 @@ The service now supports:
 - freshness signaling to identify stale runtime state
 
 This improves the operational credibility of the diagnostics layer and prepares it for future control-plane usage.
+
+## Current Persisted Authorization Diagnostics History
+
+The service now persists key authorization parity events in durable append-only storage.
+
+This includes:
+
+- bootstrap validation completion events
+- manual revalidation completion events
+
+This is the first durable storage foundation for future authorization investigation and audit capabilities.

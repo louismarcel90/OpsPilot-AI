@@ -1,3 +1,4 @@
+import { authorizationAuditEventsTable } from './schema/authorization-audit-events.table.js';
 import { membershipsTable } from './schema/memberships.table.js';
 import { tenantsTable } from './schema/tenants.table.js';
 import { usersTable } from './schema/users.table.js';
@@ -14,4 +15,5 @@ export const databaseSchema = {
   workspaceRoles: workspaceRolesTable,
   workspaceScopes: workspaceScopesTable,
   workspaceRoleScopes: workspaceRoleScopesTable,
+  authorizationAuditEvents: authorizationAuditEventsTable,
 };
