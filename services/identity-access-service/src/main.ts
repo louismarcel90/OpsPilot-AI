@@ -89,8 +89,11 @@ async function bootstrap(): Promise<void> {
   }
 
   const bootstrapCheckedAtIso = new Date().toISOString();
+  const bootstrapCorrelationId = randomUUID();
+  const bootstrapDiagnosticId = randomUUID();
 
   dependencies.authorizationBootstrapValidationStore.setDiagnostic({
+    diagnosticId: bootstrapDiagnosticId,
     checkedAtIso: bootstrapCheckedAtIso,
     isAligned: bootstrapValidationResult.parityReport.isAligned,
     source: 'bootstrap',
@@ -98,6 +101,7 @@ async function bootstrap(): Promise<void> {
   });
 
   const bootstrapDiagnostic: AuthorizationParityDiagnostic = {
+    diagnosticId: bootstrapDiagnosticId,
     checkedAtIso: bootstrapCheckedAtIso,
     isAligned: bootstrapValidationResult.parityReport.isAligned,
     source: 'bootstrap',
@@ -109,6 +113,8 @@ async function bootstrap(): Promise<void> {
     eventType: 'bootstrap_validation_completed',
     createdAt: new Date(bootstrapCheckedAtIso),
     source: 'bootstrap',
+    correlationId: bootstrapCorrelationId,
+    diagnosticId: bootstrapDiagnostic.diagnosticId,
     isAligned: bootstrapValidationResult.parityReport.isAligned,
     parityReport: bootstrapValidationResult.parityReport,
   };
@@ -119,6 +125,8 @@ async function bootstrap(): Promise<void> {
   logger.info('Workspace authorization catalog parity check passed', {
     serviceName: config.serviceName,
     operationName: 'bootstrap',
+    correlationId: bootstrapCorrelationId,
+    diagnosticId: bootstrapDiagnostic.diagnosticId,
   });
 
   const server = createHttpServer(config, logger, databaseConnection, dependencies);

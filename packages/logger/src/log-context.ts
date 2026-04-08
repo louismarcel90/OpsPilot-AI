@@ -10,4 +10,5 @@ export interface LogContext {
   readonly httpStatusCode?: number;
   readonly signalName?: string;
   readonly errorMessage?: string;
+  readonly diagnosticId?: string;
 }

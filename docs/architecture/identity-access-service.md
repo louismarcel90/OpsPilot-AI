@@ -208,3 +208,16 @@ This includes:
 - manual revalidation completion events
 
 This is the first durable storage foundation for future authorization investigation and audit capabilities.
+
+## Current Authorization Correlation Foundation
+
+Authorization diagnostics and persisted audit events now include explicit correlation identifiers.
+
+This introduces a first traceable linkage between:
+
+- runtime diagnostic state
+- persisted authorization audit events
+- request-triggered manual revalidations
+- bootstrap validation flows
+
+This is the first structural step toward a broader investigation graph across requests, decisions, diagnostics, and audit history.

@@ -17,6 +17,9 @@ export interface AuthorizationAuditEvent {
   readonly eventId: string;
   readonly eventType: AuthorizationAuditEventType;
   readonly source: AuthorizationAuditEventSource;
+  readonly correlationId: string;
+  readonly requestId?: string;
+  readonly diagnosticId: string;
   readonly isAligned: boolean;
   readonly createdAt: Date;
   readonly parityReport: AuthorizationBootstrapParityReport;

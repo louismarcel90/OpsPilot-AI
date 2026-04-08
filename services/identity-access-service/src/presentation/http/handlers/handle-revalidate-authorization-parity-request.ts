@@ -60,13 +60,17 @@ export async function handleRevalidateAuthorizationParityRequest(
     return;
   }
 
-  const diagnostic = await revalidateAuthorizationParityUseCase.execute();
+  const diagnostic = await revalidateAuthorizationParityUseCase.execute({
+    correlationId,
+    requestId: correlationId,
+  });
 
   logger.info('Revalidated authorization parity diagnostic', {
     correlationId,
     operationName: 'handleRevalidateAuthorizationParityRequest',
     httpStatusCode: 200,
     httpPath: '/diagnostics/authorization-parity/revalidate',
+    diagnosticId: diagnostic.diagnosticId,
   });
 
   const payload: {

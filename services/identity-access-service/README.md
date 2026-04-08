@@ -22,11 +22,15 @@ At this stage, the service provides:
 - startup authorization catalog parity validation between runtime and persisted catalog
 - visible authorization parity diagnostics endpoint
 - manual runtime revalidation hook for authorization parity
-- protected diagnostics endpoints with differentiated read and revalidation access
+- protected diagnostics endpoints with differentiated
+- read and revalidation access
 - stale-state signaling for runtime authorization parity diagnostics
 - persisted append-only authorization diagnostics event history foundation
+- correlation-ready authorization diagnostics and audit events
 
 The authorization parity history endpoint now reads persisted diagnostic events from durable storage.
+
+Authorization diagnostics and persisted audit events now include explicit correlation identifiers and diagnostic identifiers to support future investigation flows.
 
 ## Bootstrap Safety Checks
 
