@@ -221,3 +221,16 @@ This introduces a first traceable linkage between:
 - bootstrap validation flows
 
 This is the first structural step toward a broader investigation graph across requests, decisions, diagnostics, and audit history.
+
+## Current Investigation-Oriented Authorization History Views
+
+The service now supports filtered authorization audit history queries.
+
+Current history filters include:
+
+- event type
+- source
+- correlation identifier
+- diagnostic identifier
+
+This improves investigation readiness by allowing operators to narrow history views to a targeted authorization flow or diagnostic lifecycle.

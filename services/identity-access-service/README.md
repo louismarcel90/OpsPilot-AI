@@ -27,6 +27,7 @@ At this stage, the service provides:
 - stale-state signaling for runtime authorization parity diagnostics
 - persisted append-only authorization diagnostics event history foundation
 - correlation-ready authorization diagnostics and audit events
+- filtered investigation-oriented history views for authorization audit events
 
 The authorization parity history endpoint now reads persisted diagnostic events from durable storage.
 
@@ -72,9 +73,9 @@ Checks whether a resolved actor has a specific workspace scope derived from the 
 
 A demonstration protected route that requires actor context headers and the `workspace.admin` scope.
 
-### `GET /diagnostics/authorization-parity`
+### `GET /diagnostics/authorization-parity/history`
 
-Returns the latest authorization parity runtime state.
+Returns persisted authorization parity audit events using investigation-oriented filters.
 
 Required headers:
 
@@ -85,6 +86,14 @@ Required headers:
 Required capability:
 
 - `workspace.members.read`
+
+Supported query parameters:
+
+- `limit`
+- `eventType`
+- `source`
+- `correlationId`
+- `diagnosticId`
 
 ## Actor Context Headers
 

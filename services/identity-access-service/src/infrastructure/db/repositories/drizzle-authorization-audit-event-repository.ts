@@ -1,10 +1,11 @@
-import { desc } from 'drizzle-orm';
+import { and, desc, eq } from 'drizzle-orm';
 
 import type { PostgresConnection } from '@opspilot/db';
 import { authorizationAuditEventsTable } from '@opspilot/db';
 
 import type { AuthorizationAuditEventRepository } from '../../../application/repositories/authorization-audit-event-repository.js';
 import type { AuthorizationAuditEvent } from '../../../domain/authorization/authorization-audit-event.js';
+import type { AuthorizationAuditEventHistoryFilter } from '../../../domain/authorization/authorization-audit-event-history-filter.js';
 
 export class DrizzleAuthorizationAuditEventRepository implements AuthorizationAuditEventRepository {
   public constructor(private readonly connection: PostgresConnection) {}
@@ -23,7 +24,24 @@ export class DrizzleAuthorizationAuditEventRepository implements AuthorizationAu
     });
   }
 
-  public async listRecent(limit: number): Promise<AuthorizationAuditEvent[]> {
+  public async listRecent(
+    filter: AuthorizationAuditEventHistoryFilter,
+  ): Promise<AuthorizationAuditEvent[]> {
+    const conditions = [
+      filter.eventType !== undefined
+        ? eq(authorizationAuditEventsTable.eventType, filter.eventType)
+        : undefined,
+      filter.source !== undefined
+        ? eq(authorizationAuditEventsTable.source, filter.source)
+        : undefined,
+      filter.correlationId !== undefined
+        ? eq(authorizationAuditEventsTable.correlationId, filter.correlationId)
+        : undefined,
+      filter.diagnosticId !== undefined
+        ? eq(authorizationAuditEventsTable.diagnosticId, filter.diagnosticId)
+        : undefined,
+    ].filter((value) => value !== undefined);
+
     const rows = await this.connection.db
       .select({
         eventId: authorizationAuditEventsTable.eventId,
@@ -37,8 +55,9 @@ export class DrizzleAuthorizationAuditEventRepository implements AuthorizationAu
         parityReport: authorizationAuditEventsTable.parityReport,
       })
       .from(authorizationAuditEventsTable)
+      .where(conditions.length > 0 ? and(...conditions) : undefined)
       .orderBy(desc(authorizationAuditEventsTable.createdAt))
-      .limit(limit);
+      .limit(filter.limit);
 
     return rows.map((row) => ({
       eventId: row.eventId,
