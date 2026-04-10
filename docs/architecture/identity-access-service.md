@@ -243,3 +243,12 @@ The service now supports direct investigation-oriented reads using:
 - correlation identifier lookup
 
 This makes it possible to move from broad history exploration to focused inspection of a specific diagnostic lifecycle or a specific correlated authorization flow.
+
+## Current Stitched Investigation Views
+
+The service now supports stitched investigation-oriented views for:
+
+- a specific diagnostic identifier
+- a specific correlation identifier
+
+These views aggregate persisted audit events and selected runtime context into a single investigation response, improving operator usability and investigation speed.

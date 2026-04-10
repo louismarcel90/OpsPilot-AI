@@ -11,6 +11,8 @@ import { GetAuthorizationParityByCorrelationIdUseCase } from '../../../applicati
 import { GetAuthorizationParityByDiagnosticIdUseCase } from '../../../application/use-cases/get-authorization-parity-by-diagnostic-id.use-case.js';
 import { GetAuthorizationParityDiagnosticUseCase } from '../../../application/use-cases/get-authorization-parity-diagnostic.use-case.js';
 import { GetAuthorizationParityHistoryUseCase } from '../../../application/use-cases/get-authorization-parity-history.use-case.js';
+import { GetAuthorizationParityInvestigationByCorrelationIdUseCase } from '../../../application/use-cases/get-authorization-parity-investigation-by-correlation-id.use-case.js';
+import { GetAuthorizationParityInvestigationByDiagnosticIdUseCase } from '../../../application/use-cases/get-authorization-parity-investigation-by-diagnostic-id.use-case.js';
 import { GetAuthorizationParityRuntimeStateUseCase } from '../../../application/use-cases/get-authorization-parity-runtime-state.use-case.js';
 import { GetWorkspaceAuthorizationCatalogUseCase } from '../../../application/use-cases/get-workspace-authorization-catalog.use-case.js';
 import { RevalidateAuthorizationParityUseCase } from '../../../application/use-cases/revalidate-authorization-parity.use-case.js';
@@ -39,6 +41,8 @@ export interface ServiceDependencies {
   readonly getAuthorizationParityHistoryUseCase: GetAuthorizationParityHistoryUseCase;
   readonly getAuthorizationParityByDiagnosticIdUseCase: GetAuthorizationParityByDiagnosticIdUseCase;
   readonly getAuthorizationParityByCorrelationIdUseCase: GetAuthorizationParityByCorrelationIdUseCase;
+  readonly getAuthorizationParityInvestigationByDiagnosticIdUseCase: GetAuthorizationParityInvestigationByDiagnosticIdUseCase;
+  readonly getAuthorizationParityInvestigationByCorrelationIdUseCase: GetAuthorizationParityInvestigationByCorrelationIdUseCase;
   readonly revalidateAuthorizationParityUseCase: RevalidateAuthorizationParityUseCase;
   readonly authorizationBootstrapValidationStore: AuthorizationBootstrapValidationStore;
   readonly authorizationDiagnosticsHistoryStore: AuthorizationDiagnosticsHistoryStore;
@@ -66,6 +70,16 @@ export function createServiceDependencies(
     resolveAccessContextUseCase,
   );
 
+  const getAuthorizationParityRuntimeStateUseCase = new GetAuthorizationParityRuntimeStateUseCase(
+    authorizationBootstrapValidationStore,
+  );
+
+  const getAuthorizationParityByDiagnosticIdUseCase =
+    new GetAuthorizationParityByDiagnosticIdUseCase(authorizationAuditEventRepository);
+
+  const getAuthorizationParityByCorrelationIdUseCase =
+    new GetAuthorizationParityByCorrelationIdUseCase(authorizationAuditEventRepository);
+
   return {
     resolveUserByEmailUseCase: new ResolveUserByEmailUseCase(userReadRepository),
     resolveTenantBySlugUseCase: new ResolveTenantBySlugUseCase(tenantReadRepository),
@@ -86,18 +100,22 @@ export function createServiceDependencies(
     getAuthorizationParityDiagnosticUseCase: new GetAuthorizationParityDiagnosticUseCase(
       authorizationBootstrapValidationStore,
     ),
-    getAuthorizationParityRuntimeStateUseCase: new GetAuthorizationParityRuntimeStateUseCase(
-      authorizationBootstrapValidationStore,
-    ),
+    getAuthorizationParityRuntimeStateUseCase,
     getAuthorizationParityHistoryUseCase: new GetAuthorizationParityHistoryUseCase(
       authorizationDiagnosticsHistoryStore,
     ),
-    getAuthorizationParityByDiagnosticIdUseCase: new GetAuthorizationParityByDiagnosticIdUseCase(
-      authorizationAuditEventRepository,
-    ),
-    getAuthorizationParityByCorrelationIdUseCase: new GetAuthorizationParityByCorrelationIdUseCase(
-      authorizationAuditEventRepository,
-    ),
+    getAuthorizationParityByDiagnosticIdUseCase,
+    getAuthorizationParityByCorrelationIdUseCase,
+    getAuthorizationParityInvestigationByDiagnosticIdUseCase:
+      new GetAuthorizationParityInvestigationByDiagnosticIdUseCase(
+        getAuthorizationParityByDiagnosticIdUseCase,
+        getAuthorizationParityRuntimeStateUseCase,
+        authorizationBootstrapValidationStore,
+      ),
+    getAuthorizationParityInvestigationByCorrelationIdUseCase:
+      new GetAuthorizationParityInvestigationByCorrelationIdUseCase(
+        getAuthorizationParityByCorrelationIdUseCase,
+      ),
     revalidateAuthorizationParityUseCase: new RevalidateAuthorizationParityUseCase(
       authorizationCatalogReadRepository,
       authorizationBootstrapValidationStore,

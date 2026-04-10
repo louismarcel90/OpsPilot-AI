@@ -29,6 +29,7 @@ At this stage, the service provides:
 - correlation-ready authorization diagnostics and audit events
 - filtered investigation-oriented history views for authorization audit events
 - direct investigation lookup endpoints for diagnostic and correlation identifiers
+- stitched investigation views for correlated authorization diagnostic flows
 
 The authorization parity history endpoint now reads persisted diagnostic events from durable storage.
 
@@ -141,6 +142,34 @@ Required capability:
 ### `GET /diagnostics/authorization-parity/by-correlation-id?correlationId=...`
 
 Returns persisted authorization audit events associated with a specific correlation identifier.
+
+Required headers:
+
+- `x-actor-email`
+- `x-tenant-slug`
+- `x-workspace-slug`
+
+Required capability:
+
+- `workspace.members.read`
+
+### `GET /diagnostics/authorization-parity/investigation/by-diagnostic-id?diagnosticId=...`
+
+Returns an aggregated investigation view for a specific diagnostic identifier.
+
+Required headers:
+
+- `x-actor-email`
+- `x-tenant-slug`
+- `x-workspace-slug`
+
+Required capability:
+
+- `workspace.members.read`
+
+### `GET /diagnostics/authorization-parity/investigation/by-correlation-id?correlationId=...`
+
+Returns an aggregated investigation view for a specific correlation identifier.
 
 Required headers:
 

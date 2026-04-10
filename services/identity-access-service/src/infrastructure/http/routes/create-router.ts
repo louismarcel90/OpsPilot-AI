@@ -22,6 +22,8 @@ import { handleGetAuthorizationParityHistoryRequest } from '../../../presentatio
 import { handleRevalidateAuthorizationParityRequest } from '../../../presentation/http/handlers/handle-revalidate-authorization-parity-request.js';
 import { handleGetAuthorizationParityByCorrelationIdRequest } from '../../../presentation/http/handlers/handle-get-authorization-parity-by-correlation-id-request.js';
 import { handleGetAuthorizationParityByDiagnosticIdRequest } from '../../../presentation/http/handlers/handle-get-authorization-parity-by-diagnostic-id-request.js';
+import { handleGetAuthorizationParityInvestigationByCorrelationIdRequest } from '../../../presentation/http/handlers/handle-get-authorization-parity-investigation-by-correlation-id-request.js';
+import { handleGetAuthorizationParityInvestigationByDiagnosticIdRequest } from '../../../presentation/http/handlers/handle-get-authorization-parity-investigation-by-diagnostic-id-request.js';
 
 function resolvePath(request: IncomingMessage): string {
   const requestUrl = request.url ?? '/';
@@ -190,6 +192,36 @@ export function createRouter(
           correlationId,
           dependencies.enforceProtectedWorkspaceRequestUseCase,
           dependencies.getAuthorizationParityByCorrelationIdUseCase,
+        );
+        return;
+      }
+
+      if (
+        method === 'GET' &&
+        path === '/diagnostics/authorization-parity/investigation/by-diagnostic-id'
+      ) {
+        await handleGetAuthorizationParityInvestigationByDiagnosticIdRequest(
+          request,
+          response,
+          logger,
+          correlationId,
+          dependencies.enforceProtectedWorkspaceRequestUseCase,
+          dependencies.getAuthorizationParityInvestigationByDiagnosticIdUseCase,
+        );
+        return;
+      }
+
+      if (
+        method === 'GET' &&
+        path === '/diagnostics/authorization-parity/investigation/by-correlation-id'
+      ) {
+        await handleGetAuthorizationParityInvestigationByCorrelationIdRequest(
+          request,
+          response,
+          logger,
+          correlationId,
+          dependencies.enforceProtectedWorkspaceRequestUseCase,
+          dependencies.getAuthorizationParityInvestigationByCorrelationIdUseCase,
         );
         return;
       }
