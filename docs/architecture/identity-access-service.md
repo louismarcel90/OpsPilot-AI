@@ -234,3 +234,12 @@ Current history filters include:
 - diagnostic identifier
 
 This improves investigation readiness by allowing operators to narrow history views to a targeted authorization flow or diagnostic lifecycle.
+
+## Current Focused Investigation Reads
+
+The service now supports direct investigation-oriented reads using:
+
+- diagnostic identifier lookup
+- correlation identifier lookup
+
+This makes it possible to move from broad history exploration to focused inspection of a specific diagnostic lifecycle or a specific correlated authorization flow.

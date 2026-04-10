@@ -20,6 +20,8 @@ import type { ServiceDependencies } from '../runtime/service-dependencies.js';
 import { handleGetWorkspaceAuthorizationCatalogRequest } from '../../../presentation/http/handlers/handle-get-workspace-authorization-catalog-request.js';
 import { handleGetAuthorizationParityHistoryRequest } from '../../../presentation/http/handlers/handle-get-authorization-parity-history-request.js';
 import { handleRevalidateAuthorizationParityRequest } from '../../../presentation/http/handlers/handle-revalidate-authorization-parity-request.js';
+import { handleGetAuthorizationParityByCorrelationIdRequest } from '../../../presentation/http/handlers/handle-get-authorization-parity-by-correlation-id-request.js';
+import { handleGetAuthorizationParityByDiagnosticIdRequest } from '../../../presentation/http/handlers/handle-get-authorization-parity-by-diagnostic-id-request.js';
 
 function resolvePath(request: IncomingMessage): string {
   const requestUrl = request.url ?? '/';
@@ -164,6 +166,30 @@ export function createRouter(
           correlationId,
           dependencies.enforceProtectedWorkspaceRequestUseCase,
           dependencies.revalidateAuthorizationParityUseCase,
+        );
+        return;
+      }
+
+      if (method === 'GET' && path === '/diagnostics/authorization-parity/by-diagnostic-id') {
+        await handleGetAuthorizationParityByDiagnosticIdRequest(
+          request,
+          response,
+          logger,
+          correlationId,
+          dependencies.enforceProtectedWorkspaceRequestUseCase,
+          dependencies.getAuthorizationParityByDiagnosticIdUseCase,
+        );
+        return;
+      }
+
+      if (method === 'GET' && path === '/diagnostics/authorization-parity/by-correlation-id') {
+        await handleGetAuthorizationParityByCorrelationIdRequest(
+          request,
+          response,
+          logger,
+          correlationId,
+          dependencies.enforceProtectedWorkspaceRequestUseCase,
+          dependencies.getAuthorizationParityByCorrelationIdUseCase,
         );
         return;
       }

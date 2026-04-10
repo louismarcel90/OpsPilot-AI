@@ -28,6 +28,7 @@ At this stage, the service provides:
 - persisted append-only authorization diagnostics event history foundation
 - correlation-ready authorization diagnostics and audit events
 - filtered investigation-oriented history views for authorization audit events
+- direct investigation lookup endpoints for diagnostic and correlation identifiers
 
 The authorization parity history endpoint now reads persisted diagnostic events from durable storage.
 
@@ -122,6 +123,34 @@ Required headers:
 Required capability:
 
 - `workspace.admin`
+
+### `GET /diagnostics/authorization-parity/by-diagnostic-id?diagnosticId=...`
+
+Returns persisted authorization audit events associated with a specific diagnostic identifier.
+
+Required headers:
+
+- `x-actor-email`
+- `x-tenant-slug`
+- `x-workspace-slug`
+
+Required capability:
+
+- `workspace.members.read`
+
+### `GET /diagnostics/authorization-parity/by-correlation-id?correlationId=...`
+
+Returns persisted authorization audit events associated with a specific correlation identifier.
+
+Required headers:
+
+- `x-actor-email`
+- `x-tenant-slug`
+- `x-workspace-slug`
+
+Required capability:
+
+- `workspace.members.read`
 
 ## Local Development
 
