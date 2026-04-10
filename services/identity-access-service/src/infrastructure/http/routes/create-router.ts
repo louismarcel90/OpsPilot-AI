@@ -26,6 +26,9 @@ import { handleGetAuthorizationParityInvestigationByCorrelationIdRequest } from 
 import { handleGetAuthorizationParityInvestigationByDiagnosticIdRequest } from '../../../presentation/http/handlers/handle-get-authorization-parity-investigation-by-diagnostic-id-request.js';
 import { handleGetAuthorizationParityTimelineByCorrelationIdRequest } from '../../../presentation/http/handlers/handle-get-authorization-parity-timeline-by-correlation-id-request.js';
 import { handleGetAuthorizationParityTimelineByDiagnosticIdRequest } from '../../../presentation/http/handlers/handle-get-authorization-parity-timeline-by-diagnostic-id-request.js';
+import { handleGetAssistantBySlugRequest } from '../../../presentation/http/handlers/handle-get-assistant-by-slug-request.js';
+import { handleGetAssistantVersionsRequest } from '../../../presentation/http/handlers/handle-get-assistant-versions-request.js';
+import { handleListAssistantsRequest } from '../../../presentation/http/handlers/handle-list-assistants-request.js';
 
 function resolvePath(request: IncomingMessage): string {
   const requestUrl = request.url ?? '/';
@@ -254,6 +257,38 @@ export function createRouter(
           correlationId,
           dependencies.enforceProtectedWorkspaceRequestUseCase,
           dependencies.getAuthorizationParityTimelineByCorrelationIdUseCase,
+        );
+        return;
+      }
+
+      if (method === 'GET' && path === '/assistants') {
+        await handleListAssistantsRequest(
+          response,
+          logger,
+          correlationId,
+          dependencies.listAssistantsUseCase,
+        );
+        return;
+      }
+
+      if (method === 'GET' && path === '/assistants/by-slug') {
+        await handleGetAssistantBySlugRequest(
+          request,
+          response,
+          logger,
+          correlationId,
+          dependencies.getAssistantBySlugUseCase,
+        );
+        return;
+      }
+
+      if (method === 'GET' && path === '/assistants/versions') {
+        await handleGetAssistantVersionsRequest(
+          request,
+          response,
+          logger,
+          correlationId,
+          dependencies.getAssistantVersionsUseCase,
         );
         return;
       }

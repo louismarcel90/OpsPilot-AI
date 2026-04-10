@@ -258,3 +258,14 @@ These views aggregate persisted audit events and selected runtime context into a
 The service now supports timeline-oriented investigation views for authorization diagnostics and correlated flows.
 
 These views transform persisted audit events into operator-friendly chronology entries, improving readability and making future UI investigation tooling easier to build.
+
+## Current Assistant Definition and Version Foundation
+
+The service now includes persisted assistant definitions and assistant versions.
+
+This introduces a core separation between:
+
+- a stable assistant identity
+- a versioned assistant configuration
+
+This is the first structural step toward published assistant configuration management.

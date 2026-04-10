@@ -29,6 +29,13 @@
       "when": 1775601401901,
       "tag": "0003_outstanding_paper_doll",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1775849087116,
+      "tag": "0004_aspiring_the_fallen",
+      "breakpoints": true
     }
   ]
 }

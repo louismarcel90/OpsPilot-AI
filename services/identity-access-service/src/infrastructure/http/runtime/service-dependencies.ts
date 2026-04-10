@@ -1,3 +1,5 @@
+import type { AssistantDefinitionReadRepository } from '../../../application/repositories/assistant-definition-read-repository.js';
+import type { AssistantVersionReadRepository } from '../../../application/repositories/assistant-version-read-repository.js';
 import type { AuthorizationCatalogReadRepository } from '../../../application/repositories/authorization-catalog-read-repository.js';
 import type { AuthorizationAuditEventRepository } from '../../../application/repositories/authorization-audit-event-repository.js';
 import type { TenantReadRepository } from '../../../application/repositories/tenant-read-repository.js';
@@ -7,6 +9,8 @@ import type { WorkspaceReadRepository } from '../../../application/repositories/
 import { CheckWorkspaceAccessUseCase } from '../../../application/use-cases/check-workspace-access.use-case.js';
 import { CheckWorkspaceCapabilityUseCase } from '../../../application/use-cases/check-workspace-capability.use-case.js';
 import { EnforceProtectedWorkspaceRequestUseCase } from '../../../application/use-cases/enforce-protected-workspace-request.use-case.js';
+import { GetAssistantBySlugUseCase } from '../../../application/use-cases/get-assistant-by-slug.use-case.js';
+import { GetAssistantVersionsUseCase } from '../../../application/use-cases/get-assistant-versions.use-case.js';
 import { GetAuthorizationParityByCorrelationIdUseCase } from '../../../application/use-cases/get-authorization-parity-by-correlation-id.use-case.js';
 import { GetAuthorizationParityByDiagnosticIdUseCase } from '../../../application/use-cases/get-authorization-parity-by-diagnostic-id.use-case.js';
 import { GetAuthorizationParityDiagnosticUseCase } from '../../../application/use-cases/get-authorization-parity-diagnostic.use-case.js';
@@ -17,6 +21,7 @@ import { GetAuthorizationParityRuntimeStateUseCase } from '../../../application/
 import { GetAuthorizationParityTimelineByCorrelationIdUseCase } from '../../../application/use-cases/get-authorization-parity-timeline-by-correlation-id.use-case.js';
 import { GetAuthorizationParityTimelineByDiagnosticIdUseCase } from '../../../application/use-cases/get-authorization-parity-timeline-by-diagnostic-id.use-case.js';
 import { GetWorkspaceAuthorizationCatalogUseCase } from '../../../application/use-cases/get-workspace-authorization-catalog.use-case.js';
+import { ListAssistantsUseCase } from '../../../application/use-cases/list-assistants.use-case.js';
 import { RevalidateAuthorizationParityUseCase } from '../../../application/use-cases/revalidate-authorization-parity.use-case.js';
 import { ResolveAccessContextUseCase } from '../../../application/use-cases/resolve-access-context.use-case.js';
 import { ResolveTenantBySlugUseCase } from '../../../application/use-cases/resolve-tenant-by-slug.use-case.js';
@@ -36,6 +41,9 @@ export interface ServiceDependencies {
   readonly checkWorkspaceAccessUseCase: CheckWorkspaceAccessUseCase;
   readonly checkWorkspaceCapabilityUseCase: CheckWorkspaceCapabilityUseCase;
   readonly enforceProtectedWorkspaceRequestUseCase: EnforceProtectedWorkspaceRequestUseCase;
+  readonly listAssistantsUseCase: ListAssistantsUseCase;
+  readonly getAssistantBySlugUseCase: GetAssistantBySlugUseCase;
+  readonly getAssistantVersionsUseCase: GetAssistantVersionsUseCase;
   readonly getWorkspaceAuthorizationCatalogUseCase: GetWorkspaceAuthorizationCatalogUseCase;
   readonly validateWorkspaceAuthorizationBootstrapUseCase: ValidateWorkspaceAuthorizationBootstrapUseCase;
   readonly getAuthorizationParityDiagnosticUseCase: GetAuthorizationParityDiagnosticUseCase;
@@ -59,6 +67,8 @@ export function createServiceDependencies(
   workspaceMembershipReadRepository: WorkspaceMembershipReadRepository,
   authorizationCatalogReadRepository: AuthorizationCatalogReadRepository,
   authorizationAuditEventRepository: AuthorizationAuditEventRepository,
+  assistantDefinitionReadRepository: AssistantDefinitionReadRepository,
+  assistantVersionReadRepository: AssistantVersionReadRepository,
 ): ServiceDependencies {
   const authorizationBootstrapValidationStore = new InMemoryAuthorizationBootstrapValidationStore();
   const authorizationDiagnosticsHistoryStore = new InMemoryAuthorizationDiagnosticsHistoryStore();
@@ -96,6 +106,9 @@ export function createServiceDependencies(
     enforceProtectedWorkspaceRequestUseCase: new EnforceProtectedWorkspaceRequestUseCase(
       checkWorkspaceCapabilityUseCase,
     ),
+    listAssistantsUseCase: new ListAssistantsUseCase(assistantDefinitionReadRepository),
+    getAssistantBySlugUseCase: new GetAssistantBySlugUseCase(assistantDefinitionReadRepository),
+    getAssistantVersionsUseCase: new GetAssistantVersionsUseCase(assistantVersionReadRepository),
     getWorkspaceAuthorizationCatalogUseCase: new GetWorkspaceAuthorizationCatalogUseCase(
       authorizationCatalogReadRepository,
     ),

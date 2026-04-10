@@ -6,6 +6,8 @@ import { createPostgresConnection } from '@opspilot/db';
 import type { AuthorizationAuditEvent } from './domain/authorization/authorization-audit-event.js';
 import type { AuthorizationParityDiagnostic } from './domain/authorization/authorization-parity-diagnostic.js';
 
+import { DrizzleAssistantDefinitionReadRepository } from './infrastructure/db/repositories/drizzle-assistant-definition-read-repository.js';
+import { DrizzleAssistantVersionReadRepository } from './infrastructure/db/repositories/drizzle-assistant-version-read-repository.js';
 import { DrizzleAuthorizationAuditEventRepository } from './infrastructure/db/repositories/drizzle-authorization-audit-event-repository.js';
 import { DrizzleAuthorizationCatalogReadRepository } from './application/repositories/drizzle-authorization-catalog-read-repository.js';
 import { DrizzleTenantReadRepository } from './infrastructure/db/repositories/drizzle-tenant-read-repository.js';
@@ -69,6 +71,12 @@ async function bootstrap(): Promise<void> {
   const authorizationAuditEventRepository = new DrizzleAuthorizationAuditEventRepository(
     databaseConnection,
   );
+  const assistantDefinitionReadRepository = new DrizzleAssistantDefinitionReadRepository(
+    databaseConnection,
+  );
+  const assistantVersionReadRepository = new DrizzleAssistantVersionReadRepository(
+    databaseConnection,
+  );
 
   const dependencies = createServiceDependencies(
     userReadRepository,
@@ -77,6 +85,8 @@ async function bootstrap(): Promise<void> {
     workspaceMembershipReadRepository,
     authorizationCatalogReadRepository,
     authorizationAuditEventRepository,
+    assistantDefinitionReadRepository,
+    assistantVersionReadRepository,
   );
 
   const bootstrapValidationResult =

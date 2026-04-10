@@ -31,6 +31,7 @@ At this stage, the service provides:
 - direct investigation lookup endpoints for diagnostic and correlation identifiers
 - stitched investigation views for correlated authorization diagnostic flows
 - operator-friendly timeline views for authorization investigations
+- assistant definition and assistant version persistence foundation
 
 The authorization parity history endpoint now reads persisted diagnostic events from durable storage.
 
@@ -209,6 +210,18 @@ Required headers:
 Required capability:
 
 - `workspace.members.read`
+
+### `GET /assistants`
+
+Returns all assistant definitions currently stored in the service.
+
+### `GET /assistants/by-slug?slug=...`
+
+Returns a single assistant definition by slug.
+
+### `GET /assistants/versions?assistantId=...`
+
+Returns all versions for a specific assistant definition.
 
 ## Local Development
 

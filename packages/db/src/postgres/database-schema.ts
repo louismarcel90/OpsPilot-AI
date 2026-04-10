@@ -1,3 +1,5 @@
+import { assistantDefinitionsTable } from './schema/assistant-definitions.table.js';
+import { assistantVersionsTable } from './schema/assistant-versions.table.js';
 import { authorizationAuditEventsTable } from './schema/authorization-audit-events.table.js';
 import { membershipsTable } from './schema/memberships.table.js';
 import { tenantsTable } from './schema/tenants.table.js';
@@ -16,4 +18,6 @@ export const databaseSchema = {
   workspaceScopes: workspaceScopesTable,
   workspaceRoleScopes: workspaceRoleScopesTable,
   authorizationAuditEvents: authorizationAuditEventsTable,
+  assistantDefinitions: assistantDefinitionsTable,
+  assistantVersions: assistantVersionsTable,
 };
