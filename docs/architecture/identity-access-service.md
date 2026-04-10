@@ -252,3 +252,9 @@ The service now supports stitched investigation-oriented views for:
 - a specific correlation identifier
 
 These views aggregate persisted audit events and selected runtime context into a single investigation response, improving operator usability and investigation speed.
+
+## Current Investigation Timeline Views
+
+The service now supports timeline-oriented investigation views for authorization diagnostics and correlated flows.
+
+These views transform persisted audit events into operator-friendly chronology entries, improving readability and making future UI investigation tooling easier to build.

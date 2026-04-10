@@ -14,6 +14,8 @@ import { GetAuthorizationParityHistoryUseCase } from '../../../application/use-c
 import { GetAuthorizationParityInvestigationByCorrelationIdUseCase } from '../../../application/use-cases/get-authorization-parity-investigation-by-correlation-id.use-case.js';
 import { GetAuthorizationParityInvestigationByDiagnosticIdUseCase } from '../../../application/use-cases/get-authorization-parity-investigation-by-diagnostic-id.use-case.js';
 import { GetAuthorizationParityRuntimeStateUseCase } from '../../../application/use-cases/get-authorization-parity-runtime-state.use-case.js';
+import { GetAuthorizationParityTimelineByCorrelationIdUseCase } from '../../../application/use-cases/get-authorization-parity-timeline-by-correlation-id.use-case.js';
+import { GetAuthorizationParityTimelineByDiagnosticIdUseCase } from '../../../application/use-cases/get-authorization-parity-timeline-by-diagnostic-id.use-case.js';
 import { GetWorkspaceAuthorizationCatalogUseCase } from '../../../application/use-cases/get-workspace-authorization-catalog.use-case.js';
 import { RevalidateAuthorizationParityUseCase } from '../../../application/use-cases/revalidate-authorization-parity.use-case.js';
 import { ResolveAccessContextUseCase } from '../../../application/use-cases/resolve-access-context.use-case.js';
@@ -43,6 +45,8 @@ export interface ServiceDependencies {
   readonly getAuthorizationParityByCorrelationIdUseCase: GetAuthorizationParityByCorrelationIdUseCase;
   readonly getAuthorizationParityInvestigationByDiagnosticIdUseCase: GetAuthorizationParityInvestigationByDiagnosticIdUseCase;
   readonly getAuthorizationParityInvestigationByCorrelationIdUseCase: GetAuthorizationParityInvestigationByCorrelationIdUseCase;
+  readonly getAuthorizationParityTimelineByDiagnosticIdUseCase: GetAuthorizationParityTimelineByDiagnosticIdUseCase;
+  readonly getAuthorizationParityTimelineByCorrelationIdUseCase: GetAuthorizationParityTimelineByCorrelationIdUseCase;
   readonly revalidateAuthorizationParityUseCase: RevalidateAuthorizationParityUseCase;
   readonly authorizationBootstrapValidationStore: AuthorizationBootstrapValidationStore;
   readonly authorizationDiagnosticsHistoryStore: AuthorizationDiagnosticsHistoryStore;
@@ -114,6 +118,16 @@ export function createServiceDependencies(
       ),
     getAuthorizationParityInvestigationByCorrelationIdUseCase:
       new GetAuthorizationParityInvestigationByCorrelationIdUseCase(
+        getAuthorizationParityByCorrelationIdUseCase,
+      ),
+    getAuthorizationParityTimelineByDiagnosticIdUseCase:
+      new GetAuthorizationParityTimelineByDiagnosticIdUseCase(
+        getAuthorizationParityByDiagnosticIdUseCase,
+        getAuthorizationParityRuntimeStateUseCase,
+        authorizationBootstrapValidationStore,
+      ),
+    getAuthorizationParityTimelineByCorrelationIdUseCase:
+      new GetAuthorizationParityTimelineByCorrelationIdUseCase(
         getAuthorizationParityByCorrelationIdUseCase,
       ),
     revalidateAuthorizationParityUseCase: new RevalidateAuthorizationParityUseCase(
