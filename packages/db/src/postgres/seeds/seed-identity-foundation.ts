@@ -5,6 +5,7 @@ import { membershipsTable } from '../schema/memberships.table.js';
 import { tenantsTable } from '../schema/tenants.table.js';
 import { usersTable } from '../schema/users.table.js';
 import { workspacesTable } from '../schema/workspaces.table.js';
+import { seedAssistantFoundation } from './seed-assistant-foundation.js';
 import { seedWorkspaceAuthorizationCatalog } from './seed-workspace-authorization-catalog.js';
 
 const SEED_IDS = {
@@ -99,6 +100,8 @@ export async function seedIdentityFoundation(connection: PostgresConnection): Pr
       },
     ])
     .onConflictDoNothing({ target: membershipsTable.id });
+
+  await seedAssistantFoundation(connection);
 
   const existingTenant = await connection.db
     .select({

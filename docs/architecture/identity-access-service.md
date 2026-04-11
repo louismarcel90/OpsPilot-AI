@@ -269,3 +269,14 @@ This introduces a core separation between:
 - a versioned assistant configuration
 
 This is the first structural step toward published assistant configuration management.
+
+## Current Assistant Seed and Enriched Read Capability
+
+The service now includes seeded assistant definitions and seeded assistant versions.
+
+It also supports an enriched read model that returns:
+
+- a stable assistant definition
+- all persisted versions attached to that assistant
+
+This improves local demonstrability and prepares the service for future published assistant resolution.

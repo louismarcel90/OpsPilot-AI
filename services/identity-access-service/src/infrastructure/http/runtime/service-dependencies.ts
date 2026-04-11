@@ -11,6 +11,7 @@ import { CheckWorkspaceCapabilityUseCase } from '../../../application/use-cases/
 import { EnforceProtectedWorkspaceRequestUseCase } from '../../../application/use-cases/enforce-protected-workspace-request.use-case.js';
 import { GetAssistantBySlugUseCase } from '../../../application/use-cases/get-assistant-by-slug.use-case.js';
 import { GetAssistantVersionsUseCase } from '../../../application/use-cases/get-assistant-versions.use-case.js';
+import { GetAssistantWithVersionsUseCase } from '../../../application/use-cases/get-assistant-with-versions.use-case.js';
 import { GetAuthorizationParityByCorrelationIdUseCase } from '../../../application/use-cases/get-authorization-parity-by-correlation-id.use-case.js';
 import { GetAuthorizationParityByDiagnosticIdUseCase } from '../../../application/use-cases/get-authorization-parity-by-diagnostic-id.use-case.js';
 import { GetAuthorizationParityDiagnosticUseCase } from '../../../application/use-cases/get-authorization-parity-diagnostic.use-case.js';
@@ -44,6 +45,7 @@ export interface ServiceDependencies {
   readonly listAssistantsUseCase: ListAssistantsUseCase;
   readonly getAssistantBySlugUseCase: GetAssistantBySlugUseCase;
   readonly getAssistantVersionsUseCase: GetAssistantVersionsUseCase;
+  readonly getAssistantWithVersionsUseCase: GetAssistantWithVersionsUseCase;
   readonly getWorkspaceAuthorizationCatalogUseCase: GetWorkspaceAuthorizationCatalogUseCase;
   readonly validateWorkspaceAuthorizationBootstrapUseCase: ValidateWorkspaceAuthorizationBootstrapUseCase;
   readonly getAuthorizationParityDiagnosticUseCase: GetAuthorizationParityDiagnosticUseCase;
@@ -109,6 +111,10 @@ export function createServiceDependencies(
     listAssistantsUseCase: new ListAssistantsUseCase(assistantDefinitionReadRepository),
     getAssistantBySlugUseCase: new GetAssistantBySlugUseCase(assistantDefinitionReadRepository),
     getAssistantVersionsUseCase: new GetAssistantVersionsUseCase(assistantVersionReadRepository),
+    getAssistantWithVersionsUseCase: new GetAssistantWithVersionsUseCase(
+      assistantDefinitionReadRepository,
+      assistantVersionReadRepository,
+    ),
     getWorkspaceAuthorizationCatalogUseCase: new GetWorkspaceAuthorizationCatalogUseCase(
       authorizationCatalogReadRepository,
     ),

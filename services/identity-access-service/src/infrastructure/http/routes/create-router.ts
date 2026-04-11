@@ -29,6 +29,7 @@ import { handleGetAuthorizationParityTimelineByDiagnosticIdRequest } from '../..
 import { handleGetAssistantBySlugRequest } from '../../../presentation/http/handlers/handle-get-assistant-by-slug-request.js';
 import { handleGetAssistantVersionsRequest } from '../../../presentation/http/handlers/handle-get-assistant-versions-request.js';
 import { handleListAssistantsRequest } from '../../../presentation/http/handlers/handle-list-assistants-request.js';
+import { handleGetAssistantWithVersionsRequest } from '../../../presentation/http/handlers/handle-get-assistant-with-versions-request.js';
 
 function resolvePath(request: IncomingMessage): string {
   const requestUrl = request.url ?? '/';
@@ -289,6 +290,17 @@ export function createRouter(
           logger,
           correlationId,
           dependencies.getAssistantVersionsUseCase,
+        );
+        return;
+      }
+
+      if (method === 'GET' && path === '/assistants/with-versions') {
+        await handleGetAssistantWithVersionsRequest(
+          request,
+          response,
+          logger,
+          correlationId,
+          dependencies.getAssistantWithVersionsUseCase,
         );
         return;
       }
