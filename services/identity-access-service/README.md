@@ -33,6 +33,7 @@ At this stage, the service provides:
 - operator-friendly timeline views for authorization investigations
 - assistant definition and assistant version persistence foundation
 - seeded assistant catalog with enriched assistant plus versions read model
+- assistant version lifecycle primitives and published version resolution foundation
 
 The authorization parity history endpoint now reads persisted diagnostic events from durable storage.
 
@@ -227,6 +228,10 @@ Returns all versions for a specific assistant definition.
 ### `GET /assistants/with-versions?slug=...`
 
 Returns an assistant definition together with all persisted versions.
+
+### `GET /assistants/published-version?slug=...`
+
+Returns the currently resolved published version for a specific assistant definition.
 
 ## Local Development
 

@@ -21,6 +21,7 @@ import { GetAuthorizationParityInvestigationByDiagnosticIdUseCase } from '../../
 import { GetAuthorizationParityRuntimeStateUseCase } from '../../../application/use-cases/get-authorization-parity-runtime-state.use-case.js';
 import { GetAuthorizationParityTimelineByCorrelationIdUseCase } from '../../../application/use-cases/get-authorization-parity-timeline-by-correlation-id.use-case.js';
 import { GetAuthorizationParityTimelineByDiagnosticIdUseCase } from '../../../application/use-cases/get-authorization-parity-timeline-by-diagnostic-id.use-case.js';
+import { GetPublishedAssistantVersionUseCase } from '../../../application/use-cases/get-published-assistant-version.use-case.js';
 import { GetWorkspaceAuthorizationCatalogUseCase } from '../../../application/use-cases/get-workspace-authorization-catalog.use-case.js';
 import { ListAssistantsUseCase } from '../../../application/use-cases/list-assistants.use-case.js';
 import { RevalidateAuthorizationParityUseCase } from '../../../application/use-cases/revalidate-authorization-parity.use-case.js';
@@ -46,6 +47,7 @@ export interface ServiceDependencies {
   readonly getAssistantBySlugUseCase: GetAssistantBySlugUseCase;
   readonly getAssistantVersionsUseCase: GetAssistantVersionsUseCase;
   readonly getAssistantWithVersionsUseCase: GetAssistantWithVersionsUseCase;
+  readonly getPublishedAssistantVersionUseCase: GetPublishedAssistantVersionUseCase;
   readonly getWorkspaceAuthorizationCatalogUseCase: GetWorkspaceAuthorizationCatalogUseCase;
   readonly validateWorkspaceAuthorizationBootstrapUseCase: ValidateWorkspaceAuthorizationBootstrapUseCase;
   readonly getAuthorizationParityDiagnosticUseCase: GetAuthorizationParityDiagnosticUseCase;
@@ -112,6 +114,10 @@ export function createServiceDependencies(
     getAssistantBySlugUseCase: new GetAssistantBySlugUseCase(assistantDefinitionReadRepository),
     getAssistantVersionsUseCase: new GetAssistantVersionsUseCase(assistantVersionReadRepository),
     getAssistantWithVersionsUseCase: new GetAssistantWithVersionsUseCase(
+      assistantDefinitionReadRepository,
+      assistantVersionReadRepository,
+    ),
+    getPublishedAssistantVersionUseCase: new GetPublishedAssistantVersionUseCase(
       assistantDefinitionReadRepository,
       assistantVersionReadRepository,
     ),

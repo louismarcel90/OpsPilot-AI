@@ -280,3 +280,15 @@ It also supports an enriched read model that returns:
 - all persisted versions attached to that assistant
 
 This improves local demonstrability and prepares the service for future published assistant resolution.
+
+## Current Assistant Lifecycle and Published Version Resolution
+
+The service now includes first assistant version lifecycle primitives.
+
+Supported lifecycle statuses:
+
+- `draft`
+- `published`
+- `deprecated`
+
+It also supports resolving the currently published version for a given assistant definition, which is a first step toward a governed published configuration model.
