@@ -35,6 +35,7 @@ At this stage, the service provides:
 - seeded assistant catalog with enriched assistant plus versions read model
 - assistant version lifecycle primitives and published version resolution foundation
 - assistant version lifecycle invariants and consistency checks
+- assistant publish eligibility checks and publication readiness diagnostics
 
 The authorization parity history endpoint now reads persisted diagnostic events from durable storage.
 
@@ -237,6 +238,10 @@ Returns the currently resolved published version for a specific assistant defini
 ### `GET /assistants/version-consistency?slug=...`
 
 Returns the lifecycle consistency check for a specific assistant definition.
+
+### `GET /assistants/publish-readiness?slug=...&versionNumber=...`
+
+Returns the publication readiness diagnostic for a specific assistant version.
 
 ## Local Development
 

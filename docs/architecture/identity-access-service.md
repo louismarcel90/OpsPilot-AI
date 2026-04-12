@@ -304,3 +304,21 @@ Current checks include:
 - multiple published versions
 
 This improves assistant configuration quality and prepares the service for future governed publish flows.
+
+## Current Assistant Publication Readiness Capability
+
+The service now evaluates whether a specific assistant version is eligible for publication.
+
+Current readiness checks include:
+
+- assistant existence
+- version existence
+- assistant active state
+- lifecycle compatibility
+- model key presence
+- system instructions presence
+- max output tokens validity
+- temperature validity
+- conflicting published version detection
+
+This prepares the service for future governed publication flows.
