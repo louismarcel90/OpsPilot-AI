@@ -10,6 +10,7 @@ import { CheckWorkspaceAccessUseCase } from '../../../application/use-cases/chec
 import { CheckWorkspaceCapabilityUseCase } from '../../../application/use-cases/check-workspace-capability.use-case.js';
 import { EnforceProtectedWorkspaceRequestUseCase } from '../../../application/use-cases/enforce-protected-workspace-request.use-case.js';
 import { GetAssistantBySlugUseCase } from '../../../application/use-cases/get-assistant-by-slug.use-case.js';
+import { GetAssistantVersionConsistencyUseCase } from '../../../application/use-cases/get-assistant-version-consistency.use-case.js';
 import { GetAssistantVersionsUseCase } from '../../../application/use-cases/get-assistant-versions.use-case.js';
 import { GetAssistantWithVersionsUseCase } from '../../../application/use-cases/get-assistant-with-versions.use-case.js';
 import { GetAuthorizationParityByCorrelationIdUseCase } from '../../../application/use-cases/get-authorization-parity-by-correlation-id.use-case.js';
@@ -48,6 +49,7 @@ export interface ServiceDependencies {
   readonly getAssistantVersionsUseCase: GetAssistantVersionsUseCase;
   readonly getAssistantWithVersionsUseCase: GetAssistantWithVersionsUseCase;
   readonly getPublishedAssistantVersionUseCase: GetPublishedAssistantVersionUseCase;
+  readonly getAssistantVersionConsistencyUseCase: GetAssistantVersionConsistencyUseCase;
   readonly getWorkspaceAuthorizationCatalogUseCase: GetWorkspaceAuthorizationCatalogUseCase;
   readonly validateWorkspaceAuthorizationBootstrapUseCase: ValidateWorkspaceAuthorizationBootstrapUseCase;
   readonly getAuthorizationParityDiagnosticUseCase: GetAuthorizationParityDiagnosticUseCase;
@@ -118,6 +120,10 @@ export function createServiceDependencies(
       assistantVersionReadRepository,
     ),
     getPublishedAssistantVersionUseCase: new GetPublishedAssistantVersionUseCase(
+      assistantDefinitionReadRepository,
+      assistantVersionReadRepository,
+    ),
+    getAssistantVersionConsistencyUseCase: new GetAssistantVersionConsistencyUseCase(
       assistantDefinitionReadRepository,
       assistantVersionReadRepository,
     ),

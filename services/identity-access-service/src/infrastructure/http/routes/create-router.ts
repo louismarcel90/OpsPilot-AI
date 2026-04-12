@@ -31,6 +31,7 @@ import { handleGetAssistantVersionsRequest } from '../../../presentation/http/ha
 import { handleListAssistantsRequest } from '../../../presentation/http/handlers/handle-list-assistants-request.js';
 import { handleGetAssistantWithVersionsRequest } from '../../../presentation/http/handlers/handle-get-assistant-with-versions-request.js';
 import { handleGetPublishedAssistantVersionRequest } from '../../../presentation/http/handlers/handle-get-published-assistant-version-request.js';
+import { handleGetAssistantVersionConsistencyRequest } from '../../../presentation/http/handlers/handle-get-assistant-version-consistency-request.js';
 
 function resolvePath(request: IncomingMessage): string {
   const requestUrl = request.url ?? '/';
@@ -313,6 +314,17 @@ export function createRouter(
           logger,
           correlationId,
           dependencies.getPublishedAssistantVersionUseCase,
+        );
+        return;
+      }
+
+      if (method === 'GET' && path === '/assistants/version-consistency') {
+        await handleGetAssistantVersionConsistencyRequest(
+          request,
+          response,
+          logger,
+          correlationId,
+          dependencies.getAssistantVersionConsistencyUseCase,
         );
         return;
       }

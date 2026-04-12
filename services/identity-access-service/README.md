@@ -34,6 +34,7 @@ At this stage, the service provides:
 - assistant definition and assistant version persistence foundation
 - seeded assistant catalog with enriched assistant plus versions read model
 - assistant version lifecycle primitives and published version resolution foundation
+- assistant version lifecycle invariants and consistency checks
 
 The authorization parity history endpoint now reads persisted diagnostic events from durable storage.
 
@@ -232,6 +233,10 @@ Returns an assistant definition together with all persisted versions.
 ### `GET /assistants/published-version?slug=...`
 
 Returns the currently resolved published version for a specific assistant definition.
+
+### `GET /assistants/version-consistency?slug=...`
+
+Returns the lifecycle consistency check for a specific assistant definition.
 
 ## Local Development
 

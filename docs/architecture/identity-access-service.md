@@ -292,3 +292,15 @@ Supported lifecycle statuses:
 - `deprecated`
 
 It also supports resolving the currently published version for a given assistant definition, which is a first step toward a governed published configuration model.
+
+## Current Assistant Version Consistency Capability
+
+The service now evaluates assistant version consistency using lifecycle invariants.
+
+Current checks include:
+
+- zero published version
+- exactly one published version
+- multiple published versions
+
+This improves assistant configuration quality and prepares the service for future governed publish flows.
