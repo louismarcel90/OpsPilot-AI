@@ -37,6 +37,7 @@ At this stage, the service provides:
 - assistant version lifecycle invariants and consistency checks
 - assistant publish eligibility checks and publication readiness diagnostics
 - assistant publication operation and controlled draft-to-published transition foundation
+- assistant publication audit trail and publication transition diagnostics
 
 The authorization parity history endpoint now reads persisted diagnostic events from durable storage.
 
@@ -103,16 +104,6 @@ Supported query parameters:
 - `source`
 - `correlationId`
 - `diagnosticId`
-
-## Actor Context Headers
-
-Protected routes currently expect the following request headers:
-
-- `x-actor-email`
-- `x-tenant-slug`
-- `x-workspace-slug`
-
-These headers are currently used as a development-stage actor context transport mechanism before real authentication is introduced.
 
 ### `GET /authorization/workspace-catalog`
 
@@ -258,6 +249,24 @@ The current transition model:
 - deprecates the previously published version when one exists
 
 This is the first mutation foundation for a governed published configuration model.
+
+### `GET /assistants/publication-history?slug=...`
+
+Returns the persisted publication history for a specific assistant definition.
+
+### `GET /assistants/latest-publication?slug=...`
+
+Returns the latest persisted publication event for a specific assistant definition.
+
+## Actor Context Headers
+
+Protected routes currently expect the following request headers:
+
+- `x-actor-email`
+- `x-tenant-slug`
+- `x-workspace-slug`
+
+These headers are currently used as a development-stage actor context transport mechanism before real authentication is introduced.
 
 ## Local Development
 

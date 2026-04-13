@@ -1,4 +1,5 @@
 import { assistantDefinitionsTable } from './schema/assistant-definitions.table.js';
+import { assistantPublicationEventsTable } from './schema/assistant-publication-events.table.js';
 import { assistantVersionsTable } from './schema/assistant-versions.table.js';
 import { authorizationAuditEventsTable } from './schema/authorization-audit-events.table.js';
 import { membershipsTable } from './schema/memberships.table.js';
@@ -20,4 +21,5 @@ export const databaseSchema = {
   authorizationAuditEvents: authorizationAuditEventsTable,
   assistantDefinitions: assistantDefinitionsTable,
   assistantVersions: assistantVersionsTable,
+  assistantPublicationEvents: assistantPublicationEventsTable,
 };

@@ -34,6 +34,8 @@ import { handleGetPublishedAssistantVersionRequest } from '../../../presentation
 import { handleGetAssistantVersionConsistencyRequest } from '../../../presentation/http/handlers/handle-get-assistant-version-consistency-request.js';
 import { handleGetAssistantPublishReadinessRequest } from '../../../presentation/http/handlers/handle-get-assistant-publish-readiness-request.js';
 import { handlePublishAssistantVersionRequest } from '../../../presentation/http/handlers/handle-publish-assistant-version-request.js';
+import { handleGetAssistantLatestPublicationRequest } from '../../../presentation/http/handlers/handle-get-assistant-latest-publication-request.js';
+import { handleGetAssistantPublicationHistoryRequest } from '../../../presentation/http/handlers/handle-get-assistant-publication-history-request.js';
 
 function resolvePath(request: IncomingMessage): string {
   const requestUrl = request.url ?? '/';
@@ -349,6 +351,28 @@ export function createRouter(
           logger,
           correlationId,
           dependencies.publishAssistantVersionUseCase,
+        );
+        return;
+      }
+
+      if (method === 'GET' && path === '/assistants/publication-history') {
+        await handleGetAssistantPublicationHistoryRequest(
+          request,
+          response,
+          logger,
+          correlationId,
+          dependencies.getAssistantPublicationHistoryUseCase,
+        );
+        return;
+      }
+
+      if (method === 'GET' && path === '/assistants/latest-publication') {
+        await handleGetAssistantLatestPublicationRequest(
+          request,
+          response,
+          logger,
+          correlationId,
+          dependencies.getAssistantLatestPublicationUseCase,
         );
         return;
       }

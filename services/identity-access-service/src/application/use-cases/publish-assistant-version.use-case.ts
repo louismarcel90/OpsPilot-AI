@@ -1,3 +1,6 @@
+import { randomUUID } from 'node:crypto';
+
+import type { AssistantPublicationEventRepository } from '../repositories/assistant-publication-event-repository.js';
 import type { AssistantPublicationResult } from '../../domain/assistants/assistant-publication-result.js';
 import type { AssistantVersionSummary } from '../../domain/assistants/assistant-version-summary.js';
 import type { AssistantDefinitionReadRepository } from '../repositories/assistant-definition-read-repository.js';
@@ -10,6 +13,7 @@ export class PublishAssistantVersionUseCase {
     private readonly assistantDefinitionReadRepository: AssistantDefinitionReadRepository,
     private readonly assistantVersionReadRepository: AssistantVersionReadRepository,
     private readonly assistantVersionWriteRepository: AssistantVersionWriteRepository,
+    private readonly assistantPublicationEventRepository: AssistantPublicationEventRepository,
   ) {}
 
   public async execute(input: {
@@ -40,10 +44,12 @@ export class PublishAssistantVersionUseCase {
       );
     }
 
+    const targetVersion = readiness.targetVersion;
+    // const assistant = readiness.assistant;
+
     const previousPublishedVersion =
       allVersions.find(
-        (version) =>
-          version.lifecycleStatus === 'published' && version.id !== readiness.targetVersion?.id,
+        (version) => version.lifecycleStatus === 'published' && version.id !== targetVersion.id,
       ) ?? null;
 
     await this.assistantVersionWriteRepository.publishVersionTransition({
@@ -76,6 +82,21 @@ export class PublishAssistantVersionUseCase {
 
       deprecatedPreviousPublishedVersion = reloadedPreviousPublishedVersion;
     }
+
+    await this.assistantPublicationEventRepository.append({
+      id: randomUUID(),
+      assistantId: readiness.assistant.id,
+      assistantSlug: readiness.assistant.slug,
+      publishedVersionId: publishedVersion.id,
+      publishedVersionNumber: publishedVersion.versionNumber,
+      ...(deprecatedPreviousPublishedVersion !== undefined
+        ? { deprecatedVersionId: deprecatedPreviousPublishedVersion.id }
+        : {}),
+      ...(deprecatedPreviousPublishedVersion !== undefined
+        ? { deprecatedVersionNumber: deprecatedPreviousPublishedVersion.versionNumber }
+        : {}),
+      occurredAtIso: new Date().toISOString(),
+    });
 
     return {
       assistantSlug: readiness.assistant.slug,

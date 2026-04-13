@@ -322,3 +322,17 @@ Current readiness checks include:
 - conflicting published version detection
 
 This prepares the service for future governed publication flows.
+
+## Current Assistant Publication Audit Trail
+
+The service now persists assistant publication events.
+
+Each publication event captures:
+
+- the assistant identifier
+- the assistant slug
+- the published version
+- the deprecated previously published version, when applicable
+- the publication timestamp
+
+This is the first durable traceability layer for assistant publication mutations.
