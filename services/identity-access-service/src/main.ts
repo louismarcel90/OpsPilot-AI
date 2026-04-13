@@ -8,6 +8,7 @@ import type { AuthorizationParityDiagnostic } from './domain/authorization/autho
 
 import { DrizzleAssistantDefinitionReadRepository } from './infrastructure/db/repositories/drizzle-assistant-definition-read-repository.js';
 import { DrizzleAssistantVersionReadRepository } from './infrastructure/db/repositories/drizzle-assistant-version-read-repository.js';
+import { DrizzleAssistantVersionWriteRepository } from './infrastructure/db/repositories/drizzle-assistant-version-write-repository.js';
 import { DrizzleAuthorizationAuditEventRepository } from './infrastructure/db/repositories/drizzle-authorization-audit-event-repository.js';
 import { DrizzleAuthorizationCatalogReadRepository } from './application/repositories/drizzle-authorization-catalog-read-repository.js';
 import { DrizzleTenantReadRepository } from './infrastructure/db/repositories/drizzle-tenant-read-repository.js';
@@ -77,6 +78,9 @@ async function bootstrap(): Promise<void> {
   const assistantVersionReadRepository = new DrizzleAssistantVersionReadRepository(
     databaseConnection,
   );
+  const assistantVersionWriteRepository = new DrizzleAssistantVersionWriteRepository(
+    databaseConnection,
+  );
 
   const dependencies = createServiceDependencies(
     userReadRepository,
@@ -87,6 +91,7 @@ async function bootstrap(): Promise<void> {
     authorizationAuditEventRepository,
     assistantDefinitionReadRepository,
     assistantVersionReadRepository,
+    assistantVersionWriteRepository,
   );
 
   const bootstrapValidationResult =

@@ -36,6 +36,7 @@ At this stage, the service provides:
 - assistant version lifecycle primitives and published version resolution foundation
 - assistant version lifecycle invariants and consistency checks
 - assistant publish eligibility checks and publication readiness diagnostics
+- assistant publication operation and controlled draft-to-published transition foundation
 
 The authorization parity history endpoint now reads persisted diagnostic events from durable storage.
 
@@ -242,6 +243,21 @@ Returns the lifecycle consistency check for a specific assistant definition.
 ### `GET /assistants/publish-readiness?slug=...&versionNumber=...`
 
 Returns the publication readiness diagnostic for a specific assistant version.
+
+### `POST /assistants/publish?slug=...&versionNumber=...`
+
+Promotes a draft assistant version to published and deprecates the previously published version when applicable.
+
+## Current Assistant Publication Operation
+
+The service now supports a first governed assistant publication operation.
+
+The current transition model:
+
+- promotes a target `draft` version to `published`
+- deprecates the previously published version when one exists
+
+This is the first mutation foundation for a governed published configuration model.
 
 ## Local Development
 

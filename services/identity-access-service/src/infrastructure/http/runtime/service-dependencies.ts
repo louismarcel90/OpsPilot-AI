@@ -1,5 +1,6 @@
 import type { AssistantDefinitionReadRepository } from '../../../application/repositories/assistant-definition-read-repository.js';
 import type { AssistantVersionReadRepository } from '../../../application/repositories/assistant-version-read-repository.js';
+import type { AssistantVersionWriteRepository } from '../../../application/repositories/assistant-version-write-repository.js';
 import type { AuthorizationCatalogReadRepository } from '../../../application/repositories/authorization-catalog-read-repository.js';
 import type { AuthorizationAuditEventRepository } from '../../../application/repositories/authorization-audit-event-repository.js';
 import type { TenantReadRepository } from '../../../application/repositories/tenant-read-repository.js';
@@ -26,6 +27,7 @@ import { GetAuthorizationParityTimelineByDiagnosticIdUseCase } from '../../../ap
 import { GetPublishedAssistantVersionUseCase } from '../../../application/use-cases/get-published-assistant-version.use-case.js';
 import { GetWorkspaceAuthorizationCatalogUseCase } from '../../../application/use-cases/get-workspace-authorization-catalog.use-case.js';
 import { ListAssistantsUseCase } from '../../../application/use-cases/list-assistants.use-case.js';
+import { PublishAssistantVersionUseCase } from '../../../application/use-cases/publish-assistant-version.use-case.js';
 import { RevalidateAuthorizationParityUseCase } from '../../../application/use-cases/revalidate-authorization-parity.use-case.js';
 import { ResolveAccessContextUseCase } from '../../../application/use-cases/resolve-access-context.use-case.js';
 import { ResolveTenantBySlugUseCase } from '../../../application/use-cases/resolve-tenant-by-slug.use-case.js';
@@ -52,6 +54,7 @@ export interface ServiceDependencies {
   readonly getPublishedAssistantVersionUseCase: GetPublishedAssistantVersionUseCase;
   readonly getAssistantVersionConsistencyUseCase: GetAssistantVersionConsistencyUseCase;
   readonly getAssistantPublishReadinessUseCase: GetAssistantPublishReadinessUseCase;
+  readonly publishAssistantVersionUseCase: PublishAssistantVersionUseCase;
   readonly getWorkspaceAuthorizationCatalogUseCase: GetWorkspaceAuthorizationCatalogUseCase;
   readonly validateWorkspaceAuthorizationBootstrapUseCase: ValidateWorkspaceAuthorizationBootstrapUseCase;
   readonly getAuthorizationParityDiagnosticUseCase: GetAuthorizationParityDiagnosticUseCase;
@@ -77,6 +80,7 @@ export function createServiceDependencies(
   authorizationAuditEventRepository: AuthorizationAuditEventRepository,
   assistantDefinitionReadRepository: AssistantDefinitionReadRepository,
   assistantVersionReadRepository: AssistantVersionReadRepository,
+  assistantVersionWriteRepository: AssistantVersionWriteRepository,
 ): ServiceDependencies {
   const authorizationBootstrapValidationStore = new InMemoryAuthorizationBootstrapValidationStore();
   const authorizationDiagnosticsHistoryStore = new InMemoryAuthorizationDiagnosticsHistoryStore();
@@ -132,6 +136,11 @@ export function createServiceDependencies(
     getAssistantPublishReadinessUseCase: new GetAssistantPublishReadinessUseCase(
       assistantDefinitionReadRepository,
       assistantVersionReadRepository,
+    ),
+    publishAssistantVersionUseCase: new PublishAssistantVersionUseCase(
+      assistantDefinitionReadRepository,
+      assistantVersionReadRepository,
+      assistantVersionWriteRepository,
     ),
     getWorkspaceAuthorizationCatalogUseCase: new GetWorkspaceAuthorizationCatalogUseCase(
       authorizationCatalogReadRepository,

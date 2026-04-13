@@ -33,6 +33,7 @@ import { handleGetAssistantWithVersionsRequest } from '../../../presentation/htt
 import { handleGetPublishedAssistantVersionRequest } from '../../../presentation/http/handlers/handle-get-published-assistant-version-request.js';
 import { handleGetAssistantVersionConsistencyRequest } from '../../../presentation/http/handlers/handle-get-assistant-version-consistency-request.js';
 import { handleGetAssistantPublishReadinessRequest } from '../../../presentation/http/handlers/handle-get-assistant-publish-readiness-request.js';
+import { handlePublishAssistantVersionRequest } from '../../../presentation/http/handlers/handle-publish-assistant-version-request.js';
 
 function resolvePath(request: IncomingMessage): string {
   const requestUrl = request.url ?? '/';
@@ -337,6 +338,17 @@ export function createRouter(
           logger,
           correlationId,
           dependencies.getAssistantPublishReadinessUseCase,
+        );
+        return;
+      }
+
+      if (method === 'POST' && path === '/assistants/publish') {
+        await handlePublishAssistantVersionRequest(
+          request,
+          response,
+          logger,
+          correlationId,
+          dependencies.publishAssistantVersionUseCase,
         );
         return;
       }
