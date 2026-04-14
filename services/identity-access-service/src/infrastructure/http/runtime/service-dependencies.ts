@@ -6,6 +6,8 @@ import type { AuthorizationCatalogReadRepository } from '../../../application/re
 import type { AuthorizationAuditEventRepository } from '../../../application/repositories/authorization-audit-event-repository.js';
 import type { TenantReadRepository } from '../../../application/repositories/tenant-read-repository.js';
 import type { UserReadRepository } from '../../../application/repositories/user-read-repository.js';
+import type { WorkflowTemplateReadRepository } from '../../../application/repositories/workflow-template-read-repository.js';
+import type { WorkflowVersionReadRepository } from '../../../application/repositories/workflow-version-read-repository.js';
 import type { WorkspaceMembershipReadRepository } from '../../../application/repositories/workspace-membership-read-repository.js';
 import type { WorkspaceReadRepository } from '../../../application/repositories/workspace-read-repository.js';
 import { CheckWorkspaceAccessUseCase } from '../../../application/use-cases/check-workspace-access.use-case.js';
@@ -28,8 +30,12 @@ import { GetAuthorizationParityRuntimeStateUseCase } from '../../../application/
 import { GetAuthorizationParityTimelineByCorrelationIdUseCase } from '../../../application/use-cases/get-authorization-parity-timeline-by-correlation-id.use-case.js';
 import { GetAuthorizationParityTimelineByDiagnosticIdUseCase } from '../../../application/use-cases/get-authorization-parity-timeline-by-diagnostic-id.use-case.js';
 import { GetPublishedAssistantVersionUseCase } from '../../../application/use-cases/get-published-assistant-version.use-case.js';
+import { GetWorkflowBySlugUseCase } from '../../../application/use-cases/get-workflow-by-slug.use-case.js';
+import { GetWorkflowVersionsUseCase } from '../../../application/use-cases/get-workflow-versions.use-case.js';
+import { GetWorkflowWithVersionsUseCase } from '../../../application/use-cases/get-workflow-with-versions.use-case.js';
 import { GetWorkspaceAuthorizationCatalogUseCase } from '../../../application/use-cases/get-workspace-authorization-catalog.use-case.js';
 import { ListAssistantsUseCase } from '../../../application/use-cases/list-assistants.use-case.js';
+import { ListWorkflowsUseCase } from '../../../application/use-cases/list-workflows.use-case.js';
 import { PublishAssistantVersionUseCase } from '../../../application/use-cases/publish-assistant-version.use-case.js';
 import { RevalidateAuthorizationParityUseCase } from '../../../application/use-cases/revalidate-authorization-parity.use-case.js';
 import { ResolveAccessContextUseCase } from '../../../application/use-cases/resolve-access-context.use-case.js';
@@ -60,6 +66,10 @@ export interface ServiceDependencies {
   readonly publishAssistantVersionUseCase: PublishAssistantVersionUseCase;
   readonly getAssistantPublicationHistoryUseCase: GetAssistantPublicationHistoryUseCase;
   readonly getAssistantLatestPublicationUseCase: GetAssistantLatestPublicationUseCase;
+  readonly listWorkflowsUseCase: ListWorkflowsUseCase;
+  readonly getWorkflowBySlugUseCase: GetWorkflowBySlugUseCase;
+  readonly getWorkflowVersionsUseCase: GetWorkflowVersionsUseCase;
+  readonly getWorkflowWithVersionsUseCase: GetWorkflowWithVersionsUseCase;
   readonly getWorkspaceAuthorizationCatalogUseCase: GetWorkspaceAuthorizationCatalogUseCase;
   readonly validateWorkspaceAuthorizationBootstrapUseCase: ValidateWorkspaceAuthorizationBootstrapUseCase;
   readonly getAuthorizationParityDiagnosticUseCase: GetAuthorizationParityDiagnosticUseCase;
@@ -87,6 +97,8 @@ export function createServiceDependencies(
   assistantVersionReadRepository: AssistantVersionReadRepository,
   assistantVersionWriteRepository: AssistantVersionWriteRepository,
   assistantPublicationEventRepository: AssistantPublicationEventRepository,
+  workflowTemplateReadRepository: WorkflowTemplateReadRepository,
+  workflowVersionReadRepository: WorkflowVersionReadRepository,
 ): ServiceDependencies {
   const authorizationBootstrapValidationStore = new InMemoryAuthorizationBootstrapValidationStore();
   const authorizationDiagnosticsHistoryStore = new InMemoryAuthorizationDiagnosticsHistoryStore();
@@ -156,6 +168,13 @@ export function createServiceDependencies(
     getAssistantLatestPublicationUseCase: new GetAssistantLatestPublicationUseCase(
       assistantDefinitionReadRepository,
       assistantPublicationEventRepository,
+    ),
+    listWorkflowsUseCase: new ListWorkflowsUseCase(workflowTemplateReadRepository),
+    getWorkflowBySlugUseCase: new GetWorkflowBySlugUseCase(workflowTemplateReadRepository),
+    getWorkflowVersionsUseCase: new GetWorkflowVersionsUseCase(workflowVersionReadRepository),
+    getWorkflowWithVersionsUseCase: new GetWorkflowWithVersionsUseCase(
+      workflowTemplateReadRepository,
+      workflowVersionReadRepository,
     ),
     getWorkspaceAuthorizationCatalogUseCase: new GetWorkspaceAuthorizationCatalogUseCase(
       authorizationCatalogReadRepository,

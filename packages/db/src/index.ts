@@ -11,6 +11,8 @@ export { authorizationAuditEventsTable } from './postgres/schema/authorization-a
 export { membershipsTable } from './postgres/schema/memberships.table.js';
 export { tenantsTable } from './postgres/schema/tenants.table.js';
 export { usersTable } from './postgres/schema/users.table.js';
+export { workflowTemplatesTable } from './postgres/schema/workflow-templates.table.js';
+export { workflowVersionsTable } from './postgres/schema/workflow-versions.table.js';
 export { workspaceRoleScopesTable } from './postgres/schema/workspace-role-scopes.table.js';
 export { workspaceRolesTable } from './postgres/schema/workspace-roles.table.js';
 export { workspaceScopesTable } from './postgres/schema/workspace-scopes.table.js';

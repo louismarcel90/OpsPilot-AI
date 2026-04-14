@@ -36,6 +36,10 @@ import { handleGetAssistantPublishReadinessRequest } from '../../../presentation
 import { handlePublishAssistantVersionRequest } from '../../../presentation/http/handlers/handle-publish-assistant-version-request.js';
 import { handleGetAssistantLatestPublicationRequest } from '../../../presentation/http/handlers/handle-get-assistant-latest-publication-request.js';
 import { handleGetAssistantPublicationHistoryRequest } from '../../../presentation/http/handlers/handle-get-assistant-publication-history-request.js';
+import { handleGetWorkflowBySlugRequest } from '../../../presentation/http/handlers/handle-get-workflow-by-slug-request.js';
+import { handleGetWorkflowVersionsRequest } from '../../../presentation/http/handlers/handle-get-workflow-versions-request.js';
+import { handleGetWorkflowWithVersionsRequest } from '../../../presentation/http/handlers/handle-get-workflow-with-versions-request.js';
+import { handleListWorkflowsRequest } from '../../../presentation/http/handlers/handle-list-workflows-request.js';
 
 function resolvePath(request: IncomingMessage): string {
   const requestUrl = request.url ?? '/';
@@ -373,6 +377,49 @@ export function createRouter(
           logger,
           correlationId,
           dependencies.getAssistantLatestPublicationUseCase,
+        );
+        return;
+      }
+
+      if (method === 'GET' && path === '/workflows') {
+        await handleListWorkflowsRequest(
+          response,
+          logger,
+          correlationId,
+          dependencies.listWorkflowsUseCase,
+        );
+        return;
+      }
+
+      if (method === 'GET' && path === '/workflows/by-slug') {
+        await handleGetWorkflowBySlugRequest(
+          request,
+          response,
+          logger,
+          correlationId,
+          dependencies.getWorkflowBySlugUseCase,
+        );
+        return;
+      }
+
+      if (method === 'GET' && path === '/workflows/versions') {
+        await handleGetWorkflowVersionsRequest(
+          request,
+          response,
+          logger,
+          correlationId,
+          dependencies.getWorkflowVersionsUseCase,
+        );
+        return;
+      }
+
+      if (method === 'GET' && path === '/workflows/with-versions') {
+        await handleGetWorkflowWithVersionsRequest(
+          request,
+          response,
+          logger,
+          correlationId,
+          dependencies.getWorkflowWithVersionsUseCase,
         );
         return;
       }

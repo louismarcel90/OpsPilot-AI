@@ -38,6 +38,7 @@ At this stage, the service provides:
 - assistant publish eligibility checks and publication readiness diagnostics
 - assistant publication operation and controlled draft-to-published transition foundation
 - assistant publication audit trail and publication transition diagnostics
+- workflow template and workflow version persistence foundation
 
 The authorization parity history endpoint now reads persisted diagnostic events from durable storage.
 
@@ -257,6 +258,18 @@ Returns the persisted publication history for a specific assistant definition.
 ### `GET /assistants/latest-publication?slug=...`
 
 Returns the latest persisted publication event for a specific assistant definition.
+
+### `GET /workflows`
+
+Returns all workflow templates currently stored in the service.
+
+### `GET /workflows/by-slug?slug=...`
+
+Returns a single workflow template by slug.
+
+### `GET /workflows/versions?workflowTemplateId=...`
+
+Returns all versions for a specific workflow template.
 
 ## Actor Context Headers
 

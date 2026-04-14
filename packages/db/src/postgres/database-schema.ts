@@ -5,6 +5,8 @@ import { authorizationAuditEventsTable } from './schema/authorization-audit-even
 import { membershipsTable } from './schema/memberships.table.js';
 import { tenantsTable } from './schema/tenants.table.js';
 import { usersTable } from './schema/users.table.js';
+import { workflowTemplatesTable } from './schema/workflow-templates.table.js';
+import { workflowVersionsTable } from './schema/workflow-versions.table.js';
 import { workspaceRoleScopesTable } from './schema/workspace-role-scopes.table.js';
 import { workspaceRolesTable } from './schema/workspace-roles.table.js';
 import { workspaceScopesTable } from './schema/workspace-scopes.table.js';
@@ -22,4 +24,6 @@ export const databaseSchema = {
   assistantDefinitions: assistantDefinitionsTable,
   assistantVersions: assistantVersionsTable,
   assistantPublicationEvents: assistantPublicationEventsTable,
+  workflowTemplates: workflowTemplatesTable,
+  workflowVersions: workflowVersionsTable,
 };

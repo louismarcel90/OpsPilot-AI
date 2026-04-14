@@ -336,3 +336,14 @@ Each publication event captures:
 - the publication timestamp
 
 This is the first durable traceability layer for assistant publication mutations.
+
+## Current Workflow Template and Version Foundation
+
+The service now includes persisted workflow templates and workflow versions.
+
+This introduces a core separation between:
+
+- a stable workflow identity
+- a versioned workflow configuration
+
+This is the first structural step toward governed workflow configuration and future workflow publication.
