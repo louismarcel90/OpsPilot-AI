@@ -347,3 +347,14 @@ This introduces a core separation between:
 - a versioned workflow configuration
 
 This is the first structural step toward governed workflow configuration and future workflow publication.
+
+## Current Workflow Seed and Enriched Read Capability
+
+The service now includes seeded workflow templates and seeded workflow versions.
+
+It supports enriched reads that return:
+
+- a stable workflow template
+- all persisted versions attached to that workflow
+
+This improves local demonstrability and prepares the service for future governed workflow publication.

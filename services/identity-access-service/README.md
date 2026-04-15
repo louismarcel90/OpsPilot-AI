@@ -39,10 +39,13 @@ At this stage, the service provides:
 - assistant publication operation and controlled draft-to-published transition foundation
 - assistant publication audit trail and publication transition diagnostics
 - workflow template and workflow version persistence foundation
+- seeded workflow catalog with enriched workflow plus versions read model
 
 The authorization parity history endpoint now reads persisted diagnostic events from durable storage.
 
 Authorization diagnostics and persisted audit events now include explicit correlation identifiers and diagnostic identifiers to support future investigation flows.
+
+The local seed now includes workflow templates and workflow versions for realistic workflow configuration demonstrations.
 
 ## Bootstrap Safety Checks
 

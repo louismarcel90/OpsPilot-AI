@@ -2,6 +2,7 @@ export { createPostgresConnection } from './postgres/create-postgres-connection.
 export type { PostgresConnection } from './postgres/create-postgres-connection.js';
 export { seedAssistantFoundation } from './postgres/seeds/seed-assistant-foundation.js';
 export { seedIdentityFoundation } from './postgres/seeds/seed-identity-foundation.js';
+export { seedWorkflowFoundation } from './postgres/seeds/seed-workflow-foundation.js';
 export { seedWorkspaceAuthorizationCatalog } from './postgres/seeds/seed-workspace-authorization-catalog.js';
 export { databaseSchema } from './postgres/database-schema.js';
 export { assistantDefinitionsTable } from './postgres/schema/assistant-definitions.table.js';
