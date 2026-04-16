@@ -370,3 +370,15 @@ Supported lifecycle statuses:
 - `deprecated`
 
 It also supports resolving the currently published version for a given workflow template, which is a first step toward a governed published workflow configuration model.
+
+## Current Workflow Version Consistency Capability
+
+The service now evaluates workflow version consistency using lifecycle invariants.
+
+Current checks include:
+
+- zero published version
+- exactly one published version
+- multiple published versions
+
+This improves workflow configuration quality and prepares the service for future governed publish flows.

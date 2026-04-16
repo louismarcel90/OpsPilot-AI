@@ -41,6 +41,7 @@ At this stage, the service provides:
 - workflow template and workflow version persistence foundation
 - seeded workflow catalog with enriched workflow plus versions read model
 - workflow version lifecycle primitives and published version resolution foundation
+- workflow version lifecycle invariants and consistency checks
 
 The authorization parity history endpoint now reads persisted diagnostic events from durable storage.
 
@@ -288,6 +289,10 @@ Protected routes currently expect the following request headers:
 - `x-workspace-slug`
 
 These headers are currently used as a development-stage actor context transport mechanism before real authentication is introduced.
+
+### `GET /workflows/version-consistency?slug=...`
+
+Returns the lifecycle consistency check for a specific workflow template.
 
 ## Local Development
 

@@ -41,6 +41,7 @@ import { handleGetWorkflowVersionsRequest } from '../../../presentation/http/han
 import { handleGetWorkflowWithVersionsRequest } from '../../../presentation/http/handlers/handle-get-workflow-with-versions-request.js';
 import { handleListWorkflowsRequest } from '../../../presentation/http/handlers/handle-list-workflows-request.js';
 import { handleGetPublishedWorkflowVersionRequest } from '../../../presentation/http/handlers/handle-get-published-workflow-version-request.js';
+import { handleGetWorkflowVersionConsistencyRequest } from '../../../presentation/http/handlers/handle-get-workflow-version-consistency-request.js';
 
 function resolvePath(request: IncomingMessage): string {
   const requestUrl = request.url ?? '/';
@@ -432,6 +433,17 @@ export function createRouter(
           logger,
           correlationId,
           dependencies.getPublishedWorkflowVersionUseCase,
+        );
+        return;
+      }
+
+      if (method === 'GET' && path === '/workflows/version-consistency') {
+        await handleGetWorkflowVersionConsistencyRequest(
+          request,
+          response,
+          logger,
+          correlationId,
+          dependencies.getWorkflowVersionConsistencyUseCase,
         );
         return;
       }
