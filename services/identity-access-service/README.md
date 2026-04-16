@@ -40,6 +40,7 @@ At this stage, the service provides:
 - assistant publication audit trail and publication transition diagnostics
 - workflow template and workflow version persistence foundation
 - seeded workflow catalog with enriched workflow plus versions read model
+- workflow version lifecycle primitives and published version resolution foundation
 
 The authorization parity history endpoint now reads persisted diagnostic events from durable storage.
 
@@ -242,6 +243,10 @@ Returns the publication readiness diagnostic for a specific assistant version.
 ### `POST /assistants/publish?slug=...&versionNumber=...`
 
 Promotes a draft assistant version to published and deprecates the previously published version when applicable.
+
+### `GET /workflows/published-version?slug=...`
+
+Returns the currently resolved published version for a specific workflow template.
 
 ## Current Assistant Publication Operation
 

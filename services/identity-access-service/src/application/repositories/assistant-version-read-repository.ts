@@ -2,5 +2,11 @@ import type { AssistantVersionSummary } from '../../domain/assistants/assistant-
 
 export interface AssistantVersionReadRepository {
   listByAssistantId(assistantId: string): Promise<AssistantVersionSummary[]>;
-  findPublishedByAssistantId(assistantId: string): Promise<AssistantVersionSummary | null>;
+
+  findByAssistantIdAndVersionNumber(
+    assistantId: string,
+    versionNumber: number,
+  ): Promise<AssistantVersionSummary | null>;
+
+  findLatestPublishedByAssistantId(assistantId: string): Promise<AssistantVersionSummary | null>;
 }

@@ -1,4 +1,4 @@
-import { asc, eq } from 'drizzle-orm';
+import { and, desc, eq } from 'drizzle-orm';
 
 import type { PostgresConnection } from '@opspilot/db';
 import { assistantVersionsTable } from '@opspilot/db';
@@ -36,7 +36,7 @@ export class DrizzleAssistantVersionReadRepository implements AssistantVersionRe
       })
       .from(assistantVersionsTable)
       .where(eq(assistantVersionsTable.assistantId, assistantId))
-      .orderBy(asc(assistantVersionsTable.versionNumber));
+      .orderBy(desc(assistantVersionsTable.versionNumber));
 
     return rows.map((row) => ({
       id: row.id,
@@ -51,7 +51,51 @@ export class DrizzleAssistantVersionReadRepository implements AssistantVersionRe
     }));
   }
 
-  public async findPublishedByAssistantId(
+  public async findByAssistantIdAndVersionNumber(
+    assistantId: string,
+    versionNumber: number,
+  ): Promise<AssistantVersionSummary | null> {
+    const rows = await this.connection.db
+      .select({
+        id: assistantVersionsTable.id,
+        assistantId: assistantVersionsTable.assistantId,
+        versionNumber: assistantVersionsTable.versionNumber,
+        lifecycleStatus: assistantVersionsTable.lifecycleStatus,
+        modelKey: assistantVersionsTable.modelKey,
+        systemInstructions: assistantVersionsTable.systemInstructions,
+        temperature: assistantVersionsTable.temperature,
+        maxOutputTokens: assistantVersionsTable.maxOutputTokens,
+        changeSummary: assistantVersionsTable.changeSummary,
+      })
+      .from(assistantVersionsTable)
+      .where(
+        and(
+          eq(assistantVersionsTable.assistantId, assistantId),
+          eq(assistantVersionsTable.versionNumber, versionNumber),
+        ),
+      )
+      .limit(1);
+
+    const row = rows[0];
+
+    if (row === undefined) {
+      return null;
+    }
+
+    return {
+      id: row.id,
+      assistantId: row.assistantId,
+      versionNumber: row.versionNumber,
+      lifecycleStatus: mapLifecycleStatus(row.lifecycleStatus),
+      modelKey: row.modelKey,
+      systemInstructions: row.systemInstructions,
+      temperature: row.temperature,
+      maxOutputTokens: row.maxOutputTokens,
+      changeSummary: row.changeSummary,
+    };
+  }
+
+  public async findLatestPublishedByAssistantId(
     assistantId: string,
   ): Promise<AssistantVersionSummary | null> {
     const rows = await this.connection.db
@@ -67,29 +111,31 @@ export class DrizzleAssistantVersionReadRepository implements AssistantVersionRe
         changeSummary: assistantVersionsTable.changeSummary,
       })
       .from(assistantVersionsTable)
-      .where(eq(assistantVersionsTable.assistantId, assistantId))
-      .orderBy(asc(assistantVersionsTable.versionNumber));
+      .where(
+        and(
+          eq(assistantVersionsTable.assistantId, assistantId),
+          eq(assistantVersionsTable.lifecycleStatus, 'published'),
+        ),
+      )
+      .orderBy(desc(assistantVersionsTable.versionNumber))
+      .limit(1);
 
-    const publishedRows = rows.filter(
-      (row) => mapLifecycleStatus(row.lifecycleStatus) === 'published',
-    );
+    const row = rows[0];
 
-    const publishedRow = publishedRows.at(-1);
-
-    if (!publishedRow) {
+    if (row === undefined) {
       return null;
     }
 
     return {
-      id: publishedRow.id,
-      assistantId: publishedRow.assistantId,
-      versionNumber: publishedRow.versionNumber,
-      lifecycleStatus: mapLifecycleStatus(publishedRow.lifecycleStatus),
-      modelKey: publishedRow.modelKey,
-      systemInstructions: publishedRow.systemInstructions,
-      temperature: publishedRow.temperature,
-      maxOutputTokens: publishedRow.maxOutputTokens,
-      changeSummary: publishedRow.changeSummary,
+      id: row.id,
+      assistantId: row.assistantId,
+      versionNumber: row.versionNumber,
+      lifecycleStatus: mapLifecycleStatus(row.lifecycleStatus),
+      modelKey: row.modelKey,
+      systemInstructions: row.systemInstructions,
+      temperature: row.temperature,
+      maxOutputTokens: row.maxOutputTokens,
+      changeSummary: row.changeSummary,
     };
   }
 }

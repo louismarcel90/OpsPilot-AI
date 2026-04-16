@@ -21,9 +21,8 @@ export class GetPublishedAssistantVersionUseCase {
       return null;
     }
 
-    const publishedVersion = await this.assistantVersionReadRepository.findPublishedByAssistantId(
-      assistant.id,
-    );
+    const publishedVersion =
+      await this.assistantVersionReadRepository.findLatestPublishedByAssistantId(assistant.id);
 
     return {
       assistantId: assistant.id,

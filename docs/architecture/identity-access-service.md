@@ -358,3 +358,15 @@ It supports enriched reads that return:
 - all persisted versions attached to that workflow
 
 This improves local demonstrability and prepares the service for future governed workflow publication.
+
+## Current Workflow Lifecycle and Published Version Resolution
+
+The service now includes first workflow version lifecycle primitives.
+
+Supported lifecycle statuses:
+
+- `draft`
+- `published`
+- `deprecated`
+
+It also supports resolving the currently published version for a given workflow template, which is a first step toward a governed published workflow configuration model.

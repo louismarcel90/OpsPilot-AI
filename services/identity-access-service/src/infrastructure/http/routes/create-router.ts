@@ -40,6 +40,7 @@ import { handleGetWorkflowBySlugRequest } from '../../../presentation/http/handl
 import { handleGetWorkflowVersionsRequest } from '../../../presentation/http/handlers/handle-get-workflow-versions-request.js';
 import { handleGetWorkflowWithVersionsRequest } from '../../../presentation/http/handlers/handle-get-workflow-with-versions-request.js';
 import { handleListWorkflowsRequest } from '../../../presentation/http/handlers/handle-list-workflows-request.js';
+import { handleGetPublishedWorkflowVersionRequest } from '../../../presentation/http/handlers/handle-get-published-workflow-version-request.js';
 
 function resolvePath(request: IncomingMessage): string {
   const requestUrl = request.url ?? '/';
@@ -420,6 +421,17 @@ export function createRouter(
           logger,
           correlationId,
           dependencies.getWorkflowWithVersionsUseCase,
+        );
+        return;
+      }
+
+      if (method === 'GET' && path === '/workflows/published-version') {
+        await handleGetPublishedWorkflowVersionRequest(
+          request,
+          response,
+          logger,
+          correlationId,
+          dependencies.getPublishedWorkflowVersionUseCase,
         );
         return;
       }
