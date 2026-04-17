@@ -43,6 +43,7 @@ import { handleListWorkflowsRequest } from '../../../presentation/http/handlers/
 import { handleGetPublishedWorkflowVersionRequest } from '../../../presentation/http/handlers/handle-get-published-workflow-version-request.js';
 import { handleGetWorkflowVersionConsistencyRequest } from '../../../presentation/http/handlers/handle-get-workflow-version-consistency-request.js';
 import { handleGetWorkflowPublishReadinessRequest } from '../../../presentation/http/handlers/handle-get-workflow-publish-readiness-request.js';
+import { handlePublishWorkflowVersionRequest } from '../../../presentation/http/handlers/handle-publish-workflow-version-request.js';
 
 function resolvePath(request: IncomingMessage): string {
   const requestUrl = request.url ?? '/';
@@ -456,6 +457,17 @@ export function createRouter(
           logger,
           correlationId,
           dependencies.getWorkflowPublishReadinessUseCase,
+        );
+        return;
+      }
+
+      if (method === 'POST' && path === '/workflows/publish') {
+        await handlePublishWorkflowVersionRequest(
+          request,
+          response,
+          logger,
+          correlationId,
+          dependencies.publishWorkflowVersionUseCase,
         );
         return;
       }

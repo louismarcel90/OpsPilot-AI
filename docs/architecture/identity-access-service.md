@@ -398,3 +398,14 @@ Current readiness checks include:
 - conflicting published version detection
 
 This prepares the service for future governed workflow publication flows.
+
+## Current Workflow Publication Operation
+
+The service now supports a first governed workflow publication operation.
+
+The current transition model:
+
+- promotes a target `draft` version to `published`
+- deprecates the previously published version when one exists
+
+This is the first mutation foundation for a governed published workflow configuration model.

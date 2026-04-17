@@ -43,6 +43,7 @@ At this stage, the service provides:
 - workflow version lifecycle primitives and published version resolution foundation
 - workflow version lifecycle invariants and consistency checks
 - workflow publish eligibility checks and publication readiness diagnostics
+- workflow publication operation and controlled draft-to-published transition foundation
 
 The authorization parity history endpoint now reads persisted diagnostic events from durable storage.
 
@@ -250,16 +251,13 @@ Promotes a draft assistant version to published and deprecates the previously pu
 
 Returns the currently resolved published version for a specific workflow template.
 
-## Current Assistant Publication Operation
+### `GET /workflows/version-consistency?slug=...`
 
-The service now supports a first governed assistant publication operation.
+Returns the lifecycle consistency check for a specific workflow template.
 
-The current transition model:
+### `GET /workflows/publish-readiness?slug=...&versionNumber=...`
 
-- promotes a target `draft` version to `published`
-- deprecates the previously published version when one exists
-
-This is the first mutation foundation for a governed published configuration model.
+Returns the publication readiness diagnostic for a specific workflow version.
 
 ### `GET /assistants/publication-history?slug=...`
 
@@ -281,6 +279,21 @@ Returns a single workflow template by slug.
 
 Returns all versions for a specific workflow template.
 
+### `POST /workflows/publish?slug=...&versionNumber=...`
+
+Promotes a draft workflow version to published and deprecates the previously published version when applicable.
+
+## Current Assistant Publication Operation
+
+The service now supports a first governed assistant publication operation.
+
+The current transition model:
+
+- promotes a target `draft` version to `published`
+- deprecates the previously published version when one exists
+
+This is the first mutation foundation for a governed published configuration model.
+
 ## Actor Context Headers
 
 Protected routes currently expect the following request headers:
@@ -290,14 +303,6 @@ Protected routes currently expect the following request headers:
 - `x-workspace-slug`
 
 These headers are currently used as a development-stage actor context transport mechanism before real authentication is introduced.
-
-### `GET /workflows/version-consistency?slug=...`
-
-Returns the lifecycle consistency check for a specific workflow template.
-
-### `GET /workflows/publish-readiness?slug=...&versionNumber=...`
-
-Returns the publication readiness diagnostic for a specific workflow version.
 
 ## Local Development
 
