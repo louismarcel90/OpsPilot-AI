@@ -382,3 +382,19 @@ Current checks include:
 - multiple published versions
 
 This improves workflow configuration quality and prepares the service for future governed publish flows.
+
+## Current Workflow Publication Readiness Capability
+
+The service now evaluates whether a specific workflow version is eligible for publication.
+
+Current readiness checks include:
+
+- workflow existence
+- version existence
+- workflow active state
+- lifecycle compatibility
+- trigger mode presence
+- definition summary presence
+- conflicting published version detection
+
+This prepares the service for future governed workflow publication flows.

@@ -32,6 +32,7 @@ import { GetAuthorizationParityTimelineByDiagnosticIdUseCase } from '../../../ap
 import { GetPublishedAssistantVersionUseCase } from '../../../application/use-cases/get-published-assistant-version.use-case.js';
 import { GetPublishedWorkflowVersionUseCase } from '../../../application/use-cases/get-published-workflow-version.use-case.js';
 import { GetWorkflowBySlugUseCase } from '../../../application/use-cases/get-workflow-by-slug.use-case.js';
+import { GetWorkflowPublishReadinessUseCase } from '../../../application/use-cases/get-workflow-publish-readiness.use-case.js';
 import { GetWorkflowVersionConsistencyUseCase } from '../../../application/use-cases/get-workflow-version-consistency.use-case.js';
 import { GetWorkflowVersionsUseCase } from '../../../application/use-cases/get-workflow-versions.use-case.js';
 import { GetWorkflowWithVersionsUseCase } from '../../../application/use-cases/get-workflow-with-versions.use-case.js';
@@ -74,6 +75,7 @@ export interface ServiceDependencies {
   readonly getWorkflowWithVersionsUseCase: GetWorkflowWithVersionsUseCase;
   readonly getPublishedWorkflowVersionUseCase: GetPublishedWorkflowVersionUseCase;
   readonly getWorkflowVersionConsistencyUseCase: GetWorkflowVersionConsistencyUseCase;
+  readonly getWorkflowPublishReadinessUseCase: GetWorkflowPublishReadinessUseCase;
   readonly getWorkspaceAuthorizationCatalogUseCase: GetWorkspaceAuthorizationCatalogUseCase;
   readonly validateWorkspaceAuthorizationBootstrapUseCase: ValidateWorkspaceAuthorizationBootstrapUseCase;
   readonly getAuthorizationParityDiagnosticUseCase: GetAuthorizationParityDiagnosticUseCase;
@@ -185,6 +187,10 @@ export function createServiceDependencies(
       workflowVersionReadRepository,
     ),
     getWorkflowVersionConsistencyUseCase: new GetWorkflowVersionConsistencyUseCase(
+      workflowTemplateReadRepository,
+      workflowVersionReadRepository,
+    ),
+    getWorkflowPublishReadinessUseCase: new GetWorkflowPublishReadinessUseCase(
       workflowTemplateReadRepository,
       workflowVersionReadRepository,
     ),

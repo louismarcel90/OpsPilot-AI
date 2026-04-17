@@ -42,6 +42,7 @@ At this stage, the service provides:
 - seeded workflow catalog with enriched workflow plus versions read model
 - workflow version lifecycle primitives and published version resolution foundation
 - workflow version lifecycle invariants and consistency checks
+- workflow publish eligibility checks and publication readiness diagnostics
 
 The authorization parity history endpoint now reads persisted diagnostic events from durable storage.
 
@@ -293,6 +294,10 @@ These headers are currently used as a development-stage actor context transport 
 ### `GET /workflows/version-consistency?slug=...`
 
 Returns the lifecycle consistency check for a specific workflow template.
+
+### `GET /workflows/publish-readiness?slug=...&versionNumber=...`
+
+Returns the publication readiness diagnostic for a specific workflow version.
 
 ## Local Development
 
