@@ -9,4 +9,8 @@ export interface WorkflowStepDefinitionSummary {
   readonly stepType: WorkflowStepType;
   readonly sequenceNumber: number;
   readonly isRequired: boolean;
+  readonly assistantBinding?: string;
+  readonly toolBinding?: string;
+  readonly approvalRequired: boolean;
+  readonly policyKey?: string;
 }

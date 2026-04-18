@@ -435,3 +435,16 @@ This introduces a first internal structure model for versioned workflows, includ
 - required step flags
 
 This prepares the service for future execution-oriented workflow modeling.
+
+## Current Workflow Step Execution Intent Foundation
+
+The service now enriches workflow step definitions with a first execution-intent surface.
+
+Each step may now expose:
+
+- an assistant binding
+- a tool binding
+- an approval required flag
+- a policy key
+
+This is a first foundation for governed workflow step execution planning.

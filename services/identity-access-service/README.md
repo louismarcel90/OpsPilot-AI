@@ -46,6 +46,8 @@ At this stage, the service provides:
 - workflow publication operation and controlled draft-to-published transition foundation
 - workflow publication audit trail and workflow publication transition diagnostics
 - workflow step definition foundation and versioned workflow structure primitives
+- workflow step policy surface and assistant/tool binding primitives
+- Workflow steps now expose first execution-intent bindings, including assistant binding, tool binding, approval requirement, and step-level policy surface.
 
 The authorization parity history endpoint now reads persisted diagnostic events from durable storage.
 

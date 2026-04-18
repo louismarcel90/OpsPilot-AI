@@ -15,6 +15,13 @@
       "when": 1776504465346,
       "tag": "0001_orange_hedge_knight",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1776516947987,
+      "tag": "0002_illegal_baron_zemo",
+      "breakpoints": true
     }
   ]
 }

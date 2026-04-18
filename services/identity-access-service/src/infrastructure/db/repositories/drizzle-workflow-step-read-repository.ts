@@ -34,6 +34,10 @@ export class DrizzleWorkflowStepReadRepository implements WorkflowStepReadReposi
         stepType: workflowStepDefinitionsTable.stepType,
         sequenceNumber: workflowStepDefinitionsTable.sequenceNumber,
         isRequired: workflowStepDefinitionsTable.isRequired,
+        assistantBinding: workflowStepDefinitionsTable.assistantBinding,
+        toolBinding: workflowStepDefinitionsTable.toolBinding,
+        approvalRequired: workflowStepDefinitionsTable.approvalRequired,
+        policyKey: workflowStepDefinitionsTable.policyKey,
       })
       .from(workflowStepDefinitionsTable)
       .where(eq(workflowStepDefinitionsTable.workflowVersionId, workflowVersionId))
@@ -48,6 +52,10 @@ export class DrizzleWorkflowStepReadRepository implements WorkflowStepReadReposi
       stepType: mapWorkflowStepType(row.stepType),
       sequenceNumber: row.sequenceNumber,
       isRequired: row.isRequired,
+      ...(row.assistantBinding !== null ? { assistantBinding: row.assistantBinding } : {}),
+      ...(row.toolBinding !== null ? { toolBinding: row.toolBinding } : {}),
+      approvalRequired: row.approvalRequired,
+      ...(row.policyKey !== null ? { policyKey: row.policyKey } : {}),
     }));
   }
 }
