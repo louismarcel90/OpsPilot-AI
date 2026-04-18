@@ -1,5 +1,5 @@
 {
-  "id": "81e4d458-6972-4c2d-b40f-52f19bf8ee03",
+  "id": "d1cab80b-3398-4e72-b2d9-9d86ac4cbe16",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -980,6 +980,141 @@
         }
       },
       "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.workflow_publication_events": {
+      "name": "workflow_publication_events",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "workflow_template_id": {
+          "name": "workflow_template_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "workflow_slug": {
+          "name": "workflow_slug",
+          "type": "varchar(120)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "published_version_id": {
+          "name": "published_version_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "published_version_number": {
+          "name": "published_version_number",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "deprecated_version_id": {
+          "name": "deprecated_version_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "deprecated_version_number": {
+          "name": "deprecated_version_number",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "occurred_at": {
+          "name": "occurred_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "workflow_publication_events_template_id_idx": {
+          "name": "workflow_publication_events_template_id_idx",
+          "columns": [
+            {
+              "expression": "workflow_template_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "workflow_publication_events_workflow_slug_idx": {
+          "name": "workflow_publication_events_workflow_slug_idx",
+          "columns": [
+            {
+              "expression": "workflow_slug",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "workflow_publication_events_occurred_at_idx": {
+          "name": "workflow_publication_events_occurred_at_idx",
+          "columns": [
+            {
+              "expression": "occurred_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "workflow_publication_events_workflow_template_id_workflow_templates_id_fk": {
+          "name": "workflow_publication_events_workflow_template_id_workflow_templates_id_fk",
+          "tableFrom": "workflow_publication_events",
+          "tableTo": "workflow_templates",
+          "columnsFrom": ["workflow_template_id"],
+          "columnsTo": ["id"],
+          "onDelete": "restrict",
+          "onUpdate": "cascade"
+        },
+        "workflow_publication_events_published_version_id_workflow_versions_id_fk": {
+          "name": "workflow_publication_events_published_version_id_workflow_versions_id_fk",
+          "tableFrom": "workflow_publication_events",
+          "tableTo": "workflow_versions",
+          "columnsFrom": ["published_version_id"],
+          "columnsTo": ["id"],
+          "onDelete": "restrict",
+          "onUpdate": "cascade"
+        },
+        "workflow_publication_events_deprecated_version_id_workflow_versions_id_fk": {
+          "name": "workflow_publication_events_deprecated_version_id_workflow_versions_id_fk",
+          "tableFrom": "workflow_publication_events",
+          "tableTo": "workflow_versions",
+          "columnsFrom": ["deprecated_version_id"],
+          "columnsTo": ["id"],
+          "onDelete": "restrict",
+          "onUpdate": "cascade"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},

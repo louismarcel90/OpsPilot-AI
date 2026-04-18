@@ -409,3 +409,17 @@ The current transition model:
 - deprecates the previously published version when one exists
 
 This is the first mutation foundation for a governed published workflow configuration model.
+
+## Current Workflow Publication Audit Trail
+
+The service now persists workflow publication events.
+
+Each workflow publication event captures:
+
+- the workflow template identifier
+- the workflow slug
+- the published version
+- the deprecated previously published version, when applicable
+- the publication timestamp
+
+This is the first durable traceability layer for workflow publication mutations.

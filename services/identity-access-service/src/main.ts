@@ -14,6 +14,7 @@ import { DrizzleAuthorizationAuditEventRepository } from './infrastructure/db/re
 import { DrizzleAuthorizationCatalogReadRepository } from './application/repositories/drizzle-authorization-catalog-read-repository.js';
 import { DrizzleTenantReadRepository } from './infrastructure/db/repositories/drizzle-tenant-read-repository.js';
 import { DrizzleUserReadRepository } from './infrastructure/db/repositories/drizzle-user-read-repository.js';
+import { DrizzleWorkflowPublicationEventRepository } from './infrastructure/db/repositories/drizzle-workflow-publication-event-repository.js';
 import { DrizzleWorkflowTemplateReadRepository } from './infrastructure/db/repositories/drizzle-workflow-template-read-repository.js';
 import { DrizzleWorkflowVersionReadRepository } from './infrastructure/db/repositories/drizzle-workflow-version-read-repository.js';
 import { DrizzleWorkflowVersionWriteRepository } from './infrastructure/db/repositories/drizzle-workflow-version-write-repository.js';
@@ -97,6 +98,9 @@ async function bootstrap(): Promise<void> {
   const workflowVersionWriteRepository = new DrizzleWorkflowVersionWriteRepository(
     databaseConnection,
   );
+  const workflowPublicationEventRepository = new DrizzleWorkflowPublicationEventRepository(
+    databaseConnection,
+  );
 
   const dependencies = createServiceDependencies(
     userReadRepository,
@@ -112,6 +116,7 @@ async function bootstrap(): Promise<void> {
     workflowTemplateReadRepository,
     workflowVersionReadRepository,
     workflowVersionWriteRepository,
+    workflowPublicationEventRepository,
   );
 
   const bootstrapValidationResult =

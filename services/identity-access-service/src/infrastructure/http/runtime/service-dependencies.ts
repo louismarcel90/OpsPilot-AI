@@ -6,6 +6,7 @@ import type { AuthorizationCatalogReadRepository } from '../../../application/re
 import type { AuthorizationAuditEventRepository } from '../../../application/repositories/authorization-audit-event-repository.js';
 import type { TenantReadRepository } from '../../../application/repositories/tenant-read-repository.js';
 import type { UserReadRepository } from '../../../application/repositories/user-read-repository.js';
+import type { WorkflowPublicationEventRepository } from '../../../application/use-cases/workflow-publication-event-repository.js';
 import type { WorkflowTemplateReadRepository } from '../../../application/repositories/workflow-template-read-repository.js';
 import type { WorkflowVersionReadRepository } from '../../../application/repositories/workflow-version-read-repository.js';
 import type { WorkflowVersionWriteRepository } from '../../../application/repositories/workflow-version-write-repository.js';
@@ -33,6 +34,8 @@ import { GetAuthorizationParityTimelineByDiagnosticIdUseCase } from '../../../ap
 import { GetPublishedAssistantVersionUseCase } from '../../../application/use-cases/get-published-assistant-version.use-case.js';
 import { GetPublishedWorkflowVersionUseCase } from '../../../application/use-cases/get-published-workflow-version.use-case.js';
 import { GetWorkflowBySlugUseCase } from '../../../application/use-cases/get-workflow-by-slug.use-case.js';
+import { GetWorkflowLatestPublicationUseCase } from '../../../application/use-cases/get-workflow-latest-publication.use-case.js';
+import { GetWorkflowPublicationHistoryUseCase } from '../../../application/use-cases/get-workflow-publication-history.use-case.js';
 import { GetWorkflowPublishReadinessUseCase } from '../../../application/use-cases/get-workflow-publish-readiness.use-case.js';
 import { GetWorkflowVersionConsistencyUseCase } from '../../../application/use-cases/get-workflow-version-consistency.use-case.js';
 import { GetWorkflowVersionsUseCase } from '../../../application/use-cases/get-workflow-versions.use-case.js';
@@ -79,6 +82,8 @@ export interface ServiceDependencies {
   readonly getWorkflowVersionConsistencyUseCase: GetWorkflowVersionConsistencyUseCase;
   readonly getWorkflowPublishReadinessUseCase: GetWorkflowPublishReadinessUseCase;
   readonly publishWorkflowVersionUseCase: PublishWorkflowVersionUseCase;
+  readonly getWorkflowPublicationHistoryUseCase: GetWorkflowPublicationHistoryUseCase;
+  readonly getWorkflowLatestPublicationUseCase: GetWorkflowLatestPublicationUseCase;
   readonly getWorkspaceAuthorizationCatalogUseCase: GetWorkspaceAuthorizationCatalogUseCase;
   readonly validateWorkspaceAuthorizationBootstrapUseCase: ValidateWorkspaceAuthorizationBootstrapUseCase;
   readonly getAuthorizationParityDiagnosticUseCase: GetAuthorizationParityDiagnosticUseCase;
@@ -109,6 +114,7 @@ export function createServiceDependencies(
   workflowTemplateReadRepository: WorkflowTemplateReadRepository,
   workflowVersionReadRepository: WorkflowVersionReadRepository,
   workflowVersionWriteRepository: WorkflowVersionWriteRepository,
+  workflowPublicationEventRepository: WorkflowPublicationEventRepository,
 ): ServiceDependencies {
   const authorizationBootstrapValidationStore = new InMemoryAuthorizationBootstrapValidationStore();
   const authorizationDiagnosticsHistoryStore = new InMemoryAuthorizationDiagnosticsHistoryStore();
@@ -202,6 +208,15 @@ export function createServiceDependencies(
       workflowTemplateReadRepository,
       workflowVersionReadRepository,
       workflowVersionWriteRepository,
+      workflowPublicationEventRepository,
+    ),
+    getWorkflowPublicationHistoryUseCase: new GetWorkflowPublicationHistoryUseCase(
+      workflowTemplateReadRepository,
+      workflowPublicationEventRepository,
+    ),
+    getWorkflowLatestPublicationUseCase: new GetWorkflowLatestPublicationUseCase(
+      workflowTemplateReadRepository,
+      workflowPublicationEventRepository,
     ),
     getWorkspaceAuthorizationCatalogUseCase: new GetWorkspaceAuthorizationCatalogUseCase(
       authorizationCatalogReadRepository,

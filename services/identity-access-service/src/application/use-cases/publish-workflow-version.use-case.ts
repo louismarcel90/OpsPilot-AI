@@ -1,3 +1,6 @@
+import { randomUUID } from 'node:crypto';
+
+import type { WorkflowPublicationEventRepository } from './workflow-publication-event-repository.js';
 import type { WorkflowPublicationResult } from '../../domain/workflows/workflow-publication-result.js';
 import type { WorkflowVersionSummary } from '../../domain/workflows/workflow-version-summary.js';
 import type { WorkflowTemplateReadRepository } from '../repositories/workflow-template-read-repository.js';
@@ -10,6 +13,7 @@ export class PublishWorkflowVersionUseCase {
     private readonly workflowTemplateReadRepository: WorkflowTemplateReadRepository,
     private readonly workflowVersionReadRepository: WorkflowVersionReadRepository,
     private readonly workflowVersionWriteRepository: WorkflowVersionWriteRepository,
+    private readonly workflowPublicationEventRepository: WorkflowPublicationEventRepository,
   ) {}
 
   public async execute(input: {
@@ -77,11 +81,26 @@ export class PublishWorkflowVersionUseCase {
       deprecatedPreviousPublishedVersion = reloadedPreviousPublishedVersion;
     }
 
+    await this.workflowPublicationEventRepository.append({
+      id: randomUUID(),
+      workflowTemplateId: resolvedWorkflowTemplate.id,
+      workflowSlug: resolvedWorkflowTemplate.slug,
+      publishedVersionId: publishedVersion.id,
+      publishedVersionNumber: publishedVersion.versionNumber,
+      ...(deprecatedPreviousPublishedVersion !== undefined
+        ? { deprecatedVersionId: deprecatedPreviousPublishedVersion.id }
+        : {}),
+      ...(deprecatedPreviousPublishedVersion !== undefined
+        ? { deprecatedVersionNumber: deprecatedPreviousPublishedVersion.versionNumber }
+        : {}),
+      occurredAtIso: new Date().toISOString(),
+    });
+
     return {
       workflowSlug: resolvedWorkflowTemplate.slug,
       publishedVersion,
       ...(deprecatedPreviousPublishedVersion !== undefined
-        ? { deprecatedVersion: deprecatedPreviousPublishedVersion }
+        ? { deprecatedPreviousPublishedVersion }
         : {}),
     };
   }
