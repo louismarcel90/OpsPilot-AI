@@ -6,6 +6,7 @@ import { membershipsTable } from './schema/memberships.table.js';
 import { tenantsTable } from './schema/tenants.table.js';
 import { usersTable } from './schema/users.table.js';
 import { workflowPublicationEventsTable } from './schema/workflow-publication-events.table.js';
+import { workflowStepDefinitionsTable } from './schema/workflow-step-definitions.table.js';
 import { workflowTemplatesTable } from './schema/workflow-templates.table.js';
 import { workflowVersionsTable } from './schema/workflow-versions.table.js';
 import { workspaceRoleScopesTable } from './schema/workspace-role-scopes.table.js';
@@ -28,4 +29,5 @@ export const databaseSchema = {
   workflowTemplates: workflowTemplatesTable,
   workflowVersions: workflowVersionsTable,
   workflowPublicationEvents: workflowPublicationEventsTable,
+  workflowStepDefinitions: workflowStepDefinitionsTable,
 };

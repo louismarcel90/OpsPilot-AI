@@ -7,6 +7,7 @@ import type { AuthorizationAuditEventRepository } from '../../../application/rep
 import type { TenantReadRepository } from '../../../application/repositories/tenant-read-repository.js';
 import type { UserReadRepository } from '../../../application/repositories/user-read-repository.js';
 import type { WorkflowPublicationEventRepository } from '../../../application/use-cases/workflow-publication-event-repository.js';
+import type { WorkflowStepReadRepository } from '../../../application/repositories/workflow-step-read-repository.js';
 import type { WorkflowTemplateReadRepository } from '../../../application/repositories/workflow-template-read-repository.js';
 import type { WorkflowVersionReadRepository } from '../../../application/repositories/workflow-version-read-repository.js';
 import type { WorkflowVersionWriteRepository } from '../../../application/repositories/workflow-version-write-repository.js';
@@ -39,6 +40,8 @@ import { GetWorkflowPublicationHistoryUseCase } from '../../../application/use-c
 import { GetWorkflowPublishReadinessUseCase } from '../../../application/use-cases/get-workflow-publish-readiness.use-case.js';
 import { GetWorkflowVersionConsistencyUseCase } from '../../../application/use-cases/get-workflow-version-consistency.use-case.js';
 import { GetWorkflowVersionsUseCase } from '../../../application/use-cases/get-workflow-versions.use-case.js';
+import { GetWorkflowVersionStepsUseCase } from '../../../application/use-cases/get-workflow-version-steps.use-case.js';
+import { GetWorkflowVersionStructureUseCase } from '../../../application/use-cases/get-workflow-version-structure.use-case.js';
 import { GetWorkflowWithVersionsUseCase } from '../../../application/use-cases/get-workflow-with-versions.use-case.js';
 import { GetWorkspaceAuthorizationCatalogUseCase } from '../../../application/use-cases/get-workspace-authorization-catalog.use-case.js';
 import { ListAssistantsUseCase } from '../../../application/use-cases/list-assistants.use-case.js';
@@ -84,6 +87,8 @@ export interface ServiceDependencies {
   readonly publishWorkflowVersionUseCase: PublishWorkflowVersionUseCase;
   readonly getWorkflowPublicationHistoryUseCase: GetWorkflowPublicationHistoryUseCase;
   readonly getWorkflowLatestPublicationUseCase: GetWorkflowLatestPublicationUseCase;
+  readonly getWorkflowVersionStepsUseCase: GetWorkflowVersionStepsUseCase;
+  readonly getWorkflowVersionStructureUseCase: GetWorkflowVersionStructureUseCase;
   readonly getWorkspaceAuthorizationCatalogUseCase: GetWorkspaceAuthorizationCatalogUseCase;
   readonly validateWorkspaceAuthorizationBootstrapUseCase: ValidateWorkspaceAuthorizationBootstrapUseCase;
   readonly getAuthorizationParityDiagnosticUseCase: GetAuthorizationParityDiagnosticUseCase;
@@ -115,6 +120,7 @@ export function createServiceDependencies(
   workflowVersionReadRepository: WorkflowVersionReadRepository,
   workflowVersionWriteRepository: WorkflowVersionWriteRepository,
   workflowPublicationEventRepository: WorkflowPublicationEventRepository,
+  workflowStepReadRepository: WorkflowStepReadRepository,
 ): ServiceDependencies {
   const authorizationBootstrapValidationStore = new InMemoryAuthorizationBootstrapValidationStore();
   const authorizationDiagnosticsHistoryStore = new InMemoryAuthorizationDiagnosticsHistoryStore();
@@ -217,6 +223,12 @@ export function createServiceDependencies(
     getWorkflowLatestPublicationUseCase: new GetWorkflowLatestPublicationUseCase(
       workflowTemplateReadRepository,
       workflowPublicationEventRepository,
+    ),
+    getWorkflowVersionStepsUseCase: new GetWorkflowVersionStepsUseCase(workflowStepReadRepository),
+    getWorkflowVersionStructureUseCase: new GetWorkflowVersionStructureUseCase(
+      workflowTemplateReadRepository,
+      workflowVersionReadRepository,
+      workflowStepReadRepository,
     ),
     getWorkspaceAuthorizationCatalogUseCase: new GetWorkspaceAuthorizationCatalogUseCase(
       authorizationCatalogReadRepository,

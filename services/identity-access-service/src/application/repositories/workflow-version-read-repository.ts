@@ -6,4 +6,9 @@ export interface WorkflowVersionReadRepository {
   findPublishedByWorkflowTemplateId(
     workflowTemplateId: string,
   ): Promise<WorkflowVersionSummary | null>;
+
+  findByWorkflowTemplateIdAndVersionNumber(input: {
+    readonly workflowTemplateId: string;
+    readonly versionNumber: number;
+  }): Promise<WorkflowVersionSummary | null>;
 }

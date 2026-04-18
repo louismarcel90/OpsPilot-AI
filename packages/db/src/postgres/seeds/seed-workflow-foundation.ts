@@ -1,4 +1,5 @@
 import type { PostgresConnection } from '../create-postgres-connection.js';
+import { workflowStepDefinitionsTable } from '../schema/workflow-step-definitions.table.js';
 import { workflowTemplatesTable } from '../schema/workflow-templates.table.js';
 import { workflowVersionsTable } from '../schema/workflow-versions.table.js';
 
@@ -10,6 +11,13 @@ const WORKFLOW_SEED_IDS = {
   incidentEscalationV2: 'wf_ver_incident_escalation_002',
   changeApprovalV1: 'wf_ver_change_approval_001',
   runbookExecutionV1: 'wf_ver_runbook_execution_001',
+  incidentEscalationV2StepSeverityReview: 'wf_step_incident_escalation_v2_001',
+  incidentEscalationV2StepOwnerAssignment: 'wf_step_incident_escalation_v2_002',
+  incidentEscalationV2StepEscalationApproval: 'wf_step_incident_escalation_v2_003',
+  changeApprovalV1StepReviewRequest: 'wf_step_change_approval_v1_001',
+  changeApprovalV1StepApprovalGate: 'wf_step_change_approval_v1_002',
+  runbookExecutionV1StepAiPreparation: 'wf_step_runbook_execution_v1_001',
+  runbookExecutionV1StepToolExecution: 'wf_step_runbook_execution_v1_002',
 } as const;
 
 const WORKFLOW_SCOPE = {
@@ -115,4 +123,94 @@ export async function seedWorkflowFoundation(connection: PostgresConnection): Pr
       },
     ])
     .onConflictDoNothing({ target: workflowVersionsTable.id });
+
+  await connection.db
+    .insert(workflowStepDefinitionsTable)
+    .values([
+      {
+        id: WORKFLOW_SEED_IDS.incidentEscalationV2StepSeverityReview,
+        workflowVersionId: WORKFLOW_SEED_IDS.incidentEscalationV2,
+        stepKey: 'severity-review',
+        displayName: 'Severity Review',
+        description: 'Review the incident severity and validate escalation criteria.',
+        stepType: 'human_task',
+        sequenceNumber: 1,
+        isRequired: true,
+        createdByActorId: WORKFLOW_SCOPE.createdByActorId,
+        updatedByActorId: WORKFLOW_SCOPE.updatedByActorId,
+      },
+      {
+        id: WORKFLOW_SEED_IDS.incidentEscalationV2StepOwnerAssignment,
+        workflowVersionId: WORKFLOW_SEED_IDS.incidentEscalationV2,
+        stepKey: 'owner-assignment',
+        displayName: 'Owner Assignment',
+        description: 'Assign an operational owner to coordinate the escalation.',
+        stepType: 'tool_task',
+        sequenceNumber: 2,
+        isRequired: true,
+        createdByActorId: WORKFLOW_SCOPE.createdByActorId,
+        updatedByActorId: WORKFLOW_SCOPE.updatedByActorId,
+      },
+      {
+        id: WORKFLOW_SEED_IDS.incidentEscalationV2StepEscalationApproval,
+        workflowVersionId: WORKFLOW_SEED_IDS.incidentEscalationV2,
+        stepKey: 'escalation-approval',
+        displayName: 'Escalation Approval',
+        description: 'Require explicit approval before high-severity escalation.',
+        stepType: 'approval_gate',
+        sequenceNumber: 3,
+        isRequired: true,
+        createdByActorId: WORKFLOW_SCOPE.createdByActorId,
+        updatedByActorId: WORKFLOW_SCOPE.updatedByActorId,
+      },
+      {
+        id: WORKFLOW_SEED_IDS.changeApprovalV1StepReviewRequest,
+        workflowVersionId: WORKFLOW_SEED_IDS.changeApprovalV1,
+        stepKey: 'review-request',
+        displayName: 'Review Request',
+        description: 'Review the submitted change request and summarize operational risk.',
+        stepType: 'human_task',
+        sequenceNumber: 1,
+        isRequired: true,
+        createdByActorId: WORKFLOW_SCOPE.createdByActorId,
+        updatedByActorId: WORKFLOW_SCOPE.updatedByActorId,
+      },
+      {
+        id: WORKFLOW_SEED_IDS.changeApprovalV1StepApprovalGate,
+        workflowVersionId: WORKFLOW_SEED_IDS.changeApprovalV1,
+        stepKey: 'approval-gate',
+        displayName: 'Approval Gate',
+        description: 'Require explicit approval before the requested change can proceed.',
+        stepType: 'approval_gate',
+        sequenceNumber: 2,
+        isRequired: true,
+        createdByActorId: WORKFLOW_SCOPE.createdByActorId,
+        updatedByActorId: WORKFLOW_SCOPE.updatedByActorId,
+      },
+      {
+        id: WORKFLOW_SEED_IDS.runbookExecutionV1StepAiPreparation,
+        workflowVersionId: WORKFLOW_SEED_IDS.runbookExecutionV1,
+        stepKey: 'ai-preparation',
+        displayName: 'AI Preparation',
+        description: 'Use AI assistance to summarize the next operational procedure steps.',
+        stepType: 'ai_task',
+        sequenceNumber: 1,
+        isRequired: true,
+        createdByActorId: WORKFLOW_SCOPE.createdByActorId,
+        updatedByActorId: WORKFLOW_SCOPE.updatedByActorId,
+      },
+      {
+        id: WORKFLOW_SEED_IDS.runbookExecutionV1StepToolExecution,
+        workflowVersionId: WORKFLOW_SEED_IDS.runbookExecutionV1,
+        stepKey: 'tool-execution',
+        displayName: 'Tool Execution',
+        description: 'Execute the controlled operational tool action.',
+        stepType: 'tool_task',
+        sequenceNumber: 2,
+        isRequired: true,
+        createdByActorId: WORKFLOW_SCOPE.createdByActorId,
+        updatedByActorId: WORKFLOW_SCOPE.updatedByActorId,
+      },
+    ])
+    .onConflictDoNothing({ target: workflowStepDefinitionsTable.id });
 }

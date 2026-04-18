@@ -1,4 +1,4 @@
-import { asc, eq } from 'drizzle-orm';
+import { asc, eq, and } from 'drizzle-orm';
 
 import type { PostgresConnection } from '@opspilot/db';
 import { workflowVersionsTable } from '@opspilot/db';
@@ -16,6 +16,26 @@ function mapLifecycleStatus(value: string): WorkflowVersionLifecycleStatus {
   }
 
   return value;
+}
+
+function mapRowToWorkflowVersionSummary(row: {
+  readonly id: string;
+  readonly workflowTemplateId: string;
+  readonly versionNumber: number;
+  readonly lifecycleStatus: string;
+  readonly triggerMode: string;
+  readonly definitionSummary: string;
+  readonly changeSummary: string;
+}): WorkflowVersionSummary {
+  return {
+    id: row.id,
+    workflowTemplateId: row.workflowTemplateId,
+    versionNumber: row.versionNumber,
+    lifecycleStatus: mapLifecycleStatus(row.lifecycleStatus),
+    triggerMode: row.triggerMode,
+    definitionSummary: row.definitionSummary,
+    changeSummary: row.changeSummary,
+  };
 }
 
 export class DrizzleWorkflowVersionReadRepository implements WorkflowVersionReadRepository {
@@ -38,15 +58,7 @@ export class DrizzleWorkflowVersionReadRepository implements WorkflowVersionRead
       .where(eq(workflowVersionsTable.workflowTemplateId, workflowTemplateId))
       .orderBy(asc(workflowVersionsTable.versionNumber));
 
-    return rows.map((row) => ({
-      id: row.id,
-      workflowTemplateId: row.workflowTemplateId,
-      versionNumber: row.versionNumber,
-      lifecycleStatus: mapLifecycleStatus(row.lifecycleStatus),
-      triggerMode: row.triggerMode,
-      definitionSummary: row.definitionSummary,
-      changeSummary: row.changeSummary,
-    }));
+    return rows.map(mapRowToWorkflowVersionSummary);
   }
 
   public async findPublishedByWorkflowTemplateId(
@@ -76,14 +88,37 @@ export class DrizzleWorkflowVersionReadRepository implements WorkflowVersionRead
       return null;
     }
 
-    return {
-      id: publishedRow.id,
-      workflowTemplateId: publishedRow.workflowTemplateId,
-      versionNumber: publishedRow.versionNumber,
-      lifecycleStatus: mapLifecycleStatus(publishedRow.lifecycleStatus),
-      triggerMode: publishedRow.triggerMode,
-      definitionSummary: publishedRow.definitionSummary,
-      changeSummary: publishedRow.changeSummary,
-    };
+    return mapRowToWorkflowVersionSummary(publishedRow);
+  }
+
+  public async findByWorkflowTemplateIdAndVersionNumber(input: {
+    readonly workflowTemplateId: string;
+    readonly versionNumber: number;
+  }): Promise<WorkflowVersionSummary | null> {
+    const rows = await this.connection.db
+      .select({
+        id: workflowVersionsTable.id,
+        workflowTemplateId: workflowVersionsTable.workflowTemplateId,
+        versionNumber: workflowVersionsTable.versionNumber,
+        lifecycleStatus: workflowVersionsTable.lifecycleStatus,
+        triggerMode: workflowVersionsTable.triggerMode,
+        definitionSummary: workflowVersionsTable.definitionSummary,
+        changeSummary: workflowVersionsTable.changeSummary,
+      })
+      .from(workflowVersionsTable)
+      .where(
+        and(
+          eq(workflowVersionsTable.workflowTemplateId, input.workflowTemplateId),
+          eq(workflowVersionsTable.versionNumber, input.versionNumber),
+        ),
+      )
+      .limit(1);
+
+    const row = rows[0];
+    if (!row) {
+      return null;
+    }
+
+    return mapRowToWorkflowVersionSummary(row);
   }
 }

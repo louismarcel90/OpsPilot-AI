@@ -423,3 +423,15 @@ Each workflow publication event captures:
 - the publication timestamp
 
 This is the first durable traceability layer for workflow publication mutations.
+
+## Current Workflow Step Definition Foundation
+
+The service now includes workflow step definitions attached to workflow versions.
+
+This introduces a first internal structure model for versioned workflows, including:
+
+- ordered steps
+- step types
+- required step flags
+
+This prepares the service for future execution-oriented workflow modeling.

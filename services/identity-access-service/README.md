@@ -45,6 +45,7 @@ At this stage, the service provides:
 - workflow publish eligibility checks and publication readiness diagnostics
 - workflow publication operation and controlled draft-to-published transition foundation
 - workflow publication audit trail and workflow publication transition diagnostics
+- workflow step definition foundation and versioned workflow structure primitives
 
 The authorization parity history endpoint now reads persisted diagnostic events from durable storage.
 
@@ -291,6 +292,14 @@ Returns the persisted publication history for a specific workflow template.
 ### `GET /workflows/latest-publication?slug=...`
 
 Returns the latest persisted publication event for a specific workflow template.
+
+### `GET /workflows/version-steps?workflowVersionId=...`
+
+Returns all step definitions for a specific workflow version.
+
+### `GET /workflows/version-structure?slug=...&versionNumber=...`
+
+Returns the workflow template, workflow version, and ordered step definitions for a specific workflow version.
 
 ## Current Assistant Publication Operation
 

@@ -2,6 +2,8 @@ import type { WorkflowTemplateSummary } from '../../domain/workflows/workflow-te
 
 export interface WorkflowTemplateReadRepository {
   listAll(): Promise<WorkflowTemplateSummary[]>;
+
   findBySlug(slug: string): Promise<WorkflowTemplateSummary | null>;
+
   findById(workflowTemplateId: string): Promise<WorkflowTemplateSummary | null>;
 }

@@ -46,6 +46,8 @@ import { handleGetWorkflowPublishReadinessRequest } from '../../../presentation/
 import { handlePublishWorkflowVersionRequest } from '../../../presentation/http/handlers/handle-publish-workflow-version-request.js';
 import { handleGetWorkflowLatestPublicationRequest } from '../../../presentation/http/handlers/handle-get-workflow-latest-publication-request.js';
 import { handleGetWorkflowPublicationHistoryRequest } from '../../../presentation/http/handlers/handle-get-workflow-publication-history-request.js';
+import { handleGetWorkflowVersionStepsRequest } from '../../../presentation/http/handlers/handle-get-workflow-version-steps-request.js';
+import { handleGetWorkflowVersionStructureRequest } from '../../../presentation/http/handlers/handle-get-workflow-version-structure-request.js';
 
 function resolvePath(request: IncomingMessage): string {
   const requestUrl = request.url ?? '/';
@@ -492,6 +494,28 @@ export function createRouter(
           logger,
           correlationId,
           dependencies.getWorkflowLatestPublicationUseCase,
+        );
+        return;
+      }
+
+      if (method === 'GET' && path === '/workflows/version-steps') {
+        await handleGetWorkflowVersionStepsRequest(
+          request,
+          response,
+          logger,
+          correlationId,
+          dependencies.getWorkflowVersionStepsUseCase,
+        );
+        return;
+      }
+
+      if (method === 'GET' && path === '/workflows/version-structure') {
+        await handleGetWorkflowVersionStructureRequest(
+          request,
+          response,
+          logger,
+          correlationId,
+          dependencies.getWorkflowVersionStructureUseCase,
         );
         return;
       }
