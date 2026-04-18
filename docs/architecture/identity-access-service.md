@@ -448,3 +448,16 @@ Each step may now expose:
 - a policy key
 
 This is a first foundation for governed workflow step execution planning.
+
+## Current Workflow Step Consistency Capability
+
+The service now evaluates structural consistency rules for workflow steps.
+
+Current checks include:
+
+- AI steps require assistant bindings
+- tool steps require tool bindings
+- approval gates require approvalRequired=true
+- incompatible bindings are flagged by step type
+
+This prepares the service for stronger workflow publication and execution validation.

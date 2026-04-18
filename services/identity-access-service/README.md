@@ -48,6 +48,7 @@ At this stage, the service provides:
 - workflow step definition foundation and versioned workflow structure primitives
 - workflow step policy surface and assistant/tool binding primitives
 - Workflow steps now expose first execution-intent bindings, including assistant binding, tool binding, approval requirement, and step-level policy surface.
+- workflow step validation rules and step binding consistency checks
 
 The authorization parity history endpoint now reads persisted diagnostic events from durable storage.
 
@@ -302,6 +303,10 @@ Returns all step definitions for a specific workflow version.
 ### `GET /workflows/version-structure?slug=...&versionNumber=...`
 
 Returns the workflow template, workflow version, and ordered step definitions for a specific workflow version.
+
+### `GET /workflows/step-consistency?slug=...&versionNumber=...`
+
+Returns the structural consistency diagnostic for the steps of a specific workflow version.
 
 ## Current Assistant Publication Operation
 

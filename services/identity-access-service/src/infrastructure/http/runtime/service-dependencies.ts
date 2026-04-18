@@ -58,7 +58,7 @@ import type { AuthorizationBootstrapValidationStore } from '../../authorization/
 import { InMemoryAuthorizationBootstrapValidationStore } from '../../authorization/authorization-bootstrap-validation-store.js';
 import type { AuthorizationDiagnosticsHistoryStore } from '../../authorization/authorization-diagnostics-history-store.js';
 import { InMemoryAuthorizationDiagnosticsHistoryStore } from '../../authorization/authorization-diagnostics-history-store.js';
-
+import { GetWorkflowStepConsistencyUseCase } from '../../../application/use-cases/get-workflow-step-consistency.use-case.js';
 export interface ServiceDependencies {
   readonly resolveUserByEmailUseCase: ResolveUserByEmailUseCase;
   readonly resolveTenantBySlugUseCase: ResolveTenantBySlugUseCase;
@@ -103,6 +103,7 @@ export interface ServiceDependencies {
   readonly revalidateAuthorizationParityUseCase: RevalidateAuthorizationParityUseCase;
   readonly authorizationBootstrapValidationStore: AuthorizationBootstrapValidationStore;
   readonly authorizationDiagnosticsHistoryStore: AuthorizationDiagnosticsHistoryStore;
+  readonly getWorkflowStepConsistencyUseCase: GetWorkflowStepConsistencyUseCase;
 }
 
 export function createServiceDependencies(
@@ -269,6 +270,11 @@ export function createServiceDependencies(
       authorizationBootstrapValidationStore,
       authorizationDiagnosticsHistoryStore,
       authorizationAuditEventRepository,
+    ),
+    getWorkflowStepConsistencyUseCase: new GetWorkflowStepConsistencyUseCase(
+      workflowTemplateReadRepository,
+      workflowVersionReadRepository,
+      workflowStepReadRepository,
     ),
     authorizationBootstrapValidationStore,
     authorizationDiagnosticsHistoryStore,

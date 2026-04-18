@@ -94,6 +94,25 @@ CREATE TABLE "workflow_publication_events" (
 	"occurred_at" timestamp with time zone NOT NULL
 );
 --> statement-breakpoint
+CREATE TABLE "workflow_step_definitions" (
+	"id" text PRIMARY KEY NOT NULL,
+	"workflow_version_id" text NOT NULL,
+	"step_key" varchar(120) NOT NULL,
+	"display_name" varchar(160) NOT NULL,
+	"description" text NOT NULL,
+	"step_type" varchar(60) NOT NULL,
+	"sequence_number" integer NOT NULL,
+	"is_required" boolean DEFAULT true NOT NULL,
+	"assistant_binding" varchar(120),
+	"tool_binding" varchar(120),
+	"approval_required" boolean DEFAULT false NOT NULL,
+	"policy_key" varchar(160),
+	"created_by_actor_id" text,
+	"updated_by_actor_id" text,
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
+);
+--> statement-breakpoint
 CREATE TABLE "workflow_templates" (
 	"id" text PRIMARY KEY NOT NULL,
 	"tenant_id" text NOT NULL,
@@ -170,6 +189,7 @@ ALTER TABLE "memberships" ADD CONSTRAINT "memberships_role_code_workspace_roles_
 ALTER TABLE "workflow_publication_events" ADD CONSTRAINT "workflow_publication_events_workflow_template_id_workflow_templates_id_fk" FOREIGN KEY ("workflow_template_id") REFERENCES "public"."workflow_templates"("id") ON DELETE restrict ON UPDATE cascade;--> statement-breakpoint
 ALTER TABLE "workflow_publication_events" ADD CONSTRAINT "workflow_publication_events_published_version_id_workflow_versions_id_fk" FOREIGN KEY ("published_version_id") REFERENCES "public"."workflow_versions"("id") ON DELETE restrict ON UPDATE cascade;--> statement-breakpoint
 ALTER TABLE "workflow_publication_events" ADD CONSTRAINT "workflow_publication_events_deprecated_version_id_workflow_versions_id_fk" FOREIGN KEY ("deprecated_version_id") REFERENCES "public"."workflow_versions"("id") ON DELETE restrict ON UPDATE cascade;--> statement-breakpoint
+ALTER TABLE "workflow_step_definitions" ADD CONSTRAINT "workflow_step_definitions_workflow_version_id_workflow_versions_id_fk" FOREIGN KEY ("workflow_version_id") REFERENCES "public"."workflow_versions"("id") ON DELETE restrict ON UPDATE cascade;--> statement-breakpoint
 ALTER TABLE "workflow_templates" ADD CONSTRAINT "workflow_templates_tenant_id_tenants_id_fk" FOREIGN KEY ("tenant_id") REFERENCES "public"."tenants"("id") ON DELETE restrict ON UPDATE cascade;--> statement-breakpoint
 ALTER TABLE "workflow_templates" ADD CONSTRAINT "workflow_templates_workspace_id_workspaces_id_fk" FOREIGN KEY ("workspace_id") REFERENCES "public"."workspaces"("id") ON DELETE restrict ON UPDATE cascade;--> statement-breakpoint
 ALTER TABLE "workflow_versions" ADD CONSTRAINT "workflow_versions_workflow_template_id_workflow_templates_id_fk" FOREIGN KEY ("workflow_template_id") REFERENCES "public"."workflow_templates"("id") ON DELETE restrict ON UPDATE cascade;--> statement-breakpoint
@@ -204,6 +224,9 @@ CREATE INDEX "users_display_name_idx" ON "users" USING btree ("display_name");--
 CREATE INDEX "workflow_publication_events_template_id_idx" ON "workflow_publication_events" USING btree ("workflow_template_id");--> statement-breakpoint
 CREATE INDEX "workflow_publication_events_workflow_slug_idx" ON "workflow_publication_events" USING btree ("workflow_slug");--> statement-breakpoint
 CREATE INDEX "workflow_publication_events_occurred_at_idx" ON "workflow_publication_events" USING btree ("occurred_at");--> statement-breakpoint
+CREATE INDEX "workflow_step_definitions_workflow_version_id_idx" ON "workflow_step_definitions" USING btree ("workflow_version_id");--> statement-breakpoint
+CREATE UNIQUE INDEX "workflow_step_definitions_version_sequence_unique_idx" ON "workflow_step_definitions" USING btree ("workflow_version_id","sequence_number");--> statement-breakpoint
+CREATE UNIQUE INDEX "workflow_step_definitions_version_step_key_unique_idx" ON "workflow_step_definitions" USING btree ("workflow_version_id","step_key");--> statement-breakpoint
 CREATE INDEX "workflow_templates_tenant_id_idx" ON "workflow_templates" USING btree ("tenant_id");--> statement-breakpoint
 CREATE INDEX "workflow_templates_workspace_id_idx" ON "workflow_templates" USING btree ("workspace_id");--> statement-breakpoint
 CREATE UNIQUE INDEX "workflow_templates_workspace_slug_unique_idx" ON "workflow_templates" USING btree ("workspace_id","slug");--> statement-breakpoint

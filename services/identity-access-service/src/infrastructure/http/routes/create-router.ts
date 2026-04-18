@@ -48,6 +48,7 @@ import { handleGetWorkflowLatestPublicationRequest } from '../../../presentation
 import { handleGetWorkflowPublicationHistoryRequest } from '../../../presentation/http/handlers/handle-get-workflow-publication-history-request.js';
 import { handleGetWorkflowVersionStepsRequest } from '../../../presentation/http/handlers/handle-get-workflow-version-steps-request.js';
 import { handleGetWorkflowVersionStructureRequest } from '../../../presentation/http/handlers/handle-get-workflow-version-structure-request.js';
+import { handleGetWorkflowStepConsistencyRequest } from '../../../presentation/http/handlers/handle-get-workflow-step-consistency-request.js';
 
 function resolvePath(request: IncomingMessage): string {
   const requestUrl = request.url ?? '/';
@@ -516,6 +517,17 @@ export function createRouter(
           logger,
           correlationId,
           dependencies.getWorkflowVersionStructureUseCase,
+        );
+        return;
+      }
+
+      if (method === 'GET' && path === '/workflows/step-consistency') {
+        await handleGetWorkflowStepConsistencyRequest(
+          request,
+          response,
+          logger,
+          correlationId,
+          dependencies.getWorkflowStepConsistencyUseCase,
         );
         return;
       }
