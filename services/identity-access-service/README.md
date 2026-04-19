@@ -50,7 +50,8 @@ At this stage, the service provides:
 - Workflow steps now expose first execution-intent bindings, including assistant binding, tool binding, approval requirement, and step-level policy surface.
 - workflow step validation rules and step binding consistency checks
 - workflow publication blocking rules based on step consistency and version structure quality
-- Workflow publication readiness now includes step-structure consistency as a blocking quality gate.s
+- Workflow publication readiness now includes step-structure consistency as a blocking quality gate.
+- workflow step registry alignment checks for assistant and tool bindings
 
 The authorization parity history endpoint now reads persisted diagnostic events from durable storage.
 
@@ -309,6 +310,10 @@ Returns the workflow template, workflow version, and ordered step definitions fo
 ### `GET /workflows/step-consistency?slug=...&versionNumber=...`
 
 Returns the structural consistency diagnostic for the steps of a specific workflow version.
+
+### `GET /workflows/step-registry-alignment?slug=...&versionNumber=...`
+
+Returns workflow step consistency enriched with assistant and tool registry alignment checks.
 
 ## Current Assistant Publication Operation
 

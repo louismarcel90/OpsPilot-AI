@@ -59,6 +59,10 @@ import { InMemoryAuthorizationBootstrapValidationStore } from '../../authorizati
 import type { AuthorizationDiagnosticsHistoryStore } from '../../authorization/authorization-diagnostics-history-store.js';
 import { InMemoryAuthorizationDiagnosticsHistoryStore } from '../../authorization/authorization-diagnostics-history-store.js';
 import { GetWorkflowStepConsistencyUseCase } from '../../../application/use-cases/get-workflow-step-consistency.use-case.js';
+import type { ToolRegistry } from '../../../application/services/tool-registry.js';
+import { GetWorkflowStepRegistryAlignmentUseCase } from '../../../application/use-cases/get-workflow-step-registry-alignment.use-case.js';
+import { InMemoryToolRegistry } from '../../tools/in-memory-tool-registry.js';
+
 export interface ServiceDependencies {
   readonly resolveUserByEmailUseCase: ResolveUserByEmailUseCase;
   readonly resolveTenantBySlugUseCase: ResolveTenantBySlugUseCase;
@@ -104,6 +108,8 @@ export interface ServiceDependencies {
   readonly authorizationBootstrapValidationStore: AuthorizationBootstrapValidationStore;
   readonly authorizationDiagnosticsHistoryStore: AuthorizationDiagnosticsHistoryStore;
   readonly getWorkflowStepConsistencyUseCase: GetWorkflowStepConsistencyUseCase;
+  readonly getWorkflowStepRegistryAlignmentUseCase: GetWorkflowStepRegistryAlignmentUseCase;
+  readonly toolRegistry: ToolRegistry;
 }
 
 export function createServiceDependencies(
@@ -125,6 +131,7 @@ export function createServiceDependencies(
 ): ServiceDependencies {
   const authorizationBootstrapValidationStore = new InMemoryAuthorizationBootstrapValidationStore();
   const authorizationDiagnosticsHistoryStore = new InMemoryAuthorizationDiagnosticsHistoryStore();
+  const toolRegistry = new InMemoryToolRegistry();
 
   const resolveAccessContextUseCase = new ResolveAccessContextUseCase(
     userReadRepository,
@@ -211,6 +218,8 @@ export function createServiceDependencies(
       workflowTemplateReadRepository,
       workflowVersionReadRepository,
       workflowStepReadRepository,
+      assistantDefinitionReadRepository,
+      toolRegistry,
     ),
     publishWorkflowVersionUseCase: new PublishWorkflowVersionUseCase(
       workflowTemplateReadRepository,
@@ -218,6 +227,8 @@ export function createServiceDependencies(
       workflowVersionWriteRepository,
       workflowPublicationEventRepository,
       workflowStepReadRepository,
+      assistantDefinitionReadRepository,
+      toolRegistry,
     ),
     getWorkflowPublicationHistoryUseCase: new GetWorkflowPublicationHistoryUseCase(
       workflowTemplateReadRepository,
@@ -278,7 +289,15 @@ export function createServiceDependencies(
       workflowVersionReadRepository,
       workflowStepReadRepository,
     ),
+    getWorkflowStepRegistryAlignmentUseCase: new GetWorkflowStepRegistryAlignmentUseCase(
+      workflowTemplateReadRepository,
+      workflowVersionReadRepository,
+      workflowStepReadRepository,
+      assistantDefinitionReadRepository,
+      toolRegistry,
+    ),
     authorizationBootstrapValidationStore,
     authorizationDiagnosticsHistoryStore,
+    toolRegistry,
   };
 }

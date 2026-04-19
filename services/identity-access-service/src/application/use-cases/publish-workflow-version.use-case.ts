@@ -1,5 +1,6 @@
 import { randomUUID } from 'node:crypto';
 
+import type { AssistantDefinitionReadRepository } from '../repositories/assistant-definition-read-repository.js';
 import type { WorkflowPublicationEventRepository } from './workflow-publication-event-repository.js';
 import type { WorkflowPublicationResult } from '../../domain/workflows/workflow-publication-result.js';
 import type { WorkflowVersionSummary } from '../../domain/workflows/workflow-version-summary.js';
@@ -7,8 +8,10 @@ import type { WorkflowStepReadRepository } from '../repositories/workflow-step-r
 import type { WorkflowTemplateReadRepository } from '../repositories/workflow-template-read-repository.js';
 import type { WorkflowVersionReadRepository } from '../repositories/workflow-version-read-repository.js';
 import type { WorkflowVersionWriteRepository } from '../repositories/workflow-version-write-repository.js';
+import type { ToolRegistry } from '../services/tool-registry.js';
 import { evaluateWorkflowPublishReadiness } from '../../infrastructure/workflows/evaluate-workflow-publish-readiness.js';
 import { evaluateWorkflowStepConsistency } from '../../infrastructure/workflows/evaluate-workflow-step-consistency.js';
+import { evaluateWorkflowStepRegistryAlignment } from '../../infrastructure/workflows/evaluate-workflow-step-registry-alignment.js';
 
 export class PublishWorkflowVersionUseCase {
   public constructor(
@@ -17,6 +20,8 @@ export class PublishWorkflowVersionUseCase {
     private readonly workflowVersionWriteRepository: WorkflowVersionWriteRepository,
     private readonly workflowPublicationEventRepository: WorkflowPublicationEventRepository,
     private readonly workflowStepReadRepository: WorkflowStepReadRepository,
+    private readonly assistantDefinitionReadRepository: AssistantDefinitionReadRepository,
+    private readonly toolRegistry: ToolRegistry,
   ) {}
 
   public async execute(input: {
@@ -38,14 +43,35 @@ export class PublishWorkflowVersionUseCase {
             versionNumber: input.versionNumber,
           });
 
-    const stepConsistencyResult =
-      workflowTemplate === null || targetVersion === null
-        ? undefined
-        : evaluateWorkflowStepConsistency({
-            workflowTemplate,
-            workflowVersion: targetVersion,
-            steps: await this.workflowStepReadRepository.listByWorkflowVersionId(targetVersion.id),
-          });
+    let stepConsistencyResult: ReturnType<typeof evaluateWorkflowStepConsistency> | undefined;
+
+    if (workflowTemplate !== null && targetVersion !== null) {
+      const steps = await this.workflowStepReadRepository.listByWorkflowVersionId(targetVersion.id);
+
+      const structuralResult = evaluateWorkflowStepConsistency({
+        workflowTemplate,
+        workflowVersion: targetVersion,
+        steps,
+      });
+
+      const assistants = await this.assistantDefinitionReadRepository.listAll();
+
+      const assistantsSlugSet = new Set<string>(assistants.map((assistant) => assistant.slug));
+
+      const registryIssues = evaluateWorkflowStepRegistryAlignment({
+        steps,
+        assistantsSlugSet,
+        toolRegistry: this.toolRegistry,
+      });
+
+      stepConsistencyResult = {
+        workflowTemplate,
+        workflowVersion: targetVersion,
+        isConsistent: structuralResult.issues.length + registryIssues.length === 0,
+        issueCount: structuralResult.issues.length + registryIssues.length,
+        issues: [...structuralResult.issues, ...registryIssues],
+      };
+    }
 
     const readiness = evaluateWorkflowPublishReadiness({
       workflowSlug: input.slug,

@@ -49,6 +49,7 @@ import { handleGetWorkflowPublicationHistoryRequest } from '../../../presentatio
 import { handleGetWorkflowVersionStepsRequest } from '../../../presentation/http/handlers/handle-get-workflow-version-steps-request.js';
 import { handleGetWorkflowVersionStructureRequest } from '../../../presentation/http/handlers/handle-get-workflow-version-structure-request.js';
 import { handleGetWorkflowStepConsistencyRequest } from '../../../presentation/http/handlers/handle-get-workflow-step-consistency-request.js';
+import { handleGetWorkflowStepRegistryAlignmentRequest } from '../../../presentation/http/handlers/handle-get-workflow-step-registry-alignment-request.js';
 
 function resolvePath(request: IncomingMessage): string {
   const requestUrl = request.url ?? '/';
@@ -528,6 +529,17 @@ export function createRouter(
           logger,
           correlationId,
           dependencies.getWorkflowStepConsistencyUseCase,
+        );
+        return;
+      }
+
+      if (method === 'GET' && path === '/workflows/step-registry-alignment') {
+        await handleGetWorkflowStepRegistryAlignmentRequest(
+          request,
+          response,
+          logger,
+          correlationId,
+          dependencies.getWorkflowStepRegistryAlignmentUseCase,
         );
         return;
       }

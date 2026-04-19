@@ -469,3 +469,14 @@ The service now blocks workflow publication when step structure consistency chec
 This means workflow publication readiness now depends not only on version metadata, but also on the structural validity of the versioned workflow steps.
 
 This is the first true workflow publication quality gate.
+
+## Current Workflow Step Registry Alignment Capability
+
+The service now validates workflow step bindings against known assistant slugs and known tool keys.
+
+This introduces a first referential validation layer for:
+
+- assistant bindings
+- tool bindings
+
+This strengthens workflow publication quality gates beyond structural validation.
