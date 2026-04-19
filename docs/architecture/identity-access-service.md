@@ -461,3 +461,11 @@ Current checks include:
 - incompatible bindings are flagged by step type
 
 This prepares the service for stronger workflow publication and execution validation.
+
+## Current Workflow Publication Quality Gate
+
+The service now blocks workflow publication when step structure consistency checks fail.
+
+This means workflow publication readiness now depends not only on version metadata, but also on the structural validity of the versioned workflow steps.
+
+This is the first true workflow publication quality gate.

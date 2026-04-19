@@ -49,6 +49,8 @@ At this stage, the service provides:
 - workflow step policy surface and assistant/tool binding primitives
 - Workflow steps now expose first execution-intent bindings, including assistant binding, tool binding, approval requirement, and step-level policy surface.
 - workflow step validation rules and step binding consistency checks
+- workflow publication blocking rules based on step consistency and version structure quality
+- Workflow publication readiness now includes step-structure consistency as a blocking quality gate.s
 
 The authorization parity history endpoint now reads persisted diagnostic events from durable storage.
 

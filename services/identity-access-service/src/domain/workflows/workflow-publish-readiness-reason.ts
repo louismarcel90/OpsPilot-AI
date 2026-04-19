@@ -6,4 +6,5 @@ export type WorkflowPublishReadinessReason =
   | 'version_deprecated'
   | 'missing_trigger_mode'
   | 'missing_definition_summary'
-  | 'another_published_version_exists';
+  | 'another_published_version_exists'
+  | 'step_structure_inconsistent';

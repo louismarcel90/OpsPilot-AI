@@ -210,12 +210,14 @@ export function createServiceDependencies(
     getWorkflowPublishReadinessUseCase: new GetWorkflowPublishReadinessUseCase(
       workflowTemplateReadRepository,
       workflowVersionReadRepository,
+      workflowStepReadRepository,
     ),
     publishWorkflowVersionUseCase: new PublishWorkflowVersionUseCase(
       workflowTemplateReadRepository,
       workflowVersionReadRepository,
       workflowVersionWriteRepository,
       workflowPublicationEventRepository,
+      workflowStepReadRepository,
     ),
     getWorkflowPublicationHistoryUseCase: new GetWorkflowPublicationHistoryUseCase(
       workflowTemplateReadRepository,

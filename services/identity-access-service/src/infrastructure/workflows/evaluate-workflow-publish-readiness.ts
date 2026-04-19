@@ -1,6 +1,7 @@
 import type { WorkflowTemplateSummary } from '../../domain/workflows/workflow-template-summary.js';
 import type { WorkflowPublishReadinessCheck } from '../../domain/workflows/workflow-publish-readiness-check.js';
 import type { WorkflowPublishReadinessReason } from '../../domain/workflows/workflow-publish-readiness-reason.js';
+import type { WorkflowStepConsistencyResult } from '../../domain/workflows/workflow-step-consistency-result.js';
 import type { WorkflowVersionSummary } from '../../domain/workflows/workflow-version-summary.js';
 
 export function evaluateWorkflowPublishReadiness(input: {
@@ -8,6 +9,7 @@ export function evaluateWorkflowPublishReadiness(input: {
   readonly requestedVersionNumber: number;
   readonly workflowTemplate: WorkflowTemplateSummary | null;
   readonly allVersions: WorkflowVersionSummary[];
+  readonly stepConsistencyResult?: WorkflowStepConsistencyResult;
 }): WorkflowPublishReadinessCheck {
   if (input.workflowTemplate === null) {
     return {
@@ -63,6 +65,10 @@ export function evaluateWorkflowPublishReadiness(input: {
 
   if (currentPublishedVersion !== null) {
     reasons.push('another_published_version_exists');
+  }
+
+  if (input.stepConsistencyResult !== undefined && !input.stepConsistencyResult.isConsistent) {
+    reasons.push('step_structure_inconsistent');
   }
 
   return {
