@@ -51,6 +51,7 @@ import { handleGetWorkflowVersionStructureRequest } from '../../../presentation/
 import { handleGetWorkflowStepConsistencyRequest } from '../../../presentation/http/handlers/handle-get-workflow-step-consistency-request.js';
 import { handleGetWorkflowStepRegistryAlignmentRequest } from '../../../presentation/http/handlers/handle-get-workflow-step-registry-alignment-request.js';
 import { handleCreateWorkflowRunRequest } from '../../../presentation/http/handlers/handle-create-workflow-run-request.js';
+import { handleGetWorkflowRunStepsRequest } from '../../../presentation/http/handlers/handle-get-workflow-run-steps-request.js';
 
 function resolvePath(request: IncomingMessage): string {
   const requestUrl = request.url ?? '/';
@@ -552,6 +553,17 @@ export function createRouter(
           logger,
           correlationId,
           dependencies.createWorkflowRunUseCase,
+        );
+        return;
+      }
+
+      if (method === 'GET' && path === '/workflow-runs/steps') {
+        await handleGetWorkflowRunStepsRequest(
+          request,
+          response,
+          logger,
+          correlationId,
+          dependencies.getWorkflowRunStepsUseCase,
         );
         return;
       }

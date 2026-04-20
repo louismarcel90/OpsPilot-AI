@@ -7,6 +7,7 @@ import { tenantsTable } from './schema/tenants.table.js';
 import { usersTable } from './schema/users.table.js';
 import { workflowPublicationEventsTable } from './schema/workflow-publication-events.table.js';
 import { workflowRunsTable } from './schema/workflow-runs.table.js';
+import { workflowRunStepsTable } from './schema/workflow-run-steps.table.js';
 import { workflowStepDefinitionsTable } from './schema/workflow-step-definitions.table.js';
 import { workflowTemplatesTable } from './schema/workflow-templates.table.js';
 import { workflowVersionsTable } from './schema/workflow-versions.table.js';
@@ -32,4 +33,5 @@ export const databaseSchema = {
   workflowPublicationEvents: workflowPublicationEventsTable,
   workflowStepDefinitions: workflowStepDefinitionsTable,
   workflowRuns: workflowRunsTable,
+  workflowRunSteps: workflowRunStepsTable,
 };

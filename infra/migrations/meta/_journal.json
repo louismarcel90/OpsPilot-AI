@@ -15,6 +15,13 @@
       "when": 1776688746286,
       "tag": "0001_cold_thing",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1776693398248,
+      "tag": "0002_opposite_mathemanic",
+      "breakpoints": true
     }
   ]
 }

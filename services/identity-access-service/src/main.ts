@@ -28,6 +28,8 @@ import { IdentityAccessServiceRuntime } from './infrastructure/http/runtime/serv
 import { createServiceLogger } from './infrastructure/logging/create-service-logger.js';
 import { DrizzleWorkflowRunReadRepository } from './infrastructure/db/repositories/drizzle-workflow-run-read-repository.js';
 import { DrizzleWorkflowRunWriteRepository } from './infrastructure/db/repositories/drizzle-workflow-run-write-repository.js';
+import { DrizzleWorkflowRunStepReadRepository } from './infrastructure/db/repositories/drizzle-workflow-run-step-read-repository.js';
+import { DrizzleWorkflowRunStepWriteRepository } from './infrastructure/db/repositories/drizzle-workflow-run-step-write-repository.js';
 
 function buildBootstrapParityErrorMessage(details: {
   readonly missingPersistedRoles: string[];
@@ -107,6 +109,12 @@ async function bootstrap(): Promise<void> {
   const workflowStepReadRepository = new DrizzleWorkflowStepReadRepository(databaseConnection);
   const workflowRunReadRepository = new DrizzleWorkflowRunReadRepository(databaseConnection);
   const workflowRunWriteRepository = new DrizzleWorkflowRunWriteRepository(databaseConnection);
+  const workflowRunStepReadRepository = new DrizzleWorkflowRunStepReadRepository(
+    databaseConnection,
+  );
+  const workflowRunStepWriteRepository = new DrizzleWorkflowRunStepWriteRepository(
+    databaseConnection,
+  );
 
   const dependencies = createServiceDependencies(
     userReadRepository,
@@ -126,6 +134,8 @@ async function bootstrap(): Promise<void> {
     workflowStepReadRepository,
     workflowRunReadRepository,
     workflowRunWriteRepository,
+    workflowRunStepReadRepository,
+    workflowRunStepWriteRepository,
   );
 
   const bootstrapValidationResult =

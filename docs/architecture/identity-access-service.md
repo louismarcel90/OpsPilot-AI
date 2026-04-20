@@ -494,3 +494,18 @@ Current workflow run capabilities include:
 - linkage to a published workflow version
 
 This is the first foundational runtime layer for governed workflow execution.
+
+## Current Workflow Run Step Runtime Foundation
+
+The service now includes workflow run step execution records.
+
+Each run step record represents a projected runtime instance of a workflow step definition inside a specific workflow run.
+
+Current capabilities include:
+
+- persisted run step creation during workflow run creation
+- runtime step status representation
+- deterministic initialization of the first step as `ready`
+- deterministic initialization of subsequent steps as `pending`
+
+This is the first detailed runtime progression layer for governed workflow execution.

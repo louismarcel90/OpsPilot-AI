@@ -14,6 +14,7 @@ export { tenantsTable } from './postgres/schema/tenants.table.js';
 export { usersTable } from './postgres/schema/users.table.js';
 export { workflowPublicationEventsTable } from './postgres/schema/workflow-publication-events.table.js';
 export { workflowRunsTable } from './postgres/schema/workflow-runs.table.js';
+export { workflowRunStepsTable } from './postgres/schema/workflow-run-steps.table.js';
 export { workflowStepDefinitionsTable } from './postgres/schema/workflow-step-definitions.table.js';
 export { workflowTemplatesTable } from './postgres/schema/workflow-templates.table.js';
 export { workflowVersionsTable } from './postgres/schema/workflow-versions.table.js';
