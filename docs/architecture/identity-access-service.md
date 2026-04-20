@@ -480,3 +480,17 @@ This introduces a first referential validation layer for:
 - tool bindings
 
 This strengthens workflow publication quality gates beyond structural validation.
+
+## Current Workflow Run Runtime Foundation
+
+The service now includes a workflow run aggregate.
+
+A workflow run represents a real execution instance created from a published workflow version.
+
+Current workflow run capabilities include:
+
+- persisted workflow run creation
+- runtime status representation
+- linkage to a published workflow version
+
+This is the first foundational runtime layer for governed workflow execution.

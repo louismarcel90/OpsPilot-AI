@@ -52,6 +52,7 @@ At this stage, the service provides:
 - workflow publication blocking rules based on step consistency and version structure quality
 - Workflow publication readiness now includes step-structure consistency as a blocking quality gate.
 - workflow step registry alignment checks for assistant and tool bindings
+- workflow run aggregate foundation and runtime execution state model
 
 The authorization parity history endpoint now reads persisted diagnostic events from durable storage.
 
@@ -314,6 +315,10 @@ Returns the structural consistency diagnostic for the steps of a specific workfl
 ### `GET /workflows/step-registry-alignment?slug=...&versionNumber=...`
 
 Returns workflow step consistency enriched with assistant and tool registry alignment checks.
+
+### `POST /workflow-runs?slug=...&workspaceId=...`
+
+Creates a workflow run from the currently published version of a workflow template.
 
 ## Current Assistant Publication Operation
 

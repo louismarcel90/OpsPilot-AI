@@ -62,6 +62,9 @@ import { GetWorkflowStepConsistencyUseCase } from '../../../application/use-case
 import type { ToolRegistry } from '../../../application/services/tool-registry.js';
 import { GetWorkflowStepRegistryAlignmentUseCase } from '../../../application/use-cases/get-workflow-step-registry-alignment.use-case.js';
 import { InMemoryToolRegistry } from '../../tools/in-memory-tool-registry.js';
+import type { WorkflowRunReadRepository } from '../../../application/repositories/workflow-run-read-repository.js';
+import type { WorkflowRunWriteRepository } from '../../../application/repositories/workflow-run-write-repository.js';
+import { CreateWorkflowRunUseCase } from '../../../application/use-cases/create-workflow-run.use-case.js';
 
 export interface ServiceDependencies {
   readonly resolveUserByEmailUseCase: ResolveUserByEmailUseCase;
@@ -110,6 +113,7 @@ export interface ServiceDependencies {
   readonly getWorkflowStepConsistencyUseCase: GetWorkflowStepConsistencyUseCase;
   readonly getWorkflowStepRegistryAlignmentUseCase: GetWorkflowStepRegistryAlignmentUseCase;
   readonly toolRegistry: ToolRegistry;
+  readonly createWorkflowRunUseCase: CreateWorkflowRunUseCase;
 }
 
 export function createServiceDependencies(
@@ -128,6 +132,8 @@ export function createServiceDependencies(
   workflowVersionWriteRepository: WorkflowVersionWriteRepository,
   workflowPublicationEventRepository: WorkflowPublicationEventRepository,
   workflowStepReadRepository: WorkflowStepReadRepository,
+  workflowRunReadRepository: WorkflowRunReadRepository,
+  workflowRunWriteRepository: WorkflowRunWriteRepository,
 ): ServiceDependencies {
   const authorizationBootstrapValidationStore = new InMemoryAuthorizationBootstrapValidationStore();
   const authorizationDiagnosticsHistoryStore = new InMemoryAuthorizationDiagnosticsHistoryStore();
@@ -295,6 +301,11 @@ export function createServiceDependencies(
       workflowStepReadRepository,
       assistantDefinitionReadRepository,
       toolRegistry,
+    ),
+    createWorkflowRunUseCase: new CreateWorkflowRunUseCase(
+      workflowTemplateReadRepository,
+      workflowVersionReadRepository,
+      workflowRunWriteRepository,
     ),
     authorizationBootstrapValidationStore,
     authorizationDiagnosticsHistoryStore,
