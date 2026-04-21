@@ -54,6 +54,7 @@ At this stage, the service provides:
 - workflow step registry alignment checks for assistant and tool bindings
 - workflow run aggregate foundation and runtime execution state model
 - workflow run step execution record foundation
+- workflow run start / complete / fail transition primitives
 
 The authorization parity history endpoint now reads persisted diagnostic events from durable storage.
 
@@ -324,6 +325,18 @@ Creates a workflow run from the currently published version of a workflow templa
 ### `GET /workflow-runs/steps?runId=...`
 
 Returns the persisted step execution records for a specific workflow run.
+
+### `POST /workflow-runs/start?runId=..`
+
+Transitions a workflow run from `pending` to `running`.
+
+### `POST /workflow-runs/complete?runId=...`
+
+Transitions a workflow run from `running` to `completed`.
+
+### `POST /workflow-runs/fail?runId=...`
+
+Transitions a workflow run from `running` to `failed`.
 
 ## Current Assistant Publication Operation
 

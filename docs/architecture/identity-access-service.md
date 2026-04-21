@@ -509,3 +509,15 @@ Current capabilities include:
 - deterministic initialization of subsequent steps as `pending`
 
 This is the first detailed runtime progression layer for governed workflow execution.
+
+## Current Workflow Run Lifecycle Transitions
+
+The service now supports first workflow run lifecycle transitions.
+
+Currently supported transitions:
+
+- `pending -> running`
+- `running -> completed`
+- `running -> failed`
+
+This establishes the first governed runtime lifecycle model for workflow execution instances.

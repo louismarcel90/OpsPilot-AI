@@ -65,10 +65,12 @@ import { InMemoryToolRegistry } from '../../tools/in-memory-tool-registry.js';
 import type { WorkflowRunWriteRepository } from '../../../application/repositories/workflow-run-write-repository.js';
 import { CreateWorkflowRunUseCase } from '../../../application/use-cases/create-workflow-run.use-case.js';
 import type { WorkflowRunStepReadRepository } from '../../../application/repositories/workflow-run-step-read-repository.js';
-import type { WorkflowRunStepWriteRepository } from '../../../application/repositories/workflow-run-step-write-repository.js';
+// import type { WorkflowRunStepWriteRepository } from '../../../application/repositories/workflow-run-step-write-repository.js';
 import { GetWorkflowRunStepsUseCase } from '../../../application/use-cases/get-workflow-run-steps.use-case.js';
-
 import type { WorkflowRunReadRepository } from '../../../application/repositories/workflow-run-read-repository.js';
+import { CompleteWorkflowRunUseCase } from '../../../application/use-cases/complete-workflow-run.use-case.js';
+import { FailWorkflowRunUseCase } from '../../../application/use-cases/fail-workflow-run.use-case.js';
+import { StartWorkflowRunUseCase } from '../../../application/use-cases/start-workflow-run.use-case.js';
 export interface ServiceDependencies {
   readonly resolveUserByEmailUseCase: ResolveUserByEmailUseCase;
   readonly resolveTenantBySlugUseCase: ResolveTenantBySlugUseCase;
@@ -118,6 +120,9 @@ export interface ServiceDependencies {
   readonly toolRegistry: ToolRegistry;
   readonly createWorkflowRunUseCase: CreateWorkflowRunUseCase;
   readonly getWorkflowRunStepsUseCase: GetWorkflowRunStepsUseCase;
+  readonly startWorkflowRunUseCase: StartWorkflowRunUseCase;
+  readonly completeWorkflowRunUseCase: CompleteWorkflowRunUseCase;
+  readonly failWorkflowRunUseCase: FailWorkflowRunUseCase;
 }
 
 export function createServiceDependencies(
@@ -139,7 +144,6 @@ export function createServiceDependencies(
   workflowRunReadRepository: WorkflowRunReadRepository,
   workflowRunWriteRepository: WorkflowRunWriteRepository,
   workflowRunStepReadRepository: WorkflowRunStepReadRepository,
-  workflowRunStepWriteRepository: WorkflowRunStepWriteRepository,
 ): ServiceDependencies {
   const authorizationBootstrapValidationStore = new InMemoryAuthorizationBootstrapValidationStore();
   const authorizationDiagnosticsHistoryStore = new InMemoryAuthorizationDiagnosticsHistoryStore();
@@ -313,7 +317,18 @@ export function createServiceDependencies(
       workflowVersionReadRepository,
       workflowStepReadRepository,
       workflowRunWriteRepository,
-      workflowRunStepWriteRepository,
+    ),
+    startWorkflowRunUseCase: new StartWorkflowRunUseCase(
+      workflowRunReadRepository,
+      workflowRunWriteRepository,
+    ),
+    completeWorkflowRunUseCase: new CompleteWorkflowRunUseCase(
+      workflowRunReadRepository,
+      workflowRunWriteRepository,
+    ),
+    failWorkflowRunUseCase: new FailWorkflowRunUseCase(
+      workflowRunReadRepository,
+      workflowRunWriteRepository,
     ),
     getWorkflowRunStepsUseCase: new GetWorkflowRunStepsUseCase(workflowRunStepReadRepository),
     authorizationBootstrapValidationStore,

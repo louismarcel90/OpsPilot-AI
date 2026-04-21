@@ -5,4 +5,10 @@ export interface WorkflowRunWriteRepository {
     readonly workflowVersionId: string;
     readonly workspaceId: string;
   }): Promise<WorkflowRun>;
+
+  startRun(runId: string): Promise<WorkflowRun | null>;
+
+  completeRun(runId: string): Promise<WorkflowRun | null>;
+
+  failRun(runId: string): Promise<WorkflowRun | null>;
 }

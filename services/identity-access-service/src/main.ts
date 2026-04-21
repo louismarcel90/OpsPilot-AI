@@ -29,7 +29,6 @@ import { createServiceLogger } from './infrastructure/logging/create-service-log
 import { DrizzleWorkflowRunReadRepository } from './infrastructure/db/repositories/drizzle-workflow-run-read-repository.js';
 import { DrizzleWorkflowRunWriteRepository } from './infrastructure/db/repositories/drizzle-workflow-run-write-repository.js';
 import { DrizzleWorkflowRunStepReadRepository } from './infrastructure/db/repositories/drizzle-workflow-run-step-read-repository.js';
-import { DrizzleWorkflowRunStepWriteRepository } from './infrastructure/db/repositories/drizzle-workflow-run-step-write-repository.js';
 
 function buildBootstrapParityErrorMessage(details: {
   readonly missingPersistedRoles: string[];
@@ -76,12 +75,14 @@ async function bootstrap(): Promise<void> {
   const workspaceMembershipReadRepository = new DrizzleWorkspaceMembershipReadRepository(
     databaseConnection,
   );
+
   const authorizationCatalogReadRepository = new DrizzleAuthorizationCatalogReadRepository(
     databaseConnection,
   );
   const authorizationAuditEventRepository = new DrizzleAuthorizationAuditEventRepository(
     databaseConnection,
   );
+
   const assistantDefinitionReadRepository = new DrizzleAssistantDefinitionReadRepository(
     databaseConnection,
   );
@@ -94,6 +95,7 @@ async function bootstrap(): Promise<void> {
   const assistantPublicationEventRepository = new DrizzleAssistantPublicationEventRepository(
     databaseConnection,
   );
+
   const workflowTemplateReadRepository = new DrizzleWorkflowTemplateReadRepository(
     databaseConnection,
   );
@@ -107,12 +109,10 @@ async function bootstrap(): Promise<void> {
     databaseConnection,
   );
   const workflowStepReadRepository = new DrizzleWorkflowStepReadRepository(databaseConnection);
+
   const workflowRunReadRepository = new DrizzleWorkflowRunReadRepository(databaseConnection);
   const workflowRunWriteRepository = new DrizzleWorkflowRunWriteRepository(databaseConnection);
   const workflowRunStepReadRepository = new DrizzleWorkflowRunStepReadRepository(
-    databaseConnection,
-  );
-  const workflowRunStepWriteRepository = new DrizzleWorkflowRunStepWriteRepository(
     databaseConnection,
   );
 
@@ -135,7 +135,6 @@ async function bootstrap(): Promise<void> {
     workflowRunReadRepository,
     workflowRunWriteRepository,
     workflowRunStepReadRepository,
-    workflowRunStepWriteRepository,
   );
 
   const bootstrapValidationResult =

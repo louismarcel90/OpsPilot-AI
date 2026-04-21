@@ -9,16 +9,28 @@ import { writeBadRequestResponse } from '../../../infrastructure/http/responses/
 import { writeJson } from '../../../infrastructure/http/responses/write-json.js';
 
 function resolveInput(request: IncomingMessage): {
-  readonly slug: string;
+  readonly workflowSlug: string;
+  readonly workflowVersionNumber: number;
   readonly workspaceId: string;
 } | null {
   const requestUrl = request.url ?? '/';
   const url = new URL(requestUrl, 'http://localhost');
 
   const slug = url.searchParams.get('slug');
+  const versionNumberRaw = url.searchParams.get('versionNumber');
   const workspaceId = url.searchParams.get('workspaceId');
 
   if (!slug || slug.trim().length === 0) {
+    return null;
+  }
+
+  if (!versionNumberRaw || versionNumberRaw.trim().length === 0) {
+    return null;
+  }
+
+  const workflowVersionNumber = Number(versionNumberRaw);
+
+  if (!Number.isInteger(workflowVersionNumber) || workflowVersionNumber <= 0) {
     return null;
   }
 
@@ -27,7 +39,8 @@ function resolveInput(request: IncomingMessage): {
   }
 
   return {
-    slug: slug.trim(),
+    workflowSlug: slug.trim(),
+    workflowVersionNumber,
     workspaceId: workspaceId.trim(),
   };
 }
@@ -52,13 +65,17 @@ export async function handleCreateWorkflowRunRequest(
     writeBadRequestResponse(
       response,
       correlationId,
-      'Query parameters "slug" and "workspaceId" are required.',
+      'Query parameters "slug", "versionNumber", and "workspaceId" are required.',
     );
     return;
   }
 
   try {
-    const workflowRun = await createWorkflowRunUseCase.execute(input);
+    const workflowRun = await createWorkflowRunUseCase.execute({
+      workflowSlug: input.workflowSlug,
+      workflowVersionNumber: input.workflowVersionNumber,
+      workspaceId: input.workspaceId,
+    });
 
     logger.info('Created workflow run', {
       correlationId,

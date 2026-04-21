@@ -52,6 +52,9 @@ import { handleGetWorkflowStepConsistencyRequest } from '../../../presentation/h
 import { handleGetWorkflowStepRegistryAlignmentRequest } from '../../../presentation/http/handlers/handle-get-workflow-step-registry-alignment-request.js';
 import { handleCreateWorkflowRunRequest } from '../../../presentation/http/handlers/handle-create-workflow-run-request.js';
 import { handleGetWorkflowRunStepsRequest } from '../../../presentation/http/handlers/handle-get-workflow-run-steps-request.js';
+import { handleCompleteWorkflowRunRequest } from '../../../presentation/http/handlers/handle-complete-workflow-run-request.js';
+import { handleFailWorkflowRunRequest } from '../../../presentation/http/handlers/handle-fail-workflow-run-request.js';
+import { handleStartWorkflowRunRequest } from '../../../presentation/http/handlers/handle-start-workflow-run-request.js';
 
 function resolvePath(request: IncomingMessage): string {
   const requestUrl = request.url ?? '/';
@@ -564,6 +567,39 @@ export function createRouter(
           logger,
           correlationId,
           dependencies.getWorkflowRunStepsUseCase,
+        );
+        return;
+      }
+
+      if (method === 'POST' && path === '/workflow-runs/start') {
+        await handleStartWorkflowRunRequest(
+          request,
+          response,
+          logger,
+          correlationId,
+          dependencies.startWorkflowRunUseCase,
+        );
+        return;
+      }
+
+      if (method === 'POST' && path === '/workflow-runs/complete') {
+        await handleCompleteWorkflowRunRequest(
+          request,
+          response,
+          logger,
+          correlationId,
+          dependencies.completeWorkflowRunUseCase,
+        );
+        return;
+      }
+
+      if (method === 'POST' && path === '/workflow-runs/fail') {
+        await handleFailWorkflowRunRequest(
+          request,
+          response,
+          logger,
+          correlationId,
+          dependencies.failWorkflowRunUseCase,
         );
         return;
       }
