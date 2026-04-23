@@ -14,4 +14,6 @@ export interface WorkflowRunStepWriteRepository {
   completeRunStep(runStepId: string): Promise<WorkflowRunStep | null>;
 
   failRunStep(runStepId: string): Promise<WorkflowRunStep | null>;
+
+  markRunStepReady(runStepId: string): Promise<WorkflowRunStep | null>;
 }

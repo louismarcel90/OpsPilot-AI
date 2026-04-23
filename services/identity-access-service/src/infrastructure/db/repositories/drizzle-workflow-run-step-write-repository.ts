@@ -54,8 +54,6 @@ export class DrizzleWorkflowRunStepWriteRepository implements WorkflowRunStepWri
       .slice()
       .sort((left, right) => left.sequenceNumber - right.sequenceNumber);
 
-    console.log('DEBUG createInitialRunSteps input', input);
-
     const createdSteps: WorkflowRunStep[] = orderedStepDefinitions.map((stepDefinition, index) => ({
       id: randomUUID(),
       workflowRunId: input.workflowRunId,
@@ -75,8 +73,6 @@ export class DrizzleWorkflowRunStepWriteRepository implements WorkflowRunStepWri
         completedAt: null,
       })),
     );
-
-    console.log('DEBUG createInitialRunSteps inserted', createdSteps);
 
     return createdSteps;
   }
@@ -137,6 +133,27 @@ export class DrizzleWorkflowRunStepWriteRepository implements WorkflowRunStepWri
       .set({
         status: 'failed',
         completedAt,
+      })
+      .where(eq(workflowRunStepsTable.id, runStepId))
+      .returning({
+        id: workflowRunStepsTable.id,
+        workflowRunId: workflowRunStepsTable.workflowRunId,
+        workflowStepDefinitionId: workflowRunStepsTable.workflowStepDefinitionId,
+        sequenceNumber: workflowRunStepsTable.sequenceNumber,
+        status: workflowRunStepsTable.status,
+        startedAt: workflowRunStepsTable.startedAt,
+        completedAt: workflowRunStepsTable.completedAt,
+      });
+
+    const row = rows[0];
+    return row ? mapRowToWorkflowRunStep(row) : null;
+  }
+
+  public async markRunStepReady(runStepId: string): Promise<WorkflowRunStep | null> {
+    const rows = await this.connection.db
+      .update(workflowRunStepsTable)
+      .set({
+        status: 'ready',
       })
       .where(eq(workflowRunStepsTable.id, runStepId))
       .returning({

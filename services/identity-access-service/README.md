@@ -57,12 +57,15 @@ At this stage, the service provides:
 - workflow run start / complete / fail transition primitives
 - workflow run step start / complete / fail transition primitives
 - workflow run step start / complete / fail transition primitives
+- deterministic next-step activation and workflow progression primitives
 
 The authorization parity history endpoint now reads persisted diagnostic events from durable storage.
 
 Authorization diagnostics and persisted audit events now include explicit correlation identifiers and diagnostic identifiers to support future investigation flows.
 
 The local seed now includes workflow templates and workflow versions for realistic workflow configuration demonstrations.
+
+Completing a run step now deterministically activates the next pending step, or completes the workflow run when the completed step is the last one.
 
 ## Bootstrap Safety Checks
 

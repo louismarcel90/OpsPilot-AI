@@ -545,3 +545,18 @@ Currently supported transitions:
 - `running -> failed`
 
 This establishes the first governed runtime lifecycle model for per-step workflow execution.
+
+## Current Deterministic Workflow Progression Model
+
+The service now supports deterministic next-step activation.
+
+When a workflow run step completes:
+
+- the next ordered pending step becomes `ready`
+- or the workflow run is completed if there is no next step
+
+When a workflow run step fails:
+
+- the workflow run is failed
+
+This establishes the first orchestration-grade progression model for workflow runtime execution.

@@ -343,11 +343,14 @@ export function createServiceDependencies(
       workflowRunWriteRepository,
     ),
     completeWorkflowRunStepUseCase: new CompleteWorkflowRunStepUseCase(
+      workflowRunReadRepository,
+      workflowRunWriteRepository,
       workflowRunStepReadRepository,
       workflowRunStepWriteRepository,
     ),
-
     failWorkflowRunStepUseCase: new FailWorkflowRunStepUseCase(
+      workflowRunReadRepository,
+      workflowRunWriteRepository,
       workflowRunStepReadRepository,
       workflowRunStepWriteRepository,
     ),
