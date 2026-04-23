@@ -521,3 +521,27 @@ Currently supported transitions:
 - `running -> failed`
 
 This establishes the first governed runtime lifecycle model for workflow execution instances.
+
+## Current Workflow Run Step Lifecycle Transitions
+
+The service now supports first lifecycle transitions for workflow run steps.
+
+Currently supported transitions:
+
+- `ready -> running`
+- `running -> completed`
+- `running -> failed`
+
+This establishes the first governed runtime lifecycle model for per-step workflow execution.
+
+## Current Workflow Run Step Lifecycle Transitions
+
+The service now supports first lifecycle transitions for workflow run steps.
+
+Currently supported transitions:
+
+- `ready -> running`
+- `running -> completed`
+- `running -> failed`
+
+This establishes the first governed runtime lifecycle model for per-step workflow execution.

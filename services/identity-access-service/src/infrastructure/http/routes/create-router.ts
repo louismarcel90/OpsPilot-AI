@@ -52,9 +52,12 @@ import { handleGetWorkflowStepConsistencyRequest } from '../../../presentation/h
 import { handleGetWorkflowStepRegistryAlignmentRequest } from '../../../presentation/http/handlers/handle-get-workflow-step-registry-alignment-request.js';
 import { handleCreateWorkflowRunRequest } from '../../../presentation/http/handlers/handle-create-workflow-run-request.js';
 import { handleGetWorkflowRunStepsRequest } from '../../../presentation/http/handlers/handle-get-workflow-run-steps-request.js';
-import { handleCompleteWorkflowRunRequest } from '../../../presentation/http/handlers/handle-complete-workflow-run-request.js';
-import { handleFailWorkflowRunRequest } from '../../../presentation/http/handlers/handle-fail-workflow-run-request.js';
+// import { handleCompleteWorkflowRunRequest } from '../../../presentation/http/handlers/handle-complete-workflow-run-request.js';
+// import { handleFailWorkflowRunRequest } from '../../../presentation/http/handlers/handle-fail-workflow-run-request.js';
 import { handleStartWorkflowRunRequest } from '../../../presentation/http/handlers/handle-start-workflow-run-request.js';
+import { handleStartWorkflowRunStepRequest } from '../../../presentation/http/handlers/handle-start-workflow-run-step-request.js';
+import { handleFailWorkflowRunStepRequest } from '../../../presentation/http/handlers/handle-fail-workflow-run-step-request.js';
+import { handleCompleteWorkflowRunStepRequest } from '../../../presentation/http/handlers/handle-complete-workflow-run-step-request.js';
 
 function resolvePath(request: IncomingMessage): string {
   const requestUrl = request.url ?? '/';
@@ -582,24 +585,35 @@ export function createRouter(
         return;
       }
 
-      if (method === 'POST' && path === '/workflow-runs/complete') {
-        await handleCompleteWorkflowRunRequest(
+      if (request.method === 'POST' && path === '/workflow-runs/steps/start') {
+        await handleStartWorkflowRunStepRequest(
           request,
           response,
           logger,
           correlationId,
-          dependencies.completeWorkflowRunUseCase,
+          dependencies.startWorkflowRunStepUseCase,
         );
         return;
       }
 
-      if (method === 'POST' && path === '/workflow-runs/fail') {
-        await handleFailWorkflowRunRequest(
+      if (method === 'POST' && path === '/workflow-runs/steps/complete') {
+        await handleCompleteWorkflowRunStepRequest(
           request,
           response,
           logger,
           correlationId,
-          dependencies.failWorkflowRunUseCase,
+          dependencies.completeWorkflowRunStepUseCase,
+        );
+        return;
+      }
+
+      if (method === 'POST' && path === '/workflow-runs/steps/fail') {
+        await handleFailWorkflowRunStepRequest(
+          request,
+          response,
+          logger,
+          correlationId,
+          dependencies.failWorkflowRunStepUseCase,
         );
         return;
       }

@@ -8,4 +8,10 @@ export interface WorkflowRunStepWriteRepository {
       readonly sequenceNumber: number;
     }>;
   }): Promise<WorkflowRunStep[]>;
+
+  startRunStep(runStepId: string): Promise<WorkflowRunStep | null>;
+
+  completeRunStep(runStepId: string): Promise<WorkflowRunStep | null>;
+
+  failRunStep(runStepId: string): Promise<WorkflowRunStep | null>;
 }

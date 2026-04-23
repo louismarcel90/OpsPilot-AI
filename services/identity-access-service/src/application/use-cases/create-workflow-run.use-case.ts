@@ -1,8 +1,10 @@
-import type { WorkflowRunWriteRepository } from '../repositories/workflow-run-write-repository.js';
-import type { WorkflowStepReadRepository } from '../repositories/workflow-step-read-repository.js';
+import type { WorkflowRun } from '../../domain/workflows/workflow-run.js';
+
 import type { WorkflowTemplateReadRepository } from '../repositories/workflow-template-read-repository.js';
 import type { WorkflowVersionReadRepository } from '../repositories/workflow-version-read-repository.js';
-import type { WorkflowRun } from '../../domain/workflows/workflow-run.js';
+import type { WorkflowStepReadRepository } from '../repositories/workflow-step-read-repository.js';
+import type { WorkflowRunWriteRepository } from '../repositories/workflow-run-write-repository.js';
+import type { WorkflowRunStepWriteRepository } from '../repositories/workflow-run-step-write-repository.js';
 
 export class CreateWorkflowRunUseCase {
   public constructor(
@@ -10,6 +12,7 @@ export class CreateWorkflowRunUseCase {
     private readonly workflowVersionReadRepository: WorkflowVersionReadRepository,
     private readonly workflowStepReadRepository: WorkflowStepReadRepository,
     private readonly workflowRunWriteRepository: WorkflowRunWriteRepository,
+    private readonly workflowRunStepWriteRepository: WorkflowRunStepWriteRepository,
   ) {}
 
   public async execute(input: {
@@ -22,7 +25,7 @@ export class CreateWorkflowRunUseCase {
     );
 
     if (workflowTemplate === null) {
-      throw new Error(`Workflow template not found for slug "${input.workflowSlug}".`);
+      throw new Error('Workflow template not found.');
     }
 
     const workflowVersion =
@@ -32,20 +35,40 @@ export class CreateWorkflowRunUseCase {
       });
 
     if (workflowVersion === null) {
-      throw new Error(
-        `Workflow version ${input.workflowVersionNumber} not found for workflow "${input.workflowSlug}".`,
-      );
+      throw new Error('Workflow version not found.');
     }
 
-    const steps = await this.workflowStepReadRepository.listByWorkflowVersionId(workflowVersion.id);
+    const stepDefinitions = await this.workflowStepReadRepository.listByWorkflowVersionId(
+      workflowVersion.id,
+    );
 
-    if (steps.length === 0) {
-      throw new Error(`Workflow version ${input.workflowVersionNumber} has no executable steps.`);
+    if (stepDefinitions.length === 0) {
+      throw new Error('Workflow has no steps.');
     }
 
-    return this.workflowRunWriteRepository.create({
+    const workflowRun = await this.workflowRunWriteRepository.create({
       workflowVersionId: workflowVersion.id,
       workspaceId: input.workspaceId,
     });
+
+    await this.workflowRunStepWriteRepository.createInitialRunSteps({
+      workflowRunId: workflowRun.id,
+      stepDefinitions: stepDefinitions.map((step) => ({
+        workflowStepDefinitionId: step.id,
+        sequenceNumber: step.sequenceNumber,
+      })),
+    });
+
+    console.log('DEBUG createWorkflowRunUseCase', {
+      workflowRunId: workflowRun.id,
+      workflowVersionId: workflowVersion.id,
+      stepDefinitionsCount: stepDefinitions.length,
+      stepDefinitions: stepDefinitions.map((step) => ({
+        id: step.id,
+        sequenceNumber: step.sequenceNumber,
+      })),
+    });
+
+    return workflowRun;
   }
 }

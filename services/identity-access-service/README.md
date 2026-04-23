@@ -55,6 +55,8 @@ At this stage, the service provides:
 - workflow run aggregate foundation and runtime execution state model
 - workflow run step execution record foundation
 - workflow run start / complete / fail transition primitives
+- workflow run step start / complete / fail transition primitives
+- workflow run step start / complete / fail transition primitives
 
 The authorization parity history endpoint now reads persisted diagnostic events from durable storage.
 
@@ -337,6 +339,30 @@ Transitions a workflow run from `running` to `completed`.
 ### `POST /workflow-runs/fail?runId=...`
 
 Transitions a workflow run from `running` to `failed`.
+
+### `POST /workflow-runs/steps/start?runStepId=...`
+
+Transitions a workflow run step from `ready` to `running`.
+
+### `POST /workflow-runs/steps/complete?runStepId=...`
+
+Transitions a workflow run step from `running` to `completed`.
+
+### `POST /workflow-runs/steps/fail?runStepId=...`
+
+Transitions a workflow run step from `running` to `failed`.
+
+### `POST /workflow-runs/steps/start?runStepId=...`
+
+Transitions a workflow run step from `ready` to `running`.
+
+### `POST /workflow-runs/steps/complete?runStepId=...`
+
+Transitions a workflow run step from `running` to `completed`.
+
+### `POST /workflow-runs/steps/fail?runStepId=...`
+
+Transitions a workflow run step from `running` to `failed`.
 
 ## Current Assistant Publication Operation
 

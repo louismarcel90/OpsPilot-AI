@@ -65,12 +65,15 @@ import { InMemoryToolRegistry } from '../../tools/in-memory-tool-registry.js';
 import type { WorkflowRunWriteRepository } from '../../../application/repositories/workflow-run-write-repository.js';
 import { CreateWorkflowRunUseCase } from '../../../application/use-cases/create-workflow-run.use-case.js';
 import type { WorkflowRunStepReadRepository } from '../../../application/repositories/workflow-run-step-read-repository.js';
-// import type { WorkflowRunStepWriteRepository } from '../../../application/repositories/workflow-run-step-write-repository.js';
 import { GetWorkflowRunStepsUseCase } from '../../../application/use-cases/get-workflow-run-steps.use-case.js';
 import type { WorkflowRunReadRepository } from '../../../application/repositories/workflow-run-read-repository.js';
 import { CompleteWorkflowRunUseCase } from '../../../application/use-cases/complete-workflow-run.use-case.js';
 import { FailWorkflowRunUseCase } from '../../../application/use-cases/fail-workflow-run.use-case.js';
 import { StartWorkflowRunUseCase } from '../../../application/use-cases/start-workflow-run.use-case.js';
+import type { WorkflowRunStepWriteRepository } from '../../../application/repositories/workflow-run-step-write-repository.js';
+import { StartWorkflowRunStepUseCase } from '../../../application/use-cases/start-workflow-run-step.use-case.js';
+import { CompleteWorkflowRunStepUseCase } from '../../../application/use-cases/complete-workflow-run-step.use-case.js';
+import { FailWorkflowRunStepUseCase } from '../../../application/use-cases/fail-workflow-run-step.use-case.js';
 export interface ServiceDependencies {
   readonly resolveUserByEmailUseCase: ResolveUserByEmailUseCase;
   readonly resolveTenantBySlugUseCase: ResolveTenantBySlugUseCase;
@@ -121,8 +124,11 @@ export interface ServiceDependencies {
   readonly createWorkflowRunUseCase: CreateWorkflowRunUseCase;
   readonly getWorkflowRunStepsUseCase: GetWorkflowRunStepsUseCase;
   readonly startWorkflowRunUseCase: StartWorkflowRunUseCase;
+  readonly startWorkflowRunStepUseCase: StartWorkflowRunStepUseCase;
   readonly completeWorkflowRunUseCase: CompleteWorkflowRunUseCase;
   readonly failWorkflowRunUseCase: FailWorkflowRunUseCase;
+  readonly completeWorkflowRunStepUseCase: CompleteWorkflowRunStepUseCase;
+  readonly failWorkflowRunStepUseCase: FailWorkflowRunStepUseCase;
 }
 
 export function createServiceDependencies(
@@ -144,6 +150,7 @@ export function createServiceDependencies(
   workflowRunReadRepository: WorkflowRunReadRepository,
   workflowRunWriteRepository: WorkflowRunWriteRepository,
   workflowRunStepReadRepository: WorkflowRunStepReadRepository,
+  workflowRunStepWriteRepository: WorkflowRunStepWriteRepository,
 ): ServiceDependencies {
   const authorizationBootstrapValidationStore = new InMemoryAuthorizationBootstrapValidationStore();
   const authorizationDiagnosticsHistoryStore = new InMemoryAuthorizationDiagnosticsHistoryStore();
@@ -317,10 +324,15 @@ export function createServiceDependencies(
       workflowVersionReadRepository,
       workflowStepReadRepository,
       workflowRunWriteRepository,
+      workflowRunStepWriteRepository,
     ),
     startWorkflowRunUseCase: new StartWorkflowRunUseCase(
       workflowRunReadRepository,
       workflowRunWriteRepository,
+    ),
+    startWorkflowRunStepUseCase: new StartWorkflowRunStepUseCase(
+      workflowRunStepReadRepository,
+      workflowRunStepWriteRepository,
     ),
     completeWorkflowRunUseCase: new CompleteWorkflowRunUseCase(
       workflowRunReadRepository,
@@ -329,6 +341,15 @@ export function createServiceDependencies(
     failWorkflowRunUseCase: new FailWorkflowRunUseCase(
       workflowRunReadRepository,
       workflowRunWriteRepository,
+    ),
+    completeWorkflowRunStepUseCase: new CompleteWorkflowRunStepUseCase(
+      workflowRunStepReadRepository,
+      workflowRunStepWriteRepository,
+    ),
+
+    failWorkflowRunStepUseCase: new FailWorkflowRunStepUseCase(
+      workflowRunStepReadRepository,
+      workflowRunStepWriteRepository,
     ),
     getWorkflowRunStepsUseCase: new GetWorkflowRunStepsUseCase(workflowRunStepReadRepository),
     authorizationBootstrapValidationStore,

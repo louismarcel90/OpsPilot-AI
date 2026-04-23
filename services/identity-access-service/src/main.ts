@@ -21,14 +21,16 @@ import { DrizzleWorkflowVersionReadRepository } from './infrastructure/db/reposi
 import { DrizzleWorkflowVersionWriteRepository } from './infrastructure/db/repositories/drizzle-workflow-version-write-repository.js';
 import { DrizzleWorkspaceMembershipReadRepository } from './infrastructure/db/repositories/drizzle-workspace-membership-read-repository.js';
 import { DrizzleWorkspaceReadRepository } from './infrastructure/db/repositories/drizzle-workspace-read-repository.js';
+import { DrizzleWorkflowRunReadRepository } from './infrastructure/db/repositories/drizzle-workflow-run-read-repository.js';
+import { DrizzleWorkflowRunWriteRepository } from './infrastructure/db/repositories/drizzle-workflow-run-write-repository.js';
+import { DrizzleWorkflowRunStepReadRepository } from './infrastructure/db/repositories/drizzle-workflow-run-step-read-repository.js';
+import { DrizzleWorkflowRunStepWriteRepository } from './infrastructure/db/repositories/drizzle-workflow-run-step-write-repository.js';
+
 import { createHttpServer } from './infrastructure/http/server/create-http-server.js';
 import { registerProcessSignalHandlers } from './infrastructure/http/server/register-process-signal-handlers.js';
 import { createServiceDependencies } from './infrastructure/http/runtime/service-dependencies.js';
 import { IdentityAccessServiceRuntime } from './infrastructure/http/runtime/service-runtime.js';
 import { createServiceLogger } from './infrastructure/logging/create-service-logger.js';
-import { DrizzleWorkflowRunReadRepository } from './infrastructure/db/repositories/drizzle-workflow-run-read-repository.js';
-import { DrizzleWorkflowRunWriteRepository } from './infrastructure/db/repositories/drizzle-workflow-run-write-repository.js';
-import { DrizzleWorkflowRunStepReadRepository } from './infrastructure/db/repositories/drizzle-workflow-run-step-read-repository.js';
 
 function buildBootstrapParityErrorMessage(details: {
   readonly missingPersistedRoles: string[];
@@ -115,6 +117,9 @@ async function bootstrap(): Promise<void> {
   const workflowRunStepReadRepository = new DrizzleWorkflowRunStepReadRepository(
     databaseConnection,
   );
+  const workflowRunStepWriteRepository = new DrizzleWorkflowRunStepWriteRepository(
+    databaseConnection,
+  );
 
   const dependencies = createServiceDependencies(
     userReadRepository,
@@ -135,6 +140,7 @@ async function bootstrap(): Promise<void> {
     workflowRunReadRepository,
     workflowRunWriteRepository,
     workflowRunStepReadRepository,
+    workflowRunStepWriteRepository,
   );
 
   const bootstrapValidationResult =
