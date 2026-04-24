@@ -60,6 +60,7 @@ import { handleGetApprovalRequestsByWorkflowRunRequest } from '../../../presenta
 import { handleApproveApprovalRequest } from '../../../presentation/http/handlers/handle-approve-approval-request.js';
 import { handleRejectApprovalRequest } from '../../../presentation/http/handlers/handle-reject-approval-request.js';
 import { handleGetWorkflowRunOperationalViewRequest } from '../../../presentation/http/handlers/handle-get-workflow-run-operational-view-request.js';
+import { handleGetWorkflowRunTimelineRequest } from '../../../presentation/http/handlers/handle-get-workflow-run-timeline-request.js';
 
 function resolvePath(request: IncomingMessage): string {
   const requestUrl = request.url ?? '/';
@@ -660,6 +661,17 @@ export function createRouter(
           logger,
           correlationId,
           dependencies.getWorkflowRunOperationalViewUseCase,
+        );
+        return;
+      }
+
+      if (method === 'GET' && path === '/workflow-runs/timeline') {
+        await handleGetWorkflowRunTimelineRequest(
+          request,
+          response,
+          logger,
+          correlationId,
+          dependencies.getWorkflowRunTimelineUseCase,
         );
         return;
       }

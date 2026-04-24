@@ -61,6 +61,7 @@ At this stage, the service provides:
 - approval-gate runtime blocking and approval request aggregate foundation
 - approval decision transitions and workflow unblocking primitives
 - workflow run operational read model and timeline inspection foundation
+- workflow runtime event log foundation and execution timeline projection
 
 The authorization parity history endpoint now reads persisted diagnostic events from durable storage.
 
@@ -385,6 +386,10 @@ Rejects a pending approval request and fails the associated workflow run.
 ### `GET /workflow-runs/operational-view?runId=...`
 
 Returns a workflow run operational view including the run, its run steps, approval requests, and status summary.
+
+### `GET /workflow-runs/timeline?runId=...`
+
+Returns the append-only runtime event timeline for a workflow run.
 
 ## Current Assistant Publication Operation
 

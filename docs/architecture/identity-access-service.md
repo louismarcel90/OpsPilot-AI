@@ -597,3 +597,15 @@ The operational view includes:
 - aggregated runtime summary counts
 
 This is the first operator-facing runtime inspection foundation.
+
+## Current Workflow Runtime Event Timeline
+
+The service now persists append-only workflow runtime events.
+
+Runtime events capture:
+
+- workflow run creation and lifecycle transitions
+- workflow run step lifecycle transitions
+- approval request creation and decision transitions
+
+This establishes the first execution timeline foundation for runtime investigation and audit.

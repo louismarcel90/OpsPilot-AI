@@ -80,6 +80,10 @@ import { GetApprovalRequestsByWorkflowRunUseCase } from '../../../application/us
 import { ApproveApprovalRequestUseCase } from '../../../application/use-cases/approve-approval-request.use-case.js';
 import { RejectApprovalRequestUseCase } from '../../../application/use-cases/reject-approval-request.use-case.js';
 import { GetWorkflowRunOperationalViewUseCase } from '../../../application/use-cases/get-workflow-run-operational-view.use-case.js';
+import { WorkflowRuntimeEventRecorder } from '../../../application/services/workflow-runtime-event-recorder.js';
+import type { WorkflowRuntimeEventRepository } from '../../../application/repositories/workflow-runtime-event-repository.js';
+import { GetWorkflowRunTimelineUseCase } from '../../../application/use-cases/get-workflow-run-timeline.use-case.js';
+
 export interface ServiceDependencies {
   readonly resolveUserByEmailUseCase: ResolveUserByEmailUseCase;
   readonly resolveTenantBySlugUseCase: ResolveTenantBySlugUseCase;
@@ -139,6 +143,8 @@ export interface ServiceDependencies {
   readonly approveApprovalRequestUseCase: ApproveApprovalRequestUseCase;
   readonly rejectApprovalRequestUseCase: RejectApprovalRequestUseCase;
   readonly getWorkflowRunOperationalViewUseCase: GetWorkflowRunOperationalViewUseCase;
+  readonly getWorkflowRunTimelineUseCase: GetWorkflowRunTimelineUseCase;
+  readonly workflowRuntimeEventRecorder: WorkflowRuntimeEventRecorder;
 }
 
 export function createServiceDependencies(
@@ -163,6 +169,7 @@ export function createServiceDependencies(
   workflowRunStepWriteRepository: WorkflowRunStepWriteRepository,
   approvalRequestReadRepository: ApprovalRequestReadRepository,
   approvalRequestWriteRepository: ApprovalRequestWriteRepository,
+  workflowRuntimeEventWriteRepository: WorkflowRuntimeEventRepository,
 ): ServiceDependencies {
   const authorizationBootstrapValidationStore = new InMemoryAuthorizationBootstrapValidationStore();
   const authorizationDiagnosticsHistoryStore = new InMemoryAuthorizationDiagnosticsHistoryStore();
@@ -188,6 +195,10 @@ export function createServiceDependencies(
 
   const getAuthorizationParityByCorrelationIdUseCase =
     new GetAuthorizationParityByCorrelationIdUseCase(authorizationAuditEventRepository);
+
+  const workflowRuntimeEventRecorder = new WorkflowRuntimeEventRecorder(
+    workflowRuntimeEventWriteRepository,
+  );
 
   return {
     resolveUserByEmailUseCase: new ResolveUserByEmailUseCase(userReadRepository),
@@ -337,36 +348,45 @@ export function createServiceDependencies(
       workflowStepReadRepository,
       workflowRunWriteRepository,
       workflowRunStepWriteRepository,
+      workflowRuntimeEventRecorder,
     ),
     startWorkflowRunUseCase: new StartWorkflowRunUseCase(
       workflowRunReadRepository,
       workflowRunWriteRepository,
+      workflowRuntimeEventRecorder,
     ),
     startWorkflowRunStepUseCase: new StartWorkflowRunStepUseCase(
+      workflowRunReadRepository,
       workflowRunStepReadRepository,
       workflowRunStepWriteRepository,
+      workflowRuntimeEventRecorder,
     ),
     completeWorkflowRunUseCase: new CompleteWorkflowRunUseCase(
       workflowRunReadRepository,
       workflowRunWriteRepository,
+      workflowRuntimeEventRecorder,
     ),
     failWorkflowRunUseCase: new FailWorkflowRunUseCase(
       workflowRunReadRepository,
       workflowRunWriteRepository,
+      workflowRuntimeEventRecorder,
     ),
     completeWorkflowRunStepUseCase: new CompleteWorkflowRunStepUseCase(
       workflowRunReadRepository,
       workflowRunWriteRepository,
       workflowRunStepReadRepository,
       workflowRunStepWriteRepository,
+      workflowVersionReadRepository,
       workflowStepReadRepository,
       approvalRequestWriteRepository,
+      workflowRuntimeEventRecorder,
     ),
     failWorkflowRunStepUseCase: new FailWorkflowRunStepUseCase(
       workflowRunReadRepository,
       workflowRunWriteRepository,
       workflowRunStepReadRepository,
       workflowRunStepWriteRepository,
+      workflowRuntimeEventRecorder,
     ),
     getApprovalRequestsByWorkflowRunUseCase: new GetApprovalRequestsByWorkflowRunUseCase(
       approvalRequestReadRepository,
@@ -375,16 +395,22 @@ export function createServiceDependencies(
       approvalRequestReadRepository,
       approvalRequestWriteRepository,
       workflowRunStepWriteRepository,
+      workflowRuntimeEventRecorder,
     ),
     rejectApprovalRequestUseCase: new RejectApprovalRequestUseCase(
       approvalRequestReadRepository,
       approvalRequestWriteRepository,
       workflowRunWriteRepository,
+      workflowRuntimeEventRecorder,
     ),
     getWorkflowRunOperationalViewUseCase: new GetWorkflowRunOperationalViewUseCase(
       workflowRunReadRepository,
       workflowRunStepReadRepository,
       approvalRequestReadRepository,
+    ),
+    workflowRuntimeEventRecorder,
+    getWorkflowRunTimelineUseCase: new GetWorkflowRunTimelineUseCase(
+      workflowRuntimeEventWriteRepository,
     ),
     getWorkflowRunStepsUseCase: new GetWorkflowRunStepsUseCase(workflowRunStepReadRepository),
     authorizationBootstrapValidationStore,

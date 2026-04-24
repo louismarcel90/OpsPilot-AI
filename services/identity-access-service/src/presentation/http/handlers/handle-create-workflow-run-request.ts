@@ -9,8 +9,8 @@ import { writeBadRequestResponse } from '../../../infrastructure/http/responses/
 import { writeJson } from '../../../infrastructure/http/responses/write-json.js';
 
 function resolveInput(request: IncomingMessage): {
-  readonly workflowSlug: string;
-  readonly workflowVersionNumber: number;
+  readonly slug: string;
+  readonly versionNumber: number;
   readonly workspaceId: string;
 } | null {
   const requestUrl = request.url ?? '/';
@@ -39,8 +39,8 @@ function resolveInput(request: IncomingMessage): {
   }
 
   return {
-    workflowSlug: slug.trim(),
-    workflowVersionNumber,
+    slug: slug.trim(),
+    versionNumber: workflowVersionNumber,
     workspaceId: workspaceId.trim(),
   };
 }
@@ -72,8 +72,8 @@ export async function handleCreateWorkflowRunRequest(
 
   try {
     const workflowRun = await createWorkflowRunUseCase.execute({
-      workflowSlug: input.workflowSlug,
-      workflowVersionNumber: input.workflowVersionNumber,
+      slug: input.slug,
+      versionNumber: input.versionNumber,
       workspaceId: input.workspaceId,
     });
 

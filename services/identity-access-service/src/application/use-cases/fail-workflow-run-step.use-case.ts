@@ -4,6 +4,7 @@ import type { WorkflowRunReadRepository } from '../repositories/workflow-run-rea
 import type { WorkflowRunStepReadRepository } from '../repositories/workflow-run-step-read-repository.js';
 import type { WorkflowRunStepWriteRepository } from '../repositories/workflow-run-step-write-repository.js';
 import type { WorkflowRunWriteRepository } from '../repositories/workflow-run-write-repository.js';
+import type { WorkflowRuntimeEventRecorder } from '../services/workflow-runtime-event-recorder.js';
 
 export class FailWorkflowRunStepUseCase {
   public constructor(
@@ -11,6 +12,7 @@ export class FailWorkflowRunStepUseCase {
     private readonly workflowRunWriteRepository: WorkflowRunWriteRepository,
     private readonly workflowRunStepReadRepository: WorkflowRunStepReadRepository,
     private readonly workflowRunStepWriteRepository: WorkflowRunStepWriteRepository,
+    private readonly workflowRuntimeEventRecorder: WorkflowRuntimeEventRecorder,
   ) {}
 
   public async execute(runStepId: string): Promise<WorkflowRunStep> {
@@ -38,11 +40,39 @@ export class FailWorkflowRunStepUseCase {
       throw new Error('Workflow run was not found during failure propagation.');
     }
 
+    await this.workflowRuntimeEventRecorder.record({
+      workflowRunId: updatedRunStep.workflowRunId,
+      workspaceId: workflowRun.workspaceId,
+      eventType: 'workflow_run_step_failed',
+      payload: {
+        workflowRunId: updatedRunStep.workflowRunId,
+        workflowRunStepId: updatedRunStep.id,
+        workflowStepDefinitionId: updatedRunStep.workflowStepDefinitionId,
+        sequenceNumber: updatedRunStep.sequenceNumber,
+        previousStatus: workflowRunStep.status,
+        status: updatedRunStep.status,
+        completedAtIso: updatedRunStep.completedAtIso ?? null,
+      },
+    });
+
     const failedRun = await this.workflowRunWriteRepository.failRun(updatedRunStep.workflowRunId);
 
     if (failedRun === null) {
       throw new Error('Workflow run could not be failed after step failure.');
     }
+
+    await this.workflowRuntimeEventRecorder.record({
+      workflowRunId: failedRun.id,
+      workspaceId: failedRun.workspaceId,
+      eventType: 'workflow_run_failed',
+      payload: {
+        workflowRunId: failedRun.id,
+        previousStatus: workflowRun.status,
+        status: failedRun.status,
+        completedAtIso: failedRun.completedAtIso ?? null,
+        failedWorkflowRunStepId: updatedRunStep.id,
+      },
+    });
 
     return updatedRunStep;
   }

@@ -11,7 +11,6 @@ import { DrizzleAssistantPublicationEventRepository } from './infrastructure/db/
 import { DrizzleAssistantVersionReadRepository } from './infrastructure/db/repositories/drizzle-assistant-version-read-repository.js';
 import { DrizzleAssistantVersionWriteRepository } from './infrastructure/db/repositories/drizzle-assistant-version-write-repository.js';
 import { DrizzleAuthorizationAuditEventRepository } from './infrastructure/db/repositories/drizzle-authorization-audit-event-repository.js';
-import { DrizzleAuthorizationCatalogReadRepository } from './application/repositories/drizzle-authorization-catalog-read-repository.js';
 import { DrizzleTenantReadRepository } from './infrastructure/db/repositories/drizzle-tenant-read-repository.js';
 import { DrizzleUserReadRepository } from './infrastructure/db/repositories/drizzle-user-read-repository.js';
 import { DrizzleWorkflowPublicationEventRepository } from './infrastructure/db/repositories/drizzle-workflow-publication-event-repository.js';
@@ -25,14 +24,16 @@ import { DrizzleWorkflowRunReadRepository } from './infrastructure/db/repositori
 import { DrizzleWorkflowRunWriteRepository } from './infrastructure/db/repositories/drizzle-workflow-run-write-repository.js';
 import { DrizzleWorkflowRunStepReadRepository } from './infrastructure/db/repositories/drizzle-workflow-run-step-read-repository.js';
 import { DrizzleWorkflowRunStepWriteRepository } from './infrastructure/db/repositories/drizzle-workflow-run-step-write-repository.js';
+import { DrizzleApprovalRequestReadRepository } from './infrastructure/db/repositories/drizzle-approval-request-read-repository.js';
+import { DrizzleApprovalRequestWriteRepository } from './infrastructure/db/repositories/drizzle-approval-request-write-repository.js';
+import { DrizzleWorkflowRuntimeEventRepository } from './infrastructure/db/repositories/drizzle-workflow-runtime-event-repository.js';
 
 import { createHttpServer } from './infrastructure/http/server/create-http-server.js';
 import { registerProcessSignalHandlers } from './infrastructure/http/server/register-process-signal-handlers.js';
 import { createServiceDependencies } from './infrastructure/http/runtime/service-dependencies.js';
 import { IdentityAccessServiceRuntime } from './infrastructure/http/runtime/service-runtime.js';
 import { createServiceLogger } from './infrastructure/logging/create-service-logger.js';
-import { DrizzleApprovalRequestReadRepository } from './infrastructure/db/repositories/drizzle-approval-request-read-repository.js';
-import { DrizzleApprovalRequestWriteRepository } from './infrastructure/db/repositories/drizzle-approval-request-write-repository.js';
+import { DrizzleAuthorizationCatalogReadRepository } from './application/repositories/drizzle-authorization-catalog-read-repository.js';
 
 function buildBootstrapParityErrorMessage(details: {
   readonly missingPersistedRoles: string[];
@@ -83,6 +84,7 @@ async function bootstrap(): Promise<void> {
   const authorizationCatalogReadRepository = new DrizzleAuthorizationCatalogReadRepository(
     databaseConnection,
   );
+
   const authorizationAuditEventRepository = new DrizzleAuthorizationAuditEventRepository(
     databaseConnection,
   );
@@ -90,12 +92,15 @@ async function bootstrap(): Promise<void> {
   const assistantDefinitionReadRepository = new DrizzleAssistantDefinitionReadRepository(
     databaseConnection,
   );
+
   const assistantVersionReadRepository = new DrizzleAssistantVersionReadRepository(
     databaseConnection,
   );
+
   const assistantVersionWriteRepository = new DrizzleAssistantVersionWriteRepository(
     databaseConnection,
   );
+
   const assistantPublicationEventRepository = new DrizzleAssistantPublicationEventRepository(
     databaseConnection,
   );
@@ -103,29 +108,41 @@ async function bootstrap(): Promise<void> {
   const workflowTemplateReadRepository = new DrizzleWorkflowTemplateReadRepository(
     databaseConnection,
   );
+
   const workflowVersionReadRepository = new DrizzleWorkflowVersionReadRepository(
     databaseConnection,
   );
+
   const workflowVersionWriteRepository = new DrizzleWorkflowVersionWriteRepository(
     databaseConnection,
   );
+
   const workflowPublicationEventRepository = new DrizzleWorkflowPublicationEventRepository(
     databaseConnection,
   );
+
   const workflowStepReadRepository = new DrizzleWorkflowStepReadRepository(databaseConnection);
 
   const workflowRunReadRepository = new DrizzleWorkflowRunReadRepository(databaseConnection);
   const workflowRunWriteRepository = new DrizzleWorkflowRunWriteRepository(databaseConnection);
+
   const workflowRunStepReadRepository = new DrizzleWorkflowRunStepReadRepository(
     databaseConnection,
   );
+
   const workflowRunStepWriteRepository = new DrizzleWorkflowRunStepWriteRepository(
     databaseConnection,
   );
+
   const approvalRequestReadRepository = new DrizzleApprovalRequestReadRepository(
     databaseConnection,
   );
+
   const approvalRequestWriteRepository = new DrizzleApprovalRequestWriteRepository(
+    databaseConnection,
+  );
+
+  const workflowRuntimeEventWriteRepository = new DrizzleWorkflowRuntimeEventRepository(
     databaseConnection,
   );
 
@@ -151,6 +168,7 @@ async function bootstrap(): Promise<void> {
     workflowRunStepWriteRepository,
     approvalRequestReadRepository,
     approvalRequestWriteRepository,
+    workflowRuntimeEventWriteRepository,
   );
 
   const bootstrapValidationResult =

@@ -23,3 +23,4 @@ export { workspaceRoleScopesTable } from './postgres/schema/workspace-role-scope
 export { workspaceRolesTable } from './postgres/schema/workspace-roles.table.js';
 export { workspaceScopesTable } from './postgres/schema/workspace-scopes.table.js';
 export { workspacesTable } from './postgres/schema/workspaces.table.js';
+export { workflowRuntimeEventsTable } from './postgres/schema/workflow-runtime-events.table.js';

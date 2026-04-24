@@ -16,6 +16,7 @@ import { workspaceRoleScopesTable } from './schema/workspace-role-scopes.table.j
 import { workspaceRolesTable } from './schema/workspace-roles.table.js';
 import { workspaceScopesTable } from './schema/workspace-scopes.table.js';
 import { workspacesTable } from './schema/workspaces.table.js';
+import { workflowRuntimeEventsTable } from './schema/workflow-runtime-events.table.js';
 
 export const databaseSchema = {
   users: usersTable,
@@ -36,4 +37,5 @@ export const databaseSchema = {
   workflowRuns: workflowRunsTable,
   workflowRunSteps: workflowRunStepsTable,
   approvalRequests: approvalRequestsTable,
+  workflowRuntimeEvents: workflowRuntimeEventsTable,
 };

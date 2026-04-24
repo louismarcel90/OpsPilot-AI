@@ -29,6 +29,13 @@
       "when": 1777019056029,
       "tag": "0003_cooing_centennial",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1777056116340,
+      "tag": "0004_sharp_zarda",
+      "breakpoints": true
     }
   ]
 }
