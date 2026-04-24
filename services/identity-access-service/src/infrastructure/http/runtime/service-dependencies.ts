@@ -74,6 +74,9 @@ import type { WorkflowRunStepWriteRepository } from '../../../application/reposi
 import { StartWorkflowRunStepUseCase } from '../../../application/use-cases/start-workflow-run-step.use-case.js';
 import { CompleteWorkflowRunStepUseCase } from '../../../application/use-cases/complete-workflow-run-step.use-case.js';
 import { FailWorkflowRunStepUseCase } from '../../../application/use-cases/fail-workflow-run-step.use-case.js';
+import type { ApprovalRequestReadRepository } from '../../../application/repositories/approval-request-read-repository.js';
+import type { ApprovalRequestWriteRepository } from '../../../application/repositories/approval-request-write-repository.js';
+import { GetApprovalRequestsByWorkflowRunUseCase } from '../../../application/use-cases/get-approval-requests-by-workflow-run.use-case.js';
 export interface ServiceDependencies {
   readonly resolveUserByEmailUseCase: ResolveUserByEmailUseCase;
   readonly resolveTenantBySlugUseCase: ResolveTenantBySlugUseCase;
@@ -129,6 +132,7 @@ export interface ServiceDependencies {
   readonly failWorkflowRunUseCase: FailWorkflowRunUseCase;
   readonly completeWorkflowRunStepUseCase: CompleteWorkflowRunStepUseCase;
   readonly failWorkflowRunStepUseCase: FailWorkflowRunStepUseCase;
+  readonly getApprovalRequestsByWorkflowRunUseCase: GetApprovalRequestsByWorkflowRunUseCase;
 }
 
 export function createServiceDependencies(
@@ -151,6 +155,8 @@ export function createServiceDependencies(
   workflowRunWriteRepository: WorkflowRunWriteRepository,
   workflowRunStepReadRepository: WorkflowRunStepReadRepository,
   workflowRunStepWriteRepository: WorkflowRunStepWriteRepository,
+  approvalRequestReadRepository: ApprovalRequestReadRepository,
+  approvalRequestWriteRepository: ApprovalRequestWriteRepository,
 ): ServiceDependencies {
   const authorizationBootstrapValidationStore = new InMemoryAuthorizationBootstrapValidationStore();
   const authorizationDiagnosticsHistoryStore = new InMemoryAuthorizationDiagnosticsHistoryStore();
@@ -347,12 +353,17 @@ export function createServiceDependencies(
       workflowRunWriteRepository,
       workflowRunStepReadRepository,
       workflowRunStepWriteRepository,
+      workflowStepReadRepository,
+      approvalRequestWriteRepository,
     ),
     failWorkflowRunStepUseCase: new FailWorkflowRunStepUseCase(
       workflowRunReadRepository,
       workflowRunWriteRepository,
       workflowRunStepReadRepository,
       workflowRunStepWriteRepository,
+    ),
+    getApprovalRequestsByWorkflowRunUseCase: new GetApprovalRequestsByWorkflowRunUseCase(
+      approvalRequestReadRepository,
     ),
     getWorkflowRunStepsUseCase: new GetWorkflowRunStepsUseCase(workflowRunStepReadRepository),
     authorizationBootstrapValidationStore,

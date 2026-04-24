@@ -1,3 +1,4 @@
+import { approvalRequestsTable } from './schema/approval-requests.table.js';
 import { assistantDefinitionsTable } from './schema/assistant-definitions.table.js';
 import { assistantPublicationEventsTable } from './schema/assistant-publication-events.table.js';
 import { assistantVersionsTable } from './schema/assistant-versions.table.js';
@@ -34,4 +35,5 @@ export const databaseSchema = {
   workflowStepDefinitions: workflowStepDefinitionsTable,
   workflowRuns: workflowRunsTable,
   workflowRunSteps: workflowRunStepsTable,
+  approvalRequests: approvalRequestsTable,
 };

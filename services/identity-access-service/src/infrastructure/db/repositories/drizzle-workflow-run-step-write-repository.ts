@@ -169,4 +169,25 @@ export class DrizzleWorkflowRunStepWriteRepository implements WorkflowRunStepWri
     const row = rows[0];
     return row ? mapRowToWorkflowRunStep(row) : null;
   }
+
+  public async markRunStepBlocked(runStepId: string): Promise<WorkflowRunStep | null> {
+    const rows = await this.connection.db
+      .update(workflowRunStepsTable)
+      .set({
+        status: 'blocked',
+      })
+      .where(eq(workflowRunStepsTable.id, runStepId))
+      .returning({
+        id: workflowRunStepsTable.id,
+        workflowRunId: workflowRunStepsTable.workflowRunId,
+        workflowStepDefinitionId: workflowRunStepsTable.workflowStepDefinitionId,
+        sequenceNumber: workflowRunStepsTable.sequenceNumber,
+        status: workflowRunStepsTable.status,
+        startedAt: workflowRunStepsTable.startedAt,
+        completedAt: workflowRunStepsTable.completedAt,
+      });
+
+    const row = rows[0];
+    return row ? mapRowToWorkflowRunStep(row) : null;
+  }
 }

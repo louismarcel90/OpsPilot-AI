@@ -1,3 +1,5 @@
+import type { ApprovalRequestWriteRepository } from '../repositories/approval-request-write-repository.js';
+import type { WorkflowRun } from '../../domain/workflows/workflow-run.js';
 import type { WorkflowRunStep } from '../../domain/workflows/workflow-run-step.js';
 import { canCompleteWorkflowRunStep } from '../../domain/workflows/workflow-run-step-transition.js';
 import { findNextWorkflowRunStep } from '../../infrastructure/workflows/find-next-workflow-run-step.js';
@@ -5,6 +7,7 @@ import type { WorkflowRunReadRepository } from '../repositories/workflow-run-rea
 import type { WorkflowRunStepReadRepository } from '../repositories/workflow-run-step-read-repository.js';
 import type { WorkflowRunStepWriteRepository } from '../repositories/workflow-run-step-write-repository.js';
 import type { WorkflowRunWriteRepository } from '../repositories/workflow-run-write-repository.js';
+import type { WorkflowStepReadRepository } from '../repositories/workflow-step-read-repository.js';
 
 export class CompleteWorkflowRunStepUseCase {
   public constructor(
@@ -12,6 +15,8 @@ export class CompleteWorkflowRunStepUseCase {
     private readonly workflowRunWriteRepository: WorkflowRunWriteRepository,
     private readonly workflowRunStepReadRepository: WorkflowRunStepReadRepository,
     private readonly workflowRunStepWriteRepository: WorkflowRunStepWriteRepository,
+    private readonly workflowStepReadRepository: WorkflowStepReadRepository,
+    private readonly approvalRequestWriteRepository: ApprovalRequestWriteRepository,
   ) {}
 
   public async execute(runStepId: string): Promise<WorkflowRunStep> {
@@ -33,30 +38,83 @@ export class CompleteWorkflowRunStepUseCase {
       throw new Error('Workflow run step could not be completed.');
     }
 
+    const workflowRun = await this.workflowRunReadRepository.findById(updatedRunStep.workflowRunId);
+
+    if (workflowRun === null) {
+      throw new Error('Workflow run was not found during completion progression.');
+    }
+
     const allRunSteps = await this.workflowRunStepReadRepository.listByWorkflowRunId(
       updatedRunStep.workflowRunId,
     );
 
     const nextRunStep = findNextWorkflowRunStep(updatedRunStep, allRunSteps);
 
-    if (nextRunStep !== null) {
-      if (nextRunStep.status === 'pending') {
-        const markedReady = await this.workflowRunStepWriteRepository.markRunStepReady(
-          nextRunStep.id,
-        );
-
-        if (markedReady === null) {
-          throw new Error('Next workflow run step could not be marked ready.');
-        }
-      }
-
+    if (nextRunStep === null) {
+      await this.completeWorkflowRunAfterFinalStep(updatedRunStep);
       return updatedRunStep;
     }
 
+    if (nextRunStep.status !== 'pending') {
+      return updatedRunStep;
+    }
+
+    await this.activateNextWorkflowRunStep({
+      workflowRun,
+      nextRunStep,
+    });
+
+    return updatedRunStep;
+  }
+
+  private async activateNextWorkflowRunStep(input: {
+    readonly workflowRun: WorkflowRun;
+    readonly nextRunStep: WorkflowRunStep;
+  }): Promise<void> {
+    const stepDefinitions = await this.workflowStepReadRepository.listByWorkflowVersionId(
+      input.workflowRun.workflowVersionId,
+    );
+
+    const nextStepDefinition = stepDefinitions.find(
+      (stepDefinition) => stepDefinition.id === input.nextRunStep.workflowStepDefinitionId,
+    );
+
+    if (nextStepDefinition === undefined) {
+      throw new Error('Next workflow step definition was not found.');
+    }
+
+    if (nextStepDefinition.stepType === 'approval_gate') {
+      const blockedRunStep = await this.workflowRunStepWriteRepository.markRunStepBlocked(
+        input.nextRunStep.id,
+      );
+
+      if (blockedRunStep === null) {
+        throw new Error('Approval-gate workflow run step could not be blocked.');
+      }
+
+      await this.approvalRequestWriteRepository.create({
+        workflowRunId: input.workflowRun.id,
+        workflowRunStepId: blockedRunStep.id,
+        workspaceId: input.workflowRun.workspaceId,
+      });
+
+      return;
+    }
+
+    const markedReady = await this.workflowRunStepWriteRepository.markRunStepReady(
+      input.nextRunStep.id,
+    );
+
+    if (markedReady === null) {
+      throw new Error('Next workflow run step could not be marked ready.');
+    }
+  }
+
+  private async completeWorkflowRunAfterFinalStep(updatedRunStep: WorkflowRunStep): Promise<void> {
     const workflowRun = await this.workflowRunReadRepository.findById(updatedRunStep.workflowRunId);
 
     if (workflowRun === null) {
-      throw new Error('Workflow run was not found during completion progression.');
+      throw new Error('Workflow run was not found during final completion.');
     }
 
     const completedRun = await this.workflowRunWriteRepository.completeRun(
@@ -66,7 +124,5 @@ export class CompleteWorkflowRunStepUseCase {
     if (completedRun === null) {
       throw new Error('Workflow run could not be completed after final step completion.');
     }
-
-    return updatedRunStep;
   }
 }

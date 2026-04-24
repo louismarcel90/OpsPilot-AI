@@ -52,12 +52,11 @@ import { handleGetWorkflowStepConsistencyRequest } from '../../../presentation/h
 import { handleGetWorkflowStepRegistryAlignmentRequest } from '../../../presentation/http/handlers/handle-get-workflow-step-registry-alignment-request.js';
 import { handleCreateWorkflowRunRequest } from '../../../presentation/http/handlers/handle-create-workflow-run-request.js';
 import { handleGetWorkflowRunStepsRequest } from '../../../presentation/http/handlers/handle-get-workflow-run-steps-request.js';
-// import { handleCompleteWorkflowRunRequest } from '../../../presentation/http/handlers/handle-complete-workflow-run-request.js';
-// import { handleFailWorkflowRunRequest } from '../../../presentation/http/handlers/handle-fail-workflow-run-request.js';
 import { handleStartWorkflowRunRequest } from '../../../presentation/http/handlers/handle-start-workflow-run-request.js';
 import { handleStartWorkflowRunStepRequest } from '../../../presentation/http/handlers/handle-start-workflow-run-step-request.js';
 import { handleFailWorkflowRunStepRequest } from '../../../presentation/http/handlers/handle-fail-workflow-run-step-request.js';
 import { handleCompleteWorkflowRunStepRequest } from '../../../presentation/http/handlers/handle-complete-workflow-run-step-request.js';
+import { handleGetApprovalRequestsByWorkflowRunRequest } from '../../../presentation/http/handlers/handle-get-approval-requests-by-workflow-run-request.js';
 
 function resolvePath(request: IncomingMessage): string {
   const requestUrl = request.url ?? '/';
@@ -614,6 +613,17 @@ export function createRouter(
           logger,
           correlationId,
           dependencies.failWorkflowRunStepUseCase,
+        );
+        return;
+      }
+
+      if (method === 'GET' && path === '/approval-requests') {
+        await handleGetApprovalRequestsByWorkflowRunRequest(
+          request,
+          response,
+          logger,
+          correlationId,
+          dependencies.getApprovalRequestsByWorkflowRunUseCase,
         );
         return;
       }

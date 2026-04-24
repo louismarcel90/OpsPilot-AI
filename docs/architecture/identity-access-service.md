@@ -560,3 +560,14 @@ When a workflow run step fails:
 - the workflow run is failed
 
 This establishes the first orchestration-grade progression model for workflow runtime execution.
+
+## Current Approval-Gate Runtime Foundation
+
+The service now supports runtime blocking for approval-gate workflow steps.
+
+When deterministic workflow progression reaches an approval-gate step:
+
+- the run step becomes `blocked`
+- an approval request is persisted in `pending`
+
+This is the first governed runtime approval foundation for workflow execution.

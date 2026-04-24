@@ -121,4 +121,23 @@ export class DrizzleWorkflowVersionReadRepository implements WorkflowVersionRead
 
     return mapRowToWorkflowVersionSummary(row);
   }
+
+  public async findById(workflowVersionId: string): Promise<WorkflowVersionSummary | null> {
+    const rows = await this.connection.db
+      .select({
+        id: workflowVersionsTable.id,
+        workflowTemplateId: workflowVersionsTable.workflowTemplateId,
+        versionNumber: workflowVersionsTable.versionNumber,
+        lifecycleStatus: workflowVersionsTable.lifecycleStatus,
+        triggerMode: workflowVersionsTable.triggerMode,
+        definitionSummary: workflowVersionsTable.definitionSummary,
+        changeSummary: workflowVersionsTable.changeSummary,
+      })
+      .from(workflowVersionsTable)
+      .where(eq(workflowVersionsTable.id, workflowVersionId))
+      .limit(1);
+
+    const row = rows[0];
+    return row ? mapRowToWorkflowVersionSummary(row) : null;
+  }
 }

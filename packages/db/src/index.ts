@@ -5,6 +5,7 @@ export { seedIdentityFoundation } from './postgres/seeds/seed-identity-foundatio
 export { seedWorkflowFoundation } from './postgres/seeds/seed-workflow-foundation.js';
 export { seedWorkspaceAuthorizationCatalog } from './postgres/seeds/seed-workspace-authorization-catalog.js';
 export { databaseSchema } from './postgres/database-schema.js';
+export { approvalRequestsTable } from './postgres/schema/approval-requests.table.js';
 export { assistantDefinitionsTable } from './postgres/schema/assistant-definitions.table.js';
 export { assistantPublicationEventsTable } from './postgres/schema/assistant-publication-events.table.js';
 export { assistantVersionsTable } from './postgres/schema/assistant-versions.table.js';

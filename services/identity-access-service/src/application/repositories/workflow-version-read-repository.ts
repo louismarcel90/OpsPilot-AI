@@ -1,6 +1,8 @@
 import type { WorkflowVersionSummary } from '../../domain/workflows/workflow-version-summary.js';
 
 export interface WorkflowVersionReadRepository {
+  findById(workflowVersionId: string): Promise<WorkflowVersionSummary | null>;
+
   listByWorkflowTemplateId(workflowTemplateId: string): Promise<WorkflowVersionSummary[]>;
 
   findPublishedByWorkflowTemplateId(
