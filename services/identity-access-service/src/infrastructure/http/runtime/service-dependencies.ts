@@ -83,6 +83,7 @@ import { GetWorkflowRunOperationalViewUseCase } from '../../../application/use-c
 import { WorkflowRuntimeEventRecorder } from '../../../application/services/workflow-runtime-event-recorder.js';
 import type { WorkflowRuntimeEventRepository } from '../../../application/repositories/workflow-runtime-event-repository.js';
 import { GetWorkflowRunTimelineUseCase } from '../../../application/use-cases/get-workflow-run-timeline.use-case.js';
+import { GetWorkflowRunDiagnosticsUseCase } from '../../../application/use-cases/get-workflow-run-diagnostics.use-case.js';
 
 export interface ServiceDependencies {
   readonly resolveUserByEmailUseCase: ResolveUserByEmailUseCase;
@@ -145,6 +146,7 @@ export interface ServiceDependencies {
   readonly getWorkflowRunOperationalViewUseCase: GetWorkflowRunOperationalViewUseCase;
   readonly getWorkflowRunTimelineUseCase: GetWorkflowRunTimelineUseCase;
   readonly workflowRuntimeEventRecorder: WorkflowRuntimeEventRecorder;
+  readonly getWorkflowRunDiagnosticsUseCase: GetWorkflowRunDiagnosticsUseCase;
 }
 
 export function createServiceDependencies(
@@ -411,6 +413,11 @@ export function createServiceDependencies(
     workflowRuntimeEventRecorder,
     getWorkflowRunTimelineUseCase: new GetWorkflowRunTimelineUseCase(
       workflowRuntimeEventWriteRepository,
+    ),
+    getWorkflowRunDiagnosticsUseCase: new GetWorkflowRunDiagnosticsUseCase(
+      workflowRunReadRepository,
+      workflowRunStepReadRepository,
+      approvalRequestReadRepository,
     ),
     getWorkflowRunStepsUseCase: new GetWorkflowRunStepsUseCase(workflowRunStepReadRepository),
     authorizationBootstrapValidationStore,

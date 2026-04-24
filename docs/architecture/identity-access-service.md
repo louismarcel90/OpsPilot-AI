@@ -609,3 +609,17 @@ Runtime events capture:
 - approval request creation and decision transitions
 
 This establishes the first execution timeline foundation for runtime investigation and audit.
+
+## Current Workflow Run Runtime Diagnostics
+
+The service now evaluates workflow run runtime invariants.
+
+Current invariant checks include:
+
+- at most one ready step in a sequential workflow run
+- at most one running step in a sequential workflow run
+- blocked steps must have approval requests
+- completed runs must not contain incomplete steps
+- failed runs must have a failure signal through a failed step or rejected approval request
+
+This provides a first runtime consistency diagnostic layer for detecting invalid workflow execution states.
