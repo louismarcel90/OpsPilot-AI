@@ -57,6 +57,8 @@ import { handleStartWorkflowRunStepRequest } from '../../../presentation/http/ha
 import { handleFailWorkflowRunStepRequest } from '../../../presentation/http/handlers/handle-fail-workflow-run-step-request.js';
 import { handleCompleteWorkflowRunStepRequest } from '../../../presentation/http/handlers/handle-complete-workflow-run-step-request.js';
 import { handleGetApprovalRequestsByWorkflowRunRequest } from '../../../presentation/http/handlers/handle-get-approval-requests-by-workflow-run-request.js';
+import { handleApproveApprovalRequest } from '../../../presentation/http/handlers/handle-approve-approval-request.js';
+import { handleRejectApprovalRequest } from '../../../presentation/http/handlers/handle-reject-approval-request.js';
 
 function resolvePath(request: IncomingMessage): string {
   const requestUrl = request.url ?? '/';
@@ -624,6 +626,28 @@ export function createRouter(
           logger,
           correlationId,
           dependencies.getApprovalRequestsByWorkflowRunUseCase,
+        );
+        return;
+      }
+
+      if (method === 'POST' && path === '/approval-requests/approve') {
+        await handleApproveApprovalRequest(
+          request,
+          response,
+          logger,
+          correlationId,
+          dependencies.approveApprovalRequestUseCase,
+        );
+        return;
+      }
+
+      if (method === 'POST' && path === '/approval-requests/reject') {
+        await handleRejectApprovalRequest(
+          request,
+          response,
+          logger,
+          correlationId,
+          dependencies.rejectApprovalRequestUseCase,
         );
         return;
       }

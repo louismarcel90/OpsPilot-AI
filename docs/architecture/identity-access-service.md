@@ -571,3 +571,16 @@ When deterministic workflow progression reaches an approval-gate step:
 - an approval request is persisted in `pending`
 
 This is the first governed runtime approval foundation for workflow execution.
+
+## Current Approval Decision Runtime
+
+The service now supports approval request decision transitions.
+
+Current approval decision behavior:
+
+- approving a pending request marks it `approved`
+- approving unblocks the associated workflow run step by marking it `ready`
+- rejecting a pending request marks it `rejected`
+- rejecting fails the associated workflow run
+
+This closes the first governed runtime approval loop.

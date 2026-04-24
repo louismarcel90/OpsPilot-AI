@@ -59,6 +59,7 @@ At this stage, the service provides:
 - workflow run step start / complete / fail transition primitives
 - deterministic next-step activation and workflow progression primitives
 - approval-gate runtime blocking and approval request aggregate foundation
+- approval decision transitions and workflow unblocking primitives
 
 The authorization parity history endpoint now reads persisted diagnostic events from durable storage.
 
@@ -371,6 +372,14 @@ Transitions a workflow run step from `running` to `failed`.
 ### `GET /approval-requests?workflowRunId=...`
 
 Returns the approval requests associated with a specific workflow run.
+
+### `POST /approval-requests/approve?approvalRequestId=...`
+
+Approves a pending approval request and unblocks the associated workflow run step.
+
+### `POST /approval-requests/reject?approvalRequestId=...`
+
+Rejects a pending approval request and fails the associated workflow run.
 
 ## Current Assistant Publication Operation
 

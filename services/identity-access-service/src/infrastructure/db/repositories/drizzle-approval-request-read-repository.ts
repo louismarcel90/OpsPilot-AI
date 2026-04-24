@@ -41,6 +41,25 @@ function mapRowToApprovalRequest(row: {
 export class DrizzleApprovalRequestReadRepository implements ApprovalRequestReadRepository {
   public constructor(private readonly connection: PostgresConnection) {}
 
+  public async findById(approvalRequestId: string): Promise<ApprovalRequest | null> {
+    const rows = await this.connection.db
+      .select({
+        id: approvalRequestsTable.id,
+        workflowRunId: approvalRequestsTable.workflowRunId,
+        workflowRunStepId: approvalRequestsTable.workflowRunStepId,
+        workspaceId: approvalRequestsTable.workspaceId,
+        status: approvalRequestsTable.status,
+        requestedAt: approvalRequestsTable.requestedAt,
+        decidedAt: approvalRequestsTable.decidedAt,
+      })
+      .from(approvalRequestsTable)
+      .where(eq(approvalRequestsTable.id, approvalRequestId))
+      .limit(1);
+
+    const row = rows[0];
+    return row ? mapRowToApprovalRequest(row) : null;
+  }
+
   public async listByWorkflowRunId(workflowRunId: string): Promise<ApprovalRequest[]> {
     const rows = await this.connection.db
       .select({

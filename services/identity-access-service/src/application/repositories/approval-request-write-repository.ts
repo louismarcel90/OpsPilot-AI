@@ -6,4 +6,8 @@ export interface ApprovalRequestWriteRepository {
     readonly workflowRunStepId: string;
     readonly workspaceId: string;
   }): Promise<ApprovalRequest>;
+
+  approve(approvalRequestId: string): Promise<ApprovalRequest | null>;
+
+  reject(approvalRequestId: string): Promise<ApprovalRequest | null>;
 }

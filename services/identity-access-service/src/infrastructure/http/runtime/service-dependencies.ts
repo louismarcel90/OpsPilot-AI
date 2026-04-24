@@ -77,6 +77,8 @@ import { FailWorkflowRunStepUseCase } from '../../../application/use-cases/fail-
 import type { ApprovalRequestReadRepository } from '../../../application/repositories/approval-request-read-repository.js';
 import type { ApprovalRequestWriteRepository } from '../../../application/repositories/approval-request-write-repository.js';
 import { GetApprovalRequestsByWorkflowRunUseCase } from '../../../application/use-cases/get-approval-requests-by-workflow-run.use-case.js';
+import { ApproveApprovalRequestUseCase } from '../../../application/use-cases/approve-approval-request.use-case.js';
+import { RejectApprovalRequestUseCase } from '../../../application/use-cases/reject-approval-request.use-case.js';
 export interface ServiceDependencies {
   readonly resolveUserByEmailUseCase: ResolveUserByEmailUseCase;
   readonly resolveTenantBySlugUseCase: ResolveTenantBySlugUseCase;
@@ -133,6 +135,8 @@ export interface ServiceDependencies {
   readonly completeWorkflowRunStepUseCase: CompleteWorkflowRunStepUseCase;
   readonly failWorkflowRunStepUseCase: FailWorkflowRunStepUseCase;
   readonly getApprovalRequestsByWorkflowRunUseCase: GetApprovalRequestsByWorkflowRunUseCase;
+  readonly approveApprovalRequestUseCase: ApproveApprovalRequestUseCase;
+  readonly rejectApprovalRequestUseCase: RejectApprovalRequestUseCase;
 }
 
 export function createServiceDependencies(
@@ -364,6 +368,16 @@ export function createServiceDependencies(
     ),
     getApprovalRequestsByWorkflowRunUseCase: new GetApprovalRequestsByWorkflowRunUseCase(
       approvalRequestReadRepository,
+    ),
+    approveApprovalRequestUseCase: new ApproveApprovalRequestUseCase(
+      approvalRequestReadRepository,
+      approvalRequestWriteRepository,
+      workflowRunStepWriteRepository,
+    ),
+    rejectApprovalRequestUseCase: new RejectApprovalRequestUseCase(
+      approvalRequestReadRepository,
+      approvalRequestWriteRepository,
+      workflowRunWriteRepository,
     ),
     getWorkflowRunStepsUseCase: new GetWorkflowRunStepsUseCase(workflowRunStepReadRepository),
     authorizationBootstrapValidationStore,
