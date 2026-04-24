@@ -584,3 +584,16 @@ Current approval decision behavior:
 - rejecting fails the associated workflow run
 
 This closes the first governed runtime approval loop.
+
+## Current Workflow Run Operational View
+
+The service now exposes an operational read model for workflow runs.
+
+The operational view includes:
+
+- workflow run state
+- ordered workflow run steps
+- approval requests
+- aggregated runtime summary counts
+
+This is the first operator-facing runtime inspection foundation.

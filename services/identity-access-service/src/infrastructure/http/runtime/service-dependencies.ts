@@ -79,6 +79,7 @@ import type { ApprovalRequestWriteRepository } from '../../../application/reposi
 import { GetApprovalRequestsByWorkflowRunUseCase } from '../../../application/use-cases/get-approval-requests-by-workflow-run.use-case.js';
 import { ApproveApprovalRequestUseCase } from '../../../application/use-cases/approve-approval-request.use-case.js';
 import { RejectApprovalRequestUseCase } from '../../../application/use-cases/reject-approval-request.use-case.js';
+import { GetWorkflowRunOperationalViewUseCase } from '../../../application/use-cases/get-workflow-run-operational-view.use-case.js';
 export interface ServiceDependencies {
   readonly resolveUserByEmailUseCase: ResolveUserByEmailUseCase;
   readonly resolveTenantBySlugUseCase: ResolveTenantBySlugUseCase;
@@ -137,6 +138,7 @@ export interface ServiceDependencies {
   readonly getApprovalRequestsByWorkflowRunUseCase: GetApprovalRequestsByWorkflowRunUseCase;
   readonly approveApprovalRequestUseCase: ApproveApprovalRequestUseCase;
   readonly rejectApprovalRequestUseCase: RejectApprovalRequestUseCase;
+  readonly getWorkflowRunOperationalViewUseCase: GetWorkflowRunOperationalViewUseCase;
 }
 
 export function createServiceDependencies(
@@ -378,6 +380,11 @@ export function createServiceDependencies(
       approvalRequestReadRepository,
       approvalRequestWriteRepository,
       workflowRunWriteRepository,
+    ),
+    getWorkflowRunOperationalViewUseCase: new GetWorkflowRunOperationalViewUseCase(
+      workflowRunReadRepository,
+      workflowRunStepReadRepository,
+      approvalRequestReadRepository,
     ),
     getWorkflowRunStepsUseCase: new GetWorkflowRunStepsUseCase(workflowRunStepReadRepository),
     authorizationBootstrapValidationStore,
