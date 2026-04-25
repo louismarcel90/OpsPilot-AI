@@ -89,6 +89,9 @@ import { DrainWorkflowRunUseCase } from '../../../application/use-cases/drain-wo
 import { GetWorkflowEngineDiagnosticsUseCase } from '../../../application/use-cases/get-workflow-engine-diagnostics.use-case.js';
 import { GetWorkflowRuntimeCommandPreviewUseCase } from '../../../application/use-cases/get-workflow-runtime-command-preview.use-case.js';
 import { GetWorkflowRuntimeProtectionDiagnosticsUseCase } from '../../../application/use-cases/get-workflow-runtime-protection-diagnostics.use-case.js';
+import { MembershipRuntimeActorContextResolver } from '../../runtime/membership-runtime-actor-context-resolver.js';
+import { RuntimeProtectedActionGuard } from '../../../application/services/runtime-protected-action-guard.js';
+import { GetRuntimeAuthorizationDiagnosticsUseCase } from '../../../application/use-cases/get-runtime-authorization-diagnostics.use-case.js';
 export interface ServiceDependencies {
   readonly resolveUserByEmailUseCase: ResolveUserByEmailUseCase;
   readonly resolveTenantBySlugUseCase: ResolveTenantBySlugUseCase;
@@ -156,6 +159,10 @@ export interface ServiceDependencies {
   readonly getWorkflowEngineDiagnosticsUseCase: GetWorkflowEngineDiagnosticsUseCase;
   readonly getWorkflowRuntimeCommandPreviewUseCase: GetWorkflowRuntimeCommandPreviewUseCase;
   readonly getWorkflowRuntimeProtectionDiagnosticsUseCase: GetWorkflowRuntimeProtectionDiagnosticsUseCase;
+  readonly runtimeProtectedActionGuard: RuntimeProtectedActionGuard;
+  readonly getRuntimeAuthorizationDiagnosticsUseCase: GetRuntimeAuthorizationDiagnosticsUseCase;
+  readonly workflowRunReadRepository: WorkflowRunReadRepository;
+  readonly approvalRequestReadRepository: ApprovalRequestReadRepository;
 }
 
 export function createServiceDependencies(
@@ -244,6 +251,11 @@ export function createServiceDependencies(
   );
 
   const drainWorkflowRunUseCase = new DrainWorkflowRunUseCase(advanceWorkflowRunUseCase);
+  const runtimeActorContextResolver = new MembershipRuntimeActorContextResolver(
+    workspaceMembershipReadRepository,
+  );
+
+  const runtimeProtectedActionGuard = new RuntimeProtectedActionGuard(runtimeActorContextResolver);
 
   return {
     resolveUserByEmailUseCase: new ResolveUserByEmailUseCase(userReadRepository),
@@ -453,6 +465,12 @@ export function createServiceDependencies(
     ),
     getWorkflowRuntimeProtectionDiagnosticsUseCase:
       new GetWorkflowRuntimeProtectionDiagnosticsUseCase(workflowRunReadRepository),
+    runtimeProtectedActionGuard,
+    getRuntimeAuthorizationDiagnosticsUseCase: new GetRuntimeAuthorizationDiagnosticsUseCase(
+      workflowRunReadRepository,
+      runtimeProtectedActionGuard,
+    ),
+
     startWorkflowRunUseCase,
     startWorkflowRunStepUseCase,
     completeWorkflowRunStepUseCase,
@@ -461,6 +479,8 @@ export function createServiceDependencies(
     getWorkflowRunStepsUseCase: new GetWorkflowRunStepsUseCase(workflowRunStepReadRepository),
     authorizationBootstrapValidationStore,
     authorizationDiagnosticsHistoryStore,
+    workflowRunReadRepository,
+    approvalRequestReadRepository,
     toolRegistry,
   };
 }

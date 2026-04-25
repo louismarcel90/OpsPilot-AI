@@ -68,6 +68,7 @@ At this stage, the service provides:
 - workflow execution engine safeguards and command eligibility diagnostics
 - workflow engine execution mode and dry-run command preview
 - workflow run control surface hardening and protected runtime operations
+- runtime authorization enforcement adapter and protected command guard
 
 The authorization parity history endpoint now reads persisted diagnostic events from durable storage.
 
@@ -76,6 +77,8 @@ Authorization diagnostics and persisted audit events now include explicit correl
 The local seed now includes workflow templates and workflow versions for realistic workflow configuration demonstrations.
 
 Completing a run step now deterministically activates the next pending step, or completes the workflow run when the completed step is the last one.
+
+Protected runtime mutation endpoints now require `actorId` as a query parameter.
 
 ## Bootstrap Safety Checks
 
@@ -420,6 +423,10 @@ Returns a dry-run preview of the next workflow engine command without mutating r
 ### `GET /workflow-runs/protection-diagnostics?runId=...&action=...`
 
 Returns runtime protection diagnostics for a workflow control action.
+
+### `GET /workflow-runs/runtime-authorization?runId=...&actorId=...&action=...`
+
+Returns runtime authorization diagnostics for a protected workflow operation.
 
 ## Current Assistant Publication Operation
 

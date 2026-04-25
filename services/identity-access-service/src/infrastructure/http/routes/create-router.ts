@@ -67,6 +67,7 @@ import { handleDrainWorkflowRunRequest } from '../../../presentation/http/handle
 import { handleGetWorkflowEngineDiagnosticsRequest } from '../../../presentation/http/handlers/handle-get-workflow-engine-diagnostics-request.js';
 import { handleGetWorkflowRuntimeCommandPreviewRequest } from '../../../presentation/http/handlers/handle-get-workflow-runtime-command-preview-request.js';
 import { handleGetWorkflowRuntimeProtectionDiagnosticsRequest } from '../../../presentation/http/handlers/handle-get-workflow-runtime-protection-diagnostics-request.js';
+import { handleGetRuntimeAuthorizationDiagnosticsRequest } from '../../../presentation/http/handlers/handle-get-runtime-authorization-diagnostics-request.js';
 
 function resolvePath(request: IncomingMessage): string {
   const requestUrl = request.url ?? '/';
@@ -645,10 +646,11 @@ export function createRouter(
           logger,
           correlationId,
           dependencies.approveApprovalRequestUseCase,
+          dependencies.approvalRequestReadRepository,
+          dependencies.runtimeProtectedActionGuard,
         );
         return;
       }
-
       if (method === 'POST' && path === '/approval-requests/reject') {
         await handleRejectApprovalRequest(
           request,
@@ -656,10 +658,11 @@ export function createRouter(
           logger,
           correlationId,
           dependencies.rejectApprovalRequestUseCase,
+          dependencies.approvalRequestReadRepository,
+          dependencies.runtimeProtectedActionGuard,
         );
         return;
       }
-
       if (method === 'GET' && path === '/workflow-runs/operational-view') {
         await handleGetWorkflowRunOperationalViewRequest(
           request,
@@ -700,6 +703,8 @@ export function createRouter(
           logger,
           correlationId,
           dependencies.advanceWorkflowRunUseCase,
+          dependencies.workflowRunReadRepository,
+          dependencies.runtimeProtectedActionGuard,
         );
         return;
       }
@@ -711,10 +716,11 @@ export function createRouter(
           logger,
           correlationId,
           dependencies.drainWorkflowRunUseCase,
+          dependencies.workflowRunReadRepository,
+          dependencies.runtimeProtectedActionGuard,
         );
         return;
       }
-
       if (method === 'GET' && path === '/workflow-runs/engine-diagnostics') {
         await handleGetWorkflowEngineDiagnosticsRequest(
           request,
@@ -744,6 +750,17 @@ export function createRouter(
           logger,
           correlationId,
           dependencies.getWorkflowRuntimeProtectionDiagnosticsUseCase,
+        );
+        return;
+      }
+
+      if (method === 'GET' && path === '/workflow-runs/runtime-authorization') {
+        await handleGetRuntimeAuthorizationDiagnosticsRequest(
+          request,
+          response,
+          logger,
+          correlationId,
+          dependencies.getRuntimeAuthorizationDiagnosticsUseCase,
         );
         return;
       }

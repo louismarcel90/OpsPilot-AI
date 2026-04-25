@@ -690,3 +690,17 @@ Runtime protection diagnostics classify workflow control actions by:
 - approval authority requirement
 
 This prepares the workflow runtime for authorization and policy enforcement.
+
+## Current Runtime Authorization Guard
+
+The service now includes a first runtime authorization guard.
+
+Protected runtime operations now evaluate:
+
+- actor context
+- workspace membership
+- runtime protected action
+- required protection level
+- allow/deny decision
+
+This is the first enforcement layer before full policy-engine integration.

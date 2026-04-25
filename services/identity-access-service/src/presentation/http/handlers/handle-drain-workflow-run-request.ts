@@ -7,6 +7,9 @@ import type { AppLogger } from '@opspilot/logger';
 import type { DrainWorkflowRunUseCase } from '../../../application/use-cases/drain-workflow-run.use-case.js';
 import { writeBadRequestResponse } from '../../../infrastructure/http/responses/write-bad-request-response.js';
 import { writeJson } from '../../../infrastructure/http/responses/write-json.js';
+import type { RuntimeProtectedActionGuard } from '../../../application/services/runtime-protected-action-guard.js';
+import type { WorkflowRunReadRepository } from '../../../application/repositories/workflow-run-read-repository.js';
+import { resolveRuntimeActorId } from './resolve-runtime-actor-id.js';
 
 const DEFAULT_MAX_COMMANDS = 10;
 const HARD_MAX_COMMANDS = 50;
@@ -55,22 +58,41 @@ export async function handleDrainWorkflowRunRequest(
   logger: AppLogger,
   correlationId: string,
   drainWorkflowRunUseCase: DrainWorkflowRunUseCase,
+  workflowRunReadRepository: WorkflowRunReadRepository,
+  runtimeProtectedActionGuard: RuntimeProtectedActionGuard,
 ): Promise<void> {
   const input = resolveInput(request);
+  const actorId = resolveRuntimeActorId(request);
 
-  if (input === null) {
-    logger.warn('Missing or invalid workflow drain query parameters', {
+  if (input === null || actorId === null) {
+    logger.warn('Query parameters "runId" and "actorId" are required.', {
       correlationId,
       operationName: 'handleDrainWorkflowRunRequest',
       httpStatusCode: 400,
       httpPath: '/workflow-runs/drain',
     });
 
-    writeBadRequestResponse(response, correlationId, 'Query parameter "runId" is required.');
+    writeBadRequestResponse(
+      response,
+      correlationId,
+      'Query parameter "runId" and "actorId" are required.',
+    );
     return;
   }
 
   try {
+    const workflowRun = await workflowRunReadRepository.findById(input.runId);
+
+    if (workflowRun === null) {
+      throw new Error('Workflow run was not found.');
+    }
+
+    await runtimeProtectedActionGuard.assertAllowed({
+      actorId,
+      workspaceId: workflowRun.workspaceId,
+      workflowRunId: workflowRun.id,
+      action: 'drain_workflow_run',
+    });
     const drainResult = await drainWorkflowRunUseCase.execute(input);
 
     logger.info('Drained workflow run', {
