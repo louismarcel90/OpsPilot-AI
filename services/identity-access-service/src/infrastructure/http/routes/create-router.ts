@@ -64,6 +64,7 @@ import { handleGetWorkflowRunTimelineRequest } from '../../../presentation/http/
 import { handleGetWorkflowRunDiagnosticsRequest } from '../../../presentation/http/handlers/handle-get-workflow-run-diagnostics-request.js';
 import { handleAdvanceWorkflowRunRequest } from '../../../presentation/http/handlers/handle-advance-workflow-run-request.js';
 import { handleDrainWorkflowRunRequest } from '../../../presentation/http/handlers/handle-drain-workflow-run-request.js';
+import { handleGetWorkflowEngineDiagnosticsRequest } from '../../../presentation/http/handlers/handle-get-workflow-engine-diagnostics-request.js';
 
 function resolvePath(request: IncomingMessage): string {
   const requestUrl = request.url ?? '/';
@@ -708,6 +709,17 @@ export function createRouter(
           logger,
           correlationId,
           dependencies.drainWorkflowRunUseCase,
+        );
+        return;
+      }
+
+      if (method === 'GET' && path === '/workflow-runs/engine-diagnostics') {
+        await handleGetWorkflowEngineDiagnosticsRequest(
+          request,
+          response,
+          logger,
+          correlationId,
+          dependencies.getWorkflowEngineDiagnosticsUseCase,
         );
         return;
       }

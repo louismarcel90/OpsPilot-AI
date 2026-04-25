@@ -650,3 +650,16 @@ A drain operation repeatedly executes deterministic workflow runtime commands un
 - a maximum command limit is reached
 
 This provides a safer operator-facing auto-progression primitive while preserving deterministic, auditable execution.
+
+## Current Workflow Engine Safeguards
+
+The service now exposes workflow engine command eligibility diagnostics.
+
+The engine diagnostics explain:
+
+- the next command the engine would select
+- whether the command is executable
+- why execution is blocked or unsafe
+- whether runtime corruption-like states are present
+
+The `advance` command is now protected by engine safeguards and refuses to execute when dangerous runtime anomalies are detected.
