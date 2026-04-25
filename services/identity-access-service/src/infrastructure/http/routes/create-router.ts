@@ -66,6 +66,7 @@ import { handleAdvanceWorkflowRunRequest } from '../../../presentation/http/hand
 import { handleDrainWorkflowRunRequest } from '../../../presentation/http/handlers/handle-drain-workflow-run-request.js';
 import { handleGetWorkflowEngineDiagnosticsRequest } from '../../../presentation/http/handlers/handle-get-workflow-engine-diagnostics-request.js';
 import { handleGetWorkflowRuntimeCommandPreviewRequest } from '../../../presentation/http/handlers/handle-get-workflow-runtime-command-preview-request.js';
+import { handleGetWorkflowRuntimeProtectionDiagnosticsRequest } from '../../../presentation/http/handlers/handle-get-workflow-runtime-protection-diagnostics-request.js';
 
 function resolvePath(request: IncomingMessage): string {
   const requestUrl = request.url ?? '/';
@@ -732,6 +733,17 @@ export function createRouter(
           logger,
           correlationId,
           dependencies.getWorkflowRuntimeCommandPreviewUseCase,
+        );
+        return;
+      }
+
+      if (method === 'GET' && path === '/workflow-runs/protection-diagnostics') {
+        await handleGetWorkflowRuntimeProtectionDiagnosticsRequest(
+          request,
+          response,
+          logger,
+          correlationId,
+          dependencies.getWorkflowRuntimeProtectionDiagnosticsUseCase,
         );
         return;
       }

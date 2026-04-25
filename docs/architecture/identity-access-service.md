@@ -677,3 +677,16 @@ The preview explains:
 - which runtime endpoint corresponds to the command
 
 This gives operators a safe pre-execution inspection layer before advancing a workflow run.
+
+## Current Workflow Runtime Control Surface Protection
+
+The service now models protected workflow runtime operations.
+
+Runtime protection diagnostics classify workflow control actions by:
+
+- required protection level
+- sensitivity
+- audit requirement
+- approval authority requirement
+
+This prepares the workflow runtime for authorization and policy enforcement.

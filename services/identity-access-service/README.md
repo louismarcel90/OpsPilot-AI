@@ -67,6 +67,7 @@ At this stage, the service provides:
 - workflow execution engine drain mode and bounded auto-progression
 - workflow execution engine safeguards and command eligibility diagnostics
 - workflow engine execution mode and dry-run command preview
+- workflow run control surface hardening and protected runtime operations
 
 The authorization parity history endpoint now reads persisted diagnostic events from durable storage.
 
@@ -415,6 +416,10 @@ Returns command eligibility diagnostics for the workflow execution engine.
 ### `GET /workflow-runs/command-preview?runId=...`
 
 Returns a dry-run preview of the next workflow engine command without mutating runtime state.
+
+### `GET /workflow-runs/protection-diagnostics?runId=...&action=...`
+
+Returns runtime protection diagnostics for a workflow control action.
 
 ## Current Assistant Publication Operation
 

@@ -88,6 +88,7 @@ import { AdvanceWorkflowRunUseCase } from '../../../application/use-cases/advanc
 import { DrainWorkflowRunUseCase } from '../../../application/use-cases/drain-workflow-run.use-case.js';
 import { GetWorkflowEngineDiagnosticsUseCase } from '../../../application/use-cases/get-workflow-engine-diagnostics.use-case.js';
 import { GetWorkflowRuntimeCommandPreviewUseCase } from '../../../application/use-cases/get-workflow-runtime-command-preview.use-case.js';
+import { GetWorkflowRuntimeProtectionDiagnosticsUseCase } from '../../../application/use-cases/get-workflow-runtime-protection-diagnostics.use-case.js';
 export interface ServiceDependencies {
   readonly resolveUserByEmailUseCase: ResolveUserByEmailUseCase;
   readonly resolveTenantBySlugUseCase: ResolveTenantBySlugUseCase;
@@ -154,6 +155,7 @@ export interface ServiceDependencies {
   readonly drainWorkflowRunUseCase: DrainWorkflowRunUseCase;
   readonly getWorkflowEngineDiagnosticsUseCase: GetWorkflowEngineDiagnosticsUseCase;
   readonly getWorkflowRuntimeCommandPreviewUseCase: GetWorkflowRuntimeCommandPreviewUseCase;
+  readonly getWorkflowRuntimeProtectionDiagnosticsUseCase: GetWorkflowRuntimeProtectionDiagnosticsUseCase;
 }
 
 export function createServiceDependencies(
@@ -449,6 +451,8 @@ export function createServiceDependencies(
       workflowRunStepReadRepository,
       approvalRequestReadRepository,
     ),
+    getWorkflowRuntimeProtectionDiagnosticsUseCase:
+      new GetWorkflowRuntimeProtectionDiagnosticsUseCase(workflowRunReadRepository),
     startWorkflowRunUseCase,
     startWorkflowRunStepUseCase,
     completeWorkflowRunStepUseCase,
