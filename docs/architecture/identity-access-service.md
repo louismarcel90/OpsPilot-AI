@@ -663,3 +663,17 @@ The engine diagnostics explain:
 - whether runtime corruption-like states are present
 
 The `advance` command is now protected by engine safeguards and refuses to execute when dangerous runtime anomalies are detected.
+
+## Current Workflow Engine Dry-Run Preview
+
+The service now exposes a dry-run command preview for workflow execution.
+
+The preview explains:
+
+- which command the engine would select
+- whether the command would execute
+- whether runtime state would be mutated
+- why the command is or is not executable
+- which runtime endpoint corresponds to the command
+
+This gives operators a safe pre-execution inspection layer before advancing a workflow run.
