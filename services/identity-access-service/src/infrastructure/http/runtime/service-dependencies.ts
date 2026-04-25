@@ -84,6 +84,7 @@ import { WorkflowRuntimeEventRecorder } from '../../../application/services/work
 import type { WorkflowRuntimeEventRepository } from '../../../application/repositories/workflow-runtime-event-repository.js';
 import { GetWorkflowRunTimelineUseCase } from '../../../application/use-cases/get-workflow-run-timeline.use-case.js';
 import { GetWorkflowRunDiagnosticsUseCase } from '../../../application/use-cases/get-workflow-run-diagnostics.use-case.js';
+import { AdvanceWorkflowRunUseCase } from '../../../application/use-cases/advance-workflow-run.use-case.js';
 
 export interface ServiceDependencies {
   readonly resolveUserByEmailUseCase: ResolveUserByEmailUseCase;
@@ -147,6 +148,7 @@ export interface ServiceDependencies {
   readonly getWorkflowRunTimelineUseCase: GetWorkflowRunTimelineUseCase;
   readonly workflowRuntimeEventRecorder: WorkflowRuntimeEventRecorder;
   readonly getWorkflowRunDiagnosticsUseCase: GetWorkflowRunDiagnosticsUseCase;
+  readonly advanceWorkflowRunUseCase: AdvanceWorkflowRunUseCase;
 }
 
 export function createServiceDependencies(
@@ -200,6 +202,29 @@ export function createServiceDependencies(
 
   const workflowRuntimeEventRecorder = new WorkflowRuntimeEventRecorder(
     workflowRuntimeEventWriteRepository,
+  );
+  const startWorkflowRunUseCase = new StartWorkflowRunUseCase(
+    workflowRunReadRepository,
+    workflowRunWriteRepository,
+    workflowRuntimeEventRecorder,
+  );
+
+  const startWorkflowRunStepUseCase = new StartWorkflowRunStepUseCase(
+    workflowRunReadRepository,
+    workflowRunStepReadRepository,
+    workflowRunStepWriteRepository,
+    workflowRuntimeEventRecorder,
+  );
+
+  const completeWorkflowRunStepUseCase = new CompleteWorkflowRunStepUseCase(
+    workflowRunReadRepository,
+    workflowRunWriteRepository,
+    workflowRunStepReadRepository,
+    workflowRunStepWriteRepository,
+    workflowVersionReadRepository,
+    workflowStepReadRepository,
+    approvalRequestWriteRepository,
+    workflowRuntimeEventRecorder,
   );
 
   return {
@@ -352,17 +377,6 @@ export function createServiceDependencies(
       workflowRunStepWriteRepository,
       workflowRuntimeEventRecorder,
     ),
-    startWorkflowRunUseCase: new StartWorkflowRunUseCase(
-      workflowRunReadRepository,
-      workflowRunWriteRepository,
-      workflowRuntimeEventRecorder,
-    ),
-    startWorkflowRunStepUseCase: new StartWorkflowRunStepUseCase(
-      workflowRunReadRepository,
-      workflowRunStepReadRepository,
-      workflowRunStepWriteRepository,
-      workflowRuntimeEventRecorder,
-    ),
     completeWorkflowRunUseCase: new CompleteWorkflowRunUseCase(
       workflowRunReadRepository,
       workflowRunWriteRepository,
@@ -371,16 +385,6 @@ export function createServiceDependencies(
     failWorkflowRunUseCase: new FailWorkflowRunUseCase(
       workflowRunReadRepository,
       workflowRunWriteRepository,
-      workflowRuntimeEventRecorder,
-    ),
-    completeWorkflowRunStepUseCase: new CompleteWorkflowRunStepUseCase(
-      workflowRunReadRepository,
-      workflowRunWriteRepository,
-      workflowRunStepReadRepository,
-      workflowRunStepWriteRepository,
-      workflowVersionReadRepository,
-      workflowStepReadRepository,
-      approvalRequestWriteRepository,
       workflowRuntimeEventRecorder,
     ),
     failWorkflowRunStepUseCase: new FailWorkflowRunStepUseCase(
@@ -418,6 +422,16 @@ export function createServiceDependencies(
       workflowRunReadRepository,
       workflowRunStepReadRepository,
       approvalRequestReadRepository,
+    ),
+    startWorkflowRunUseCase,
+    startWorkflowRunStepUseCase,
+    completeWorkflowRunStepUseCase,
+    advanceWorkflowRunUseCase: new AdvanceWorkflowRunUseCase(
+      workflowRunReadRepository,
+      workflowRunStepReadRepository,
+      startWorkflowRunUseCase,
+      startWorkflowRunStepUseCase,
+      completeWorkflowRunStepUseCase,
     ),
     getWorkflowRunStepsUseCase: new GetWorkflowRunStepsUseCase(workflowRunStepReadRepository),
     authorizationBootstrapValidationStore,

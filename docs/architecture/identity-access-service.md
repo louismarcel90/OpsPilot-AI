@@ -623,3 +623,17 @@ Current invariant checks include:
 - failed runs must have a failure signal through a failed step or rejected approval request
 
 This provides a first runtime consistency diagnostic layer for detecting invalid workflow execution states.
+
+## Current Workflow Execution Engine Foundation
+
+The service now includes a deterministic workflow runtime command resolver.
+
+The engine can inspect a workflow run and decide the next safe runtime action:
+
+- start the workflow run
+- start the next ready workflow run step
+- complete a running workflow run step
+- wait for approval
+- no-op for terminal states
+
+This is the first step toward engine-driven workflow orchestration.

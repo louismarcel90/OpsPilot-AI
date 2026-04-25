@@ -63,6 +63,7 @@ At this stage, the service provides:
 - workflow run operational read model and timeline inspection foundation
 - workflow runtime event log foundation and execution timeline projection
 - workflow run invariant checks and runtime consistency diagnostics
+- workflow execution engine loop foundation and command-driven runtime progression
 
 The authorization parity history endpoint now reads persisted diagnostic events from durable storage.
 
@@ -395,6 +396,10 @@ Returns the append-only runtime event timeline for a workflow run.
 ### `GET /workflow-runs/diagnostics?runId=...`
 
 Returns runtime consistency diagnostics for a workflow run, including invariant violations and summary counts.
+
+### `POST /workflow-runs/advance?runId=...`
+
+Executes one deterministic runtime engine advancement command for a workflow run.
 
 ## Current Assistant Publication Operation
 

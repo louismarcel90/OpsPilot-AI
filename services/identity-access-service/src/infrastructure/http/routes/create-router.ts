@@ -62,6 +62,7 @@ import { handleRejectApprovalRequest } from '../../../presentation/http/handlers
 import { handleGetWorkflowRunOperationalViewRequest } from '../../../presentation/http/handlers/handle-get-workflow-run-operational-view-request.js';
 import { handleGetWorkflowRunTimelineRequest } from '../../../presentation/http/handlers/handle-get-workflow-run-timeline-request.js';
 import { handleGetWorkflowRunDiagnosticsRequest } from '../../../presentation/http/handlers/handle-get-workflow-run-diagnostics-request.js';
+import { handleAdvanceWorkflowRunRequest } from '../../../presentation/http/handlers/handle-advance-workflow-run-request.js';
 
 function resolvePath(request: IncomingMessage): string {
   const requestUrl = request.url ?? '/';
@@ -684,6 +685,17 @@ export function createRouter(
           logger,
           correlationId,
           dependencies.getWorkflowRunDiagnosticsUseCase,
+        );
+        return;
+      }
+
+      if (method === 'POST' && path === '/workflow-runs/advance') {
+        await handleAdvanceWorkflowRunRequest(
+          request,
+          response,
+          logger,
+          correlationId,
+          dependencies.advanceWorkflowRunUseCase,
         );
         return;
       }
