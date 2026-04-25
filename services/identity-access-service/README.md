@@ -64,6 +64,7 @@ At this stage, the service provides:
 - workflow runtime event log foundation and execution timeline projection
 - workflow run invariant checks and runtime consistency diagnostics
 - workflow execution engine loop foundation and command-driven runtime progression
+- workflow execution engine drain mode and bounded auto-progression
 
 The authorization parity history endpoint now reads persisted diagnostic events from durable storage.
 
@@ -400,6 +401,10 @@ Returns runtime consistency diagnostics for a workflow run, including invariant 
 ### `POST /workflow-runs/advance?runId=...`
 
 Executes one deterministic runtime engine advancement command for a workflow run.
+
+### `POST /workflow-runs/drain?runId=...&maxCommands=...`
+
+Runs bounded workflow engine auto-progression until approval wait, terminal state, no-op, or command limit.
 
 ## Current Assistant Publication Operation
 

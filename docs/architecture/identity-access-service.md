@@ -637,3 +637,16 @@ The engine can inspect a workflow run and decide the next safe runtime action:
 - no-op for terminal states
 
 This is the first step toward engine-driven workflow orchestration.
+
+## Current Workflow Engine Drain Mode
+
+The service now supports bounded workflow runtime drain mode.
+
+A drain operation repeatedly executes deterministic workflow runtime commands until:
+
+- approval is required
+- a terminal state is reached
+- no action is available
+- a maximum command limit is reached
+
+This provides a safer operator-facing auto-progression primitive while preserving deterministic, auditable execution.

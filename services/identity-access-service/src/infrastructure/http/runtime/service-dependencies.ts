@@ -85,6 +85,7 @@ import type { WorkflowRuntimeEventRepository } from '../../../application/reposi
 import { GetWorkflowRunTimelineUseCase } from '../../../application/use-cases/get-workflow-run-timeline.use-case.js';
 import { GetWorkflowRunDiagnosticsUseCase } from '../../../application/use-cases/get-workflow-run-diagnostics.use-case.js';
 import { AdvanceWorkflowRunUseCase } from '../../../application/use-cases/advance-workflow-run.use-case.js';
+import { DrainWorkflowRunUseCase } from '../../../application/use-cases/drain-workflow-run.use-case.js';
 
 export interface ServiceDependencies {
   readonly resolveUserByEmailUseCase: ResolveUserByEmailUseCase;
@@ -149,6 +150,7 @@ export interface ServiceDependencies {
   readonly workflowRuntimeEventRecorder: WorkflowRuntimeEventRecorder;
   readonly getWorkflowRunDiagnosticsUseCase: GetWorkflowRunDiagnosticsUseCase;
   readonly advanceWorkflowRunUseCase: AdvanceWorkflowRunUseCase;
+  readonly drainWorkflowRunUseCase: DrainWorkflowRunUseCase;
 }
 
 export function createServiceDependencies(
@@ -226,6 +228,16 @@ export function createServiceDependencies(
     approvalRequestWriteRepository,
     workflowRuntimeEventRecorder,
   );
+
+  const advanceWorkflowRunUseCase = new AdvanceWorkflowRunUseCase(
+    workflowRunReadRepository,
+    workflowRunStepReadRepository,
+    startWorkflowRunUseCase,
+    startWorkflowRunStepUseCase,
+    completeWorkflowRunStepUseCase,
+  );
+
+  const drainWorkflowRunUseCase = new DrainWorkflowRunUseCase(advanceWorkflowRunUseCase);
 
   return {
     resolveUserByEmailUseCase: new ResolveUserByEmailUseCase(userReadRepository),
@@ -426,13 +438,8 @@ export function createServiceDependencies(
     startWorkflowRunUseCase,
     startWorkflowRunStepUseCase,
     completeWorkflowRunStepUseCase,
-    advanceWorkflowRunUseCase: new AdvanceWorkflowRunUseCase(
-      workflowRunReadRepository,
-      workflowRunStepReadRepository,
-      startWorkflowRunUseCase,
-      startWorkflowRunStepUseCase,
-      completeWorkflowRunStepUseCase,
-    ),
+    advanceWorkflowRunUseCase,
+    drainWorkflowRunUseCase,
     getWorkflowRunStepsUseCase: new GetWorkflowRunStepsUseCase(workflowRunStepReadRepository),
     authorizationBootstrapValidationStore,
     authorizationDiagnosticsHistoryStore,
