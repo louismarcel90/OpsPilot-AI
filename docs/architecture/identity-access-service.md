@@ -736,3 +736,19 @@ Denied actions are projected from append-only workflow runtime events and includ
 - event timestamp
 
 This improves investigation readiness for blocked workflow runtime operations.
+
+## Current Runtime Authorization Activity View
+
+The service now exposes a runtime authorization activity view.
+
+Authorization activity is projected from append-only workflow runtime events and includes:
+
+- allowed protected runtime actions
+- denied protected runtime actions
+- actor identity
+- actor runtime role
+- protected action
+- required protection level
+- decision reason
+
+This gives operators and investigators a complete authorization activity summary for a workflow run.
