@@ -720,3 +720,19 @@ Recorded authorization events include:
 - decision reason
 
 This strengthens investigation readiness and creates a foundation for policy-driven runtime access auditing.
+
+## Current Denied Runtime Action Investigation View
+
+The service now exposes a denied runtime action investigation view.
+
+Denied actions are projected from append-only workflow runtime events and include:
+
+- actor identity
+- actor kind
+- actor runtime role
+- protected action
+- required protection level
+- denial reason
+- event timestamp
+
+This improves investigation readiness for blocked workflow runtime operations.

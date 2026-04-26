@@ -70,6 +70,7 @@ At this stage, the service provides:
 - workflow run control surface hardening and protected runtime operations
 - runtime authorization enforcement adapter and protected command guard
 - runtime authorization event recording and denied-action audit trail
+- denied runtime action diagnostics and authorization investigation view
 
 The authorization parity history endpoint now reads persisted diagnostic events from durable storage.
 
@@ -430,6 +431,10 @@ Returns runtime protection diagnostics for a workflow control action.
 ### `GET /workflow-runs/runtime-authorization?runId=...&actorId=...&action=...`
 
 Returns runtime authorization diagnostics for a protected workflow operation.
+
+### `GET /workflow-runs/denied-actions?runId=...`
+
+Returns denied runtime authorization actions projected from the workflow runtime timeline.
 
 ## Current Assistant Publication Operation
 

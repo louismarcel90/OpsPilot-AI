@@ -93,7 +93,7 @@ import { MembershipRuntimeActorContextResolver } from '../../runtime/membership-
 import { RuntimeProtectedActionGuard } from '../../../application/services/runtime-protected-action-guard.js';
 import { GetRuntimeAuthorizationDiagnosticsUseCase } from '../../../application/use-cases/get-runtime-authorization-diagnostics.use-case.js';
 import { RuntimeAuthorizationEventRecorder } from '../../../application/services/runtime-authorization-event-recorder.js';
-
+import { GetDeniedRuntimeActionsUseCase } from '../../../application/use-cases/get-denied-runtime-actions.use-case.js';
 export interface ServiceDependencies {
   readonly resolveUserByEmailUseCase: ResolveUserByEmailUseCase;
   readonly resolveTenantBySlugUseCase: ResolveTenantBySlugUseCase;
@@ -166,6 +166,7 @@ export interface ServiceDependencies {
   readonly workflowRunReadRepository: WorkflowRunReadRepository;
   readonly approvalRequestReadRepository: ApprovalRequestReadRepository;
   readonly runtimeAuthorizationEventRecorder: RuntimeAuthorizationEventRecorder;
+  readonly getDeniedRuntimeActionsUseCase: GetDeniedRuntimeActionsUseCase;
 }
 
 export function createServiceDependencies(
@@ -478,8 +479,11 @@ export function createServiceDependencies(
       workflowRunReadRepository,
       runtimeProtectedActionGuard,
     ),
+    getDeniedRuntimeActionsUseCase: new GetDeniedRuntimeActionsUseCase(
+      workflowRunReadRepository,
+      workflowRuntimeEventWriteRepository,
+    ),
     runtimeAuthorizationEventRecorder,
-
     startWorkflowRunUseCase,
     startWorkflowRunStepUseCase,
     completeWorkflowRunStepUseCase,

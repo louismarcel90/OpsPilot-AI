@@ -68,6 +68,7 @@ import { handleGetWorkflowEngineDiagnosticsRequest } from '../../../presentation
 import { handleGetWorkflowRuntimeCommandPreviewRequest } from '../../../presentation/http/handlers/handle-get-workflow-runtime-command-preview-request.js';
 import { handleGetWorkflowRuntimeProtectionDiagnosticsRequest } from '../../../presentation/http/handlers/handle-get-workflow-runtime-protection-diagnostics-request.js';
 import { handleGetRuntimeAuthorizationDiagnosticsRequest } from '../../../presentation/http/handlers/handle-get-runtime-authorization-diagnostics-request.js';
+import { handleGetDeniedRuntimeActionsRequest } from '../../../presentation/http/handlers/handle-get-denied-runtime-actions-request.js';
 
 function resolvePath(request: IncomingMessage): string {
   const requestUrl = request.url ?? '/';
@@ -761,6 +762,17 @@ export function createRouter(
           logger,
           correlationId,
           dependencies.getRuntimeAuthorizationDiagnosticsUseCase,
+        );
+        return;
+      }
+
+      if (method === 'GET' && path === '/workflow-runs/denied-actions') {
+        await handleGetDeniedRuntimeActionsRequest(
+          request,
+          response,
+          logger,
+          correlationId,
+          dependencies.getDeniedRuntimeActionsUseCase,
         );
         return;
       }
