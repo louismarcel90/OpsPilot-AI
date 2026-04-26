@@ -766,3 +766,19 @@ Security posture is derived from:
 - runtime invariant violations
 
 This provides operators with a concise risk view for workflow runtime investigation.
+
+## Current Evidence Pack Slice Query
+
+The service now supports partial evidence pack queries.
+
+Operators can request selected investigation sections such as:
+
+- workflow run state
+- runtime timeline
+- runtime diagnostics
+- engine diagnostics
+- authorization activity
+- denied actions
+- security posture
+
+This makes investigation payloads more scalable and UI-friendly.

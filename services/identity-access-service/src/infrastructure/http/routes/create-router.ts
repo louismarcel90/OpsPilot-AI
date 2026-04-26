@@ -72,6 +72,7 @@ import { handleGetDeniedRuntimeActionsRequest } from '../../../presentation/http
 import { handleGetRuntimeAuthorizationActivityRequest } from '../../../presentation/http/handlers/handle-get-runtime-authorization-activity-request.js';
 import { handleGetWorkflowRuntimeSecurityPostureRequest } from '../../../presentation/http/handlers/handle-get-workflow-runtime-security-posture-request.js';
 import { handleGetWorkflowRunEvidencePackRequest } from '../../../presentation/http/handlers/handle-get-workflow-run-evidence-pack-request.js';
+import { handleGetWorkflowRunEvidencePackSliceRequest } from '../../../presentation/http/handlers/handle-get-workflow-run-evidence-pack-slice-request.js';
 
 function resolvePath(request: IncomingMessage): string {
   const requestUrl = request.url ?? '/';
@@ -809,6 +810,17 @@ export function createRouter(
           logger,
           correlationId,
           dependencies.getWorkflowRunEvidencePackUseCase,
+        );
+        return;
+      }
+
+      if (method === 'GET' && path === '/workflow-runs/evidence-pack/slice') {
+        await handleGetWorkflowRunEvidencePackSliceRequest(
+          request,
+          response,
+          logger,
+          correlationId,
+          dependencies.getWorkflowRunEvidencePackSliceUseCase,
         );
         return;
       }
