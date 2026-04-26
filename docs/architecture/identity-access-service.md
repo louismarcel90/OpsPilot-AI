@@ -782,3 +782,23 @@ Operators can request selected investigation sections such as:
 - security posture
 
 This makes investigation payloads more scalable and UI-friendly.
+
+## Current Filtered Runtime Timeline
+
+The service now supports filtered workflow runtime timeline queries.
+
+Operators can filter runtime events by:
+
+- event type
+- event category
+- maximum returned event count
+
+Timeline entries are categorized into:
+
+- workflow run
+- workflow step
+- approval
+- authorization
+- unknown
+
+This makes runtime investigation timelines more scalable and UI-ready.

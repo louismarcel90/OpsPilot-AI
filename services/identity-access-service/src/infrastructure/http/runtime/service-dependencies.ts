@@ -98,7 +98,7 @@ import { GetRuntimeAuthorizationActivityUseCase } from '../../../application/use
 import { GetWorkflowRuntimeSecurityPostureUseCase } from '../../../application/use-cases/get-workflow-runtime-security-posture.use-case.js';
 import { GetWorkflowRunEvidencePackUseCase } from '../../../application/use-cases/get-workflow-run-evidence-pack.use-case.js';
 import { GetWorkflowRunEvidencePackSliceUseCase } from '../../../application/use-cases/get-workflow-run-evidence-pack-slice.use-case.js';
-
+import { GetFilteredWorkflowRunTimelineUseCase } from '../../../application/use-cases/get-filtered-workflow-run-timeline.use-case.js';
 export interface ServiceDependencies {
   readonly resolveUserByEmailUseCase: ResolveUserByEmailUseCase;
   readonly resolveTenantBySlugUseCase: ResolveTenantBySlugUseCase;
@@ -176,6 +176,7 @@ export interface ServiceDependencies {
   readonly getWorkflowRuntimeSecurityPostureUseCase: GetWorkflowRuntimeSecurityPostureUseCase;
   readonly getWorkflowRunEvidencePackUseCase: GetWorkflowRunEvidencePackUseCase;
   readonly getWorkflowRunEvidencePackSliceUseCase: GetWorkflowRunEvidencePackSliceUseCase;
+  readonly getFilteredWorkflowRunTimelineUseCase: GetFilteredWorkflowRunTimelineUseCase;
 }
 
 export function createServiceDependencies(
@@ -512,6 +513,10 @@ export function createServiceDependencies(
       workflowRunReadRepository,
       workflowRunStepReadRepository,
       approvalRequestReadRepository,
+      workflowRuntimeEventWriteRepository,
+    ),
+    getFilteredWorkflowRunTimelineUseCase: new GetFilteredWorkflowRunTimelineUseCase(
+      workflowRunReadRepository,
       workflowRuntimeEventWriteRepository,
     ),
     runtimeAuthorizationEventRecorder,

@@ -74,6 +74,7 @@ At this stage, the service provides:
 - allowed runtime action investigation view and authorization activity summary
 - workflow runtime security posture summary and operator risk indicators
 - investigation filters, slicing, and partial evidence queries
+- workflow runtime timeline filtering and event category projection
 
 The authorization parity history endpoint now reads persisted diagnostic events from durable storage.
 
@@ -450,6 +451,10 @@ Returns workflow runtime security posture, risk level, and operator-facing risk 
 ### `GET /workflow-runs/evidence-pack/slice?runId=...&sections=...`
 
 Returns selected evidence pack sections for a workflow run.
+
+### `GET /workflow-runs/timeline/filtered?runId=...&eventTypes=...&categories=...&limit=...`
+
+Returns a filtered, categorized workflow runtime timeline.
 
 ## Current Assistant Publication Operation
 
