@@ -92,6 +92,8 @@ import { GetWorkflowRuntimeProtectionDiagnosticsUseCase } from '../../../applica
 import { MembershipRuntimeActorContextResolver } from '../../runtime/membership-runtime-actor-context-resolver.js';
 import { RuntimeProtectedActionGuard } from '../../../application/services/runtime-protected-action-guard.js';
 import { GetRuntimeAuthorizationDiagnosticsUseCase } from '../../../application/use-cases/get-runtime-authorization-diagnostics.use-case.js';
+import { RuntimeAuthorizationEventRecorder } from '../../../application/services/runtime-authorization-event-recorder.js';
+
 export interface ServiceDependencies {
   readonly resolveUserByEmailUseCase: ResolveUserByEmailUseCase;
   readonly resolveTenantBySlugUseCase: ResolveTenantBySlugUseCase;
@@ -163,6 +165,7 @@ export interface ServiceDependencies {
   readonly getRuntimeAuthorizationDiagnosticsUseCase: GetRuntimeAuthorizationDiagnosticsUseCase;
   readonly workflowRunReadRepository: WorkflowRunReadRepository;
   readonly approvalRequestReadRepository: ApprovalRequestReadRepository;
+  readonly runtimeAuthorizationEventRecorder: RuntimeAuthorizationEventRecorder;
 }
 
 export function createServiceDependencies(
@@ -217,6 +220,9 @@ export function createServiceDependencies(
   const workflowRuntimeEventRecorder = new WorkflowRuntimeEventRecorder(
     workflowRuntimeEventWriteRepository,
   );
+  const runtimeAuthorizationEventRecorder = new RuntimeAuthorizationEventRecorder(
+    workflowRuntimeEventRecorder,
+  );
   const startWorkflowRunUseCase = new StartWorkflowRunUseCase(
     workflowRunReadRepository,
     workflowRunWriteRepository,
@@ -254,8 +260,10 @@ export function createServiceDependencies(
   const runtimeActorContextResolver = new MembershipRuntimeActorContextResolver(
     workspaceMembershipReadRepository,
   );
-
-  const runtimeProtectedActionGuard = new RuntimeProtectedActionGuard(runtimeActorContextResolver);
+  const runtimeProtectedActionGuard = new RuntimeProtectedActionGuard(
+    runtimeActorContextResolver,
+    runtimeAuthorizationEventRecorder,
+  );
 
   return {
     resolveUserByEmailUseCase: new ResolveUserByEmailUseCase(userReadRepository),
@@ -470,6 +478,7 @@ export function createServiceDependencies(
       workflowRunReadRepository,
       runtimeProtectedActionGuard,
     ),
+    runtimeAuthorizationEventRecorder,
 
     startWorkflowRunUseCase,
     startWorkflowRunStepUseCase,

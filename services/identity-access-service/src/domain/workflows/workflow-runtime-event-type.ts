@@ -11,6 +11,8 @@ export const WORKFLOW_RUNTIME_EVENT_TYPE_VALUES = [
   'approval_request_created',
   'approval_request_approved',
   'approval_request_rejected',
+  'runtime_authorization_allowed',
+  'runtime_authorization_denied',
 ] as const;
 
 export type WorkflowRuntimeEventType = (typeof WORKFLOW_RUNTIME_EVENT_TYPE_VALUES)[number];

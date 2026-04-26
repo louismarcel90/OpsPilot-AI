@@ -3,9 +3,13 @@ import { canRuntimeRoleSatisfyProtectionLevel } from '../../domain/runtime/runti
 import type { WorkflowRuntimeProtectedAction } from '../../domain/workflows/workflow-runtime-protected-action.js';
 import { evaluateWorkflowRuntimeProtection } from '../../infrastructure/workflows/evaluate-workflow-runtime-protection.js';
 import type { RuntimeActorContextResolver } from './runtime-actor-context-resolver.js';
+import type { RuntimeAuthorizationEventRecorder } from './runtime-authorization-event-recorder.js';
 
 export class RuntimeProtectedActionGuard {
-  public constructor(private readonly runtimeActorContextResolver: RuntimeActorContextResolver) {}
+  public constructor(
+    private readonly runtimeActorContextResolver: RuntimeActorContextResolver,
+    private readonly runtimeAuthorizationEventRecorder: RuntimeAuthorizationEventRecorder,
+  ) {}
 
   public async evaluate(input: {
     readonly actorId: string;
@@ -54,6 +58,12 @@ export class RuntimeProtectedActionGuard {
     if (decision === null) {
       throw new Error('Runtime actor context could not be resolved.');
     }
+
+    await this.runtimeAuthorizationEventRecorder.recordDecision({
+      workflowRunId: input.workflowRunId,
+      workspaceId: input.workspaceId,
+      decision,
+    });
 
     if (decision.status === 'deny') {
       throw new Error(

@@ -704,3 +704,19 @@ Protected runtime operations now evaluate:
 - allow/deny decision
 
 This is the first enforcement layer before full policy-engine integration.
+
+## Current Runtime Authorization Audit Trail
+
+The service now records runtime authorization decisions for protected workflow operations.
+
+Recorded authorization events include:
+
+- allowed protected runtime actions
+- denied protected runtime actions
+- actor identity
+- actor runtime role
+- protected action
+- required protection level
+- decision reason
+
+This strengthens investigation readiness and creates a foundation for policy-driven runtime access auditing.

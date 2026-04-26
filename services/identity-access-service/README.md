@@ -69,6 +69,7 @@ At this stage, the service provides:
 - workflow engine execution mode and dry-run command preview
 - workflow run control surface hardening and protected runtime operations
 - runtime authorization enforcement adapter and protected command guard
+- runtime authorization event recording and denied-action audit trail
 
 The authorization parity history endpoint now reads persisted diagnostic events from durable storage.
 
@@ -79,6 +80,8 @@ The local seed now includes workflow templates and workflow versions for realist
 Completing a run step now deterministically activates the next pending step, or completes the workflow run when the completed step is the last one.
 
 Protected runtime mutation endpoints now require `actorId` as a query parameter.
+
+Runtime authorization decisions for protected operations are now recorded in the workflow runtime timeline.
 
 ## Bootstrap Safety Checks
 
