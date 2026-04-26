@@ -72,6 +72,7 @@ At this stage, the service provides:
 - runtime authorization event recording and denied-action audit trail
 - denied runtime action diagnostics and authorization investigation view
 - allowed runtime action investigation view and authorization activity summary
+- workflow runtime security posture summary and operator risk indicators
 
 The authorization parity history endpoint now reads persisted diagnostic events from durable storage.
 
@@ -440,6 +441,10 @@ Returns denied runtime authorization actions projected from the workflow runtime
 ### `GET /workflow-runs/authorization-activity?runId=...`
 
 Returns allowed and denied runtime authorization activity projected from the workflow runtime timeline.
+
+### `GET /workflow-runs/security-posture?runId=...`
+
+Returns workflow runtime security posture, risk level, and operator-facing risk indicators.
 
 ## Current Assistant Publication Operation
 

@@ -752,3 +752,17 @@ Authorization activity is projected from append-only workflow runtime events and
 - decision reason
 
 This gives operators and investigators a complete authorization activity summary for a workflow run.
+
+## Current Workflow Runtime Security Posture
+
+The service now exposes a runtime security posture summary for workflow runs.
+
+Security posture is derived from:
+
+- runtime authorization activity
+- denied protected actions
+- rejected approvals
+- failed workflow run steps
+- runtime invariant violations
+
+This provides operators with a concise risk view for workflow runtime investigation.
