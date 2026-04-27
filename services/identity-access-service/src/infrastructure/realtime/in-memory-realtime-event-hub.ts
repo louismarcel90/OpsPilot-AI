@@ -1,11 +1,12 @@
 import type { ServerResponse } from 'node:http';
 
+import type { RealtimeEventPublisher } from '../../application/services/realtime-event-publisher.js';
+import type { RealtimeChannelDiagnostics } from '../../domain/realtime/realtime-channel-diagnostics.js';
 import type { RealtimeEventEnvelope } from '../../domain/realtime/realtime-event-envelope.js';
 import {
   serializeRealtimeEventTopic,
   type RealtimeEventTopic,
 } from '../../domain/realtime/realtime-event-topic.js';
-import type { RealtimeEventPublisher } from '../../application/services/realtime-event-publisher.js';
 
 interface RealtimeSubscriber {
   readonly id: string;
@@ -89,5 +90,17 @@ export class InMemoryRealtimeEventHub implements RealtimeEventPublisher {
   public getSubscriberCount(topic: RealtimeEventTopic): number {
     const topicKey = serializeRealtimeEventTopic(topic);
     return this.subscribersByTopic.get(topicKey)?.length ?? 0;
+  }
+
+  public getTopicDiagnostics(topic: RealtimeEventTopic): RealtimeChannelDiagnostics {
+    return {
+      topic,
+      serializedTopic: serializeRealtimeEventTopic(topic),
+      subscriberCount: this.getSubscriberCount(topic),
+      healthStatus: 'healthy',
+      transport: 'sse',
+      isInMemory: true,
+      generatedAtIso: new Date().toISOString(),
+    };
   }
 }

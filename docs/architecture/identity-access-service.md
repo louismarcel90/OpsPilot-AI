@@ -825,3 +825,18 @@ Runtime events are now:
 - streamed to subscribed clients through SSE
 
 This establishes the first realtime foundation for workflow operations and investigation views.
+
+## Current Realtime Channel Diagnostics
+
+The service now exposes realtime diagnostics for workflow run SSE topics.
+
+Realtime diagnostics include:
+
+- serialized topic
+- subscriber count
+- transport type
+- hub mode
+- health status
+- diagnostic timestamp
+
+This gives operators basic visibility into live workflow runtime subscriptions.

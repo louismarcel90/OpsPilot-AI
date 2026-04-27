@@ -77,6 +77,7 @@ At this stage, the service provides:
 - workflow runtime timeline filtering and event category projection
 - runtime timeline pagination cursor and stable ordering
 - realtime event envelope model and SSE realtime gateway foundation
+- realtime channel diagnostics and subscriber inspection
 
 The authorization parity history endpoint now reads persisted diagnostic events from durable storage.
 
@@ -461,6 +462,10 @@ Returns a filtered, categorized workflow runtime timeline.
 ### `GET /workflow-runs/realtime/events?runId=...`
 
 Opens a Server-Sent Events stream for realtime workflow runtime events.
+
+### `GET /workflow-runs/realtime/diagnostics?runId=...`
+
+Returns realtime SSE topic diagnostics for a workflow run.
 
 ## Current Assistant Publication Operation
 
