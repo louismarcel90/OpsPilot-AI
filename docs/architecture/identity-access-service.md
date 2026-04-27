@@ -802,3 +802,14 @@ Timeline entries are categorized into:
 - unknown
 
 This makes runtime investigation timelines more scalable and UI-ready.
+
+## Current Paginated Runtime Timeline
+
+The service now supports stable cursor pagination for workflow runtime timelines.
+
+Timeline pagination uses a stable ordering based on:
+
+- event occurrence timestamp
+- event id tie-breaker
+
+This prevents large runtime timelines from being loaded all at once and prepares the investigation UI for long-running workflows.

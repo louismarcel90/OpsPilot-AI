@@ -75,6 +75,7 @@ At this stage, the service provides:
 - workflow runtime security posture summary and operator risk indicators
 - investigation filters, slicing, and partial evidence queries
 - workflow runtime timeline filtering and event category projection
+- runtime timeline pagination cursor and stable ordering
 
 The authorization parity history endpoint now reads persisted diagnostic events from durable storage.
 
@@ -466,6 +467,10 @@ The current transition model:
 - deprecates the previously published version when one exists
 
 This is the first mutation foundation for a governed published configuration model.
+
+### `GET /workflow-runs/timeline/page?runId=...&limit=...&cursor=...`
+
+Returns a stable cursor-paginated workflow runtime timeline page.
 
 ## Actor Context Headers
 
