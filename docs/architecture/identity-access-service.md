@@ -813,3 +813,15 @@ Timeline pagination uses a stable ordering based on:
 - event id tie-breaker
 
 This prevents large runtime timelines from being loaded all at once and prepares the investigation UI for long-running workflows.
+
+## Current Realtime Workflow Runtime Gateway
+
+The service now exposes a Server-Sent Events realtime gateway for workflow runtime events.
+
+Runtime events are now:
+
+- persisted in the append-only workflow runtime timeline
+- published to an in-memory realtime topic
+- streamed to subscribed clients through SSE
+
+This establishes the first realtime foundation for workflow operations and investigation views.

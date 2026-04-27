@@ -101,6 +101,7 @@ import { GetWorkflowRunEvidencePackSliceUseCase } from '../../../application/use
 import { GetFilteredWorkflowRunTimelineUseCase } from '../../../application/use-cases/get-filtered-workflow-run-timeline.use-case.js';
 import { GetPaginatedWorkflowRunTimelineUseCase } from '../../../application/use-cases/get-paginated-workflow-run-timeline.use-case.js';
 import { SearchWorkflowRunTimelineUseCase } from '../../../application/use-cases/search-workflow-run-timeline.use-case.js';
+import { InMemoryRealtimeEventHub } from '../../realtime/in-memory-realtime-event-hub.js';
 export interface ServiceDependencies {
   readonly resolveUserByEmailUseCase: ResolveUserByEmailUseCase;
   readonly resolveTenantBySlugUseCase: ResolveTenantBySlugUseCase;
@@ -181,6 +182,7 @@ export interface ServiceDependencies {
   readonly getFilteredWorkflowRunTimelineUseCase: GetFilteredWorkflowRunTimelineUseCase;
   readonly getPaginatedWorkflowRunTimelineUseCase: GetPaginatedWorkflowRunTimelineUseCase;
   readonly searchWorkflowRunTimelineUseCase: SearchWorkflowRunTimelineUseCase;
+  readonly realtimeEventHub: InMemoryRealtimeEventHub;
 }
 
 export function createServiceDependencies(
@@ -232,8 +234,11 @@ export function createServiceDependencies(
   const getAuthorizationParityByCorrelationIdUseCase =
     new GetAuthorizationParityByCorrelationIdUseCase(authorizationAuditEventRepository);
 
+  const realtimeEventHub = new InMemoryRealtimeEventHub();
+
   const workflowRuntimeEventRecorder = new WorkflowRuntimeEventRecorder(
     workflowRuntimeEventWriteRepository,
+    realtimeEventHub,
   );
   const runtimeAuthorizationEventRecorder = new RuntimeAuthorizationEventRecorder(
     workflowRuntimeEventRecorder,
@@ -531,6 +536,7 @@ export function createServiceDependencies(
       workflowRunReadRepository,
       workflowRuntimeEventWriteRepository,
     ),
+    realtimeEventHub,
     runtimeAuthorizationEventRecorder,
     startWorkflowRunUseCase,
     startWorkflowRunStepUseCase,
