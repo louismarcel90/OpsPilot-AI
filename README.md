@@ -44,6 +44,8 @@
 
 ## 🧭 Principles
 
+---
+
 ## 🏛️ Engineering Constitution
 
 > Non-negotiable engineering laws governing this system.
@@ -55,6 +57,8 @@ State is a projection. Events are the source of truth.
 Failures are expected and handled explicitly (never silently).
 
 AI actions are governed, explainable, and fully auditable.
+
+---
 
 ## 🚀 Quick Start
 
