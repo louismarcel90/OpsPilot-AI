@@ -75,6 +75,7 @@ import { handleGetWorkflowRunEvidencePackRequest } from '../../../presentation/h
 import { handleGetWorkflowRunEvidencePackSliceRequest } from '../../../presentation/http/handlers/handle-get-workflow-run-evidence-pack-slice-request.js';
 import { handleGetFilteredWorkflowRunTimelineRequest } from '../../../presentation/http/handlers/handle-get-filtered-workflow-run-timeline-request.js';
 import { handleGetPaginatedWorkflowRunTimelineRequest } from '../../../presentation/http/handlers/handle-get-paginated-workflow-run-timeline-request.js';
+import { handleSearchWorkflowRunTimelineRequest } from '../../../presentation/http/handlers/handle-search-workflow-run-timeline-request.js';
 
 function resolvePath(request: IncomingMessage): string {
   const requestUrl = request.url ?? '/';
@@ -845,6 +846,17 @@ export function createRouter(
           logger,
           correlationId,
           dependencies.getPaginatedWorkflowRunTimelineUseCase,
+        );
+        return;
+      }
+
+      if (method === 'GET' && path === '/workflow-runs/timeline/search') {
+        await handleSearchWorkflowRunTimelineRequest(
+          request,
+          response,
+          logger,
+          correlationId,
+          dependencies.searchWorkflowRunTimelineUseCase,
         );
         return;
       }
