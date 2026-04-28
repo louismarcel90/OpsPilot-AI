@@ -854,3 +854,21 @@ Recommended client strategy:
 5. Use timeline pagination or evidence-pack slice queries for deeper history
 
 This creates a safer realtime client foundation by preventing the UI from relying only on events received after connection time.
+
+## Current Realtime Stream Staleness Diagnostics
+
+The service now exposes realtime stream staleness diagnostics.
+
+Realtime staleness diagnostics include:
+
+- last published realtime event timestamp
+- event age in milliseconds
+- subscriber count
+- freshness status
+- reconnect recommendation
+
+Recommended client behavior:
+
+- if status is `fresh`, continue consuming SSE deltas
+- if status is `stale`, refetch realtime snapshot and reopen SSE
+- if status is `inactive`, fetch snapshot before opening or reopening the stream

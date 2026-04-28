@@ -79,6 +79,7 @@ At this stage, the service provides:
 - realtime event envelope model and SSE realtime gateway foundation
 - realtime channel diagnostics and subscriber inspection
 - realtime snapshot endpoint and snapshot + delta client strategy
+- realtime stale stream handling and client reconnect diagnostics
 
 The authorization parity history endpoint now reads persisted diagnostic events from durable storage.
 
@@ -471,6 +472,10 @@ Returns realtime SSE topic diagnostics for a workflow run.
 ### `GET /workflow-runs/realtime/snapshot?runId=...`
 
 Returns the current workflow run realtime snapshot before opening an SSE stream.
+
+### `GET /workflow-runs/realtime/staleness?runId=...&staleThresholdMs=...`
+
+Returns realtime stream staleness diagnostics and reconnect recommendation for a workflow run.
 
 ## Current Assistant Publication Operation
 
