@@ -78,6 +78,7 @@ import { handleGetPaginatedWorkflowRunTimelineRequest } from '../../../presentat
 import { handleSearchWorkflowRunTimelineRequest } from '../../../presentation/http/handlers/handle-search-workflow-run-timeline-request.js';
 import { handleWorkflowRunRealtimeEventsRequest } from '../../../presentation/http/handlers/handle-workflow-run-realtime-events-request.js';
 import { handleGetWorkflowRunRealtimeDiagnosticsRequest } from '../../../presentation/http/handlers/handle-get-workflow-run-realtime-diagnostics-request.js';
+import { handleGetWorkflowRunRealtimeSnapshotRequest } from '../../../presentation/http/handlers/handle-get-workflow-run-realtime-snapshot-request.js';
 
 function resolvePath(request: IncomingMessage): string {
   const requestUrl = request.url ?? '/';
@@ -882,6 +883,17 @@ export function createRouter(
           logger,
           correlationId,
           dependencies.getWorkflowRunRealtimeDiagnosticsUseCase,
+        );
+        return;
+      }
+
+      if (method === 'GET' && path === '/workflow-runs/realtime/snapshot') {
+        await handleGetWorkflowRunRealtimeSnapshotRequest(
+          request,
+          response,
+          logger,
+          correlationId,
+          dependencies.getWorkflowRunRealtimeSnapshotUseCase,
         );
         return;
       }

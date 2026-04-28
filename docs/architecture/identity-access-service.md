@@ -840,3 +840,17 @@ Realtime diagnostics include:
 - diagnostic timestamp
 
 This gives operators basic visibility into live workflow runtime subscriptions.
+
+## Current Realtime Snapshot + Delta Strategy
+
+The service now exposes a realtime snapshot endpoint for workflow runs.
+
+Recommended client strategy:
+
+1. Fetch `/workflow-runs/realtime/snapshot?runId=...`
+2. Render the current workflow state from the snapshot
+3. Open `/workflow-runs/realtime/events?runId=...`
+4. Apply incoming SSE events as live deltas
+5. Use timeline pagination or evidence-pack slice queries for deeper history
+
+This creates a safer realtime client foundation by preventing the UI from relying only on events received after connection time.

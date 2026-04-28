@@ -103,6 +103,8 @@ import { GetPaginatedWorkflowRunTimelineUseCase } from '../../../application/use
 import { SearchWorkflowRunTimelineUseCase } from '../../../application/use-cases/search-workflow-run-timeline.use-case.js';
 import { InMemoryRealtimeEventHub } from '../../realtime/in-memory-realtime-event-hub.js';
 import { GetWorkflowRunRealtimeDiagnosticsUseCase } from '../../../application/use-cases/get-workflow-run-realtime-diagnostics.use-case.js';
+import { GetWorkflowRunRealtimeSnapshotUseCase } from '../../../application/use-cases/get-workflow-run-realtime-snapshot.use-case.js';
+
 export interface ServiceDependencies {
   readonly resolveUserByEmailUseCase: ResolveUserByEmailUseCase;
   readonly resolveTenantBySlugUseCase: ResolveTenantBySlugUseCase;
@@ -185,6 +187,7 @@ export interface ServiceDependencies {
   readonly searchWorkflowRunTimelineUseCase: SearchWorkflowRunTimelineUseCase;
   readonly realtimeEventHub: InMemoryRealtimeEventHub;
   readonly getWorkflowRunRealtimeDiagnosticsUseCase: GetWorkflowRunRealtimeDiagnosticsUseCase;
+  readonly getWorkflowRunRealtimeSnapshotUseCase: GetWorkflowRunRealtimeSnapshotUseCase;
 }
 
 export function createServiceDependencies(
@@ -541,6 +544,12 @@ export function createServiceDependencies(
     getWorkflowRunRealtimeDiagnosticsUseCase: new GetWorkflowRunRealtimeDiagnosticsUseCase(
       workflowRunReadRepository,
       realtimeEventHub,
+    ),
+    getWorkflowRunRealtimeSnapshotUseCase: new GetWorkflowRunRealtimeSnapshotUseCase(
+      workflowRunReadRepository,
+      workflowRunStepReadRepository,
+      approvalRequestReadRepository,
+      workflowRuntimeEventWriteRepository,
     ),
     realtimeEventHub,
     runtimeAuthorizationEventRecorder,
