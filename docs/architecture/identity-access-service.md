@@ -872,3 +872,17 @@ Recommended client behavior:
 - if status is `fresh`, continue consuming SSE deltas
 - if status is `stale`, refetch realtime snapshot and reopen SSE
 - if status is `inactive`, fetch snapshot before opening or reopening the stream
+
+## Current Simulation Scenario Catalog
+
+The service now exposes a simulation scenario catalog.
+
+The catalog describes mission-critical workflow runtime scenarios such as:
+
+- approval happy path
+- approval rejection path
+- denied runtime action
+- workflow step failure
+- realtime snapshot and delta behavior
+
+This creates the foundation for a simulation lab that can later execute controlled scenarios against the workflow runtime.

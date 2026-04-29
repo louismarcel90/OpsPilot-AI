@@ -80,6 +80,7 @@ At this stage, the service provides:
 - realtime channel diagnostics and subscriber inspection
 - realtime snapshot endpoint and snapshot + delta client strategy
 - realtime stale stream handling and client reconnect diagnostics
+- simulation scenario catalog foundation
 
 The authorization parity history endpoint now reads persisted diagnostic events from durable storage.
 
@@ -476,6 +477,14 @@ Returns the current workflow run realtime snapshot before opening an SSE stream.
 ### `GET /workflow-runs/realtime/staleness?runId=...&staleThresholdMs=...`
 
 Returns realtime stream staleness diagnostics and reconnect recommendation for a workflow run.
+
+### `GET /simulation/scenarios`
+
+Returns the simulation scenario catalog.
+
+### `GET /simulation/scenarios?category=approval_runtime`
+
+Returns simulation scenarios filtered by category.
 
 ## Current Assistant Publication Operation
 
