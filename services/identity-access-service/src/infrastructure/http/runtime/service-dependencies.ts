@@ -106,6 +106,7 @@ import { GetWorkflowRunRealtimeDiagnosticsUseCase } from '../../../application/u
 import { GetWorkflowRunRealtimeSnapshotUseCase } from '../../../application/use-cases/get-workflow-run-realtime-snapshot.use-case.js';
 import { GetWorkflowRunRealtimeStalenessUseCase } from '../../../application/use-cases/get-workflow-run-realtime-staleness.use-case.js';
 import { ListSimulationScenariosUseCase } from '../../../application/use-cases/list-simulation-scenarios.use-case.js';
+import { GetSimulationScenarioDetailUseCase } from '../../../application/use-cases/get-simulation-scenario-detail.use-case.js';
 export interface ServiceDependencies {
   readonly resolveUserByEmailUseCase: ResolveUserByEmailUseCase;
   readonly resolveTenantBySlugUseCase: ResolveTenantBySlugUseCase;
@@ -191,6 +192,7 @@ export interface ServiceDependencies {
   readonly getWorkflowRunRealtimeSnapshotUseCase: GetWorkflowRunRealtimeSnapshotUseCase;
   readonly getWorkflowRunRealtimeStalenessUseCase: GetWorkflowRunRealtimeStalenessUseCase;
   readonly listSimulationScenariosUseCase: ListSimulationScenariosUseCase;
+  readonly getSimulationScenarioDetailUseCase: GetSimulationScenarioDetailUseCase;
 }
 
 export function createServiceDependencies(
@@ -558,6 +560,7 @@ export function createServiceDependencies(
       workflowRunReadRepository,
       realtimeEventHub,
     ),
+    getSimulationScenarioDetailUseCase: new GetSimulationScenarioDetailUseCase(),
     listSimulationScenariosUseCase: new ListSimulationScenariosUseCase(),
     realtimeEventHub,
     runtimeAuthorizationEventRecorder,

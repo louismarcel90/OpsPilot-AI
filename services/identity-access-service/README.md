@@ -81,6 +81,7 @@ At this stage, the service provides:
 - realtime snapshot endpoint and snapshot + delta client strategy
 - realtime stale stream handling and client reconnect diagnostics
 - simulation scenario catalog foundation
+- simulation scenario detail endpoint and executable plan preview
 
 The authorization parity history endpoint now reads persisted diagnostic events from durable storage.
 
@@ -485,6 +486,10 @@ Returns the simulation scenario catalog.
 ### `GET /simulation/scenarios?category=approval_runtime`
 
 Returns simulation scenarios filtered by category.
+
+### `GET /simulation/scenarios/detail?slug=...`
+
+Returns a simulation scenario detail with an execution plan preview.
 
 ## Current Assistant Publication Operation
 

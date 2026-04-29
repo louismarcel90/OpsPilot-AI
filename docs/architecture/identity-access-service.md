@@ -886,3 +886,18 @@ The catalog describes mission-critical workflow runtime scenarios such as:
 - realtime snapshot and delta behavior
 
 This creates the foundation for a simulation lab that can later execute controlled scenarios against the workflow runtime.
+
+## Current Simulation Scenario Detail Preview
+
+The service now exposes simulation scenario details with execution plan previews.
+
+Scenario details include:
+
+- scenario metadata
+- objective
+- expected signals
+- ordered execution steps
+- actor responsibility per step
+- expected outcome per step
+
+This prepares the Simulation Lab for future controlled scenario execution.

@@ -81,6 +81,7 @@ import { handleGetWorkflowRunRealtimeDiagnosticsRequest } from '../../../present
 import { handleGetWorkflowRunRealtimeSnapshotRequest } from '../../../presentation/http/handlers/handle-get-workflow-run-realtime-snapshot-request.js';
 import { handleGetWorkflowRunRealtimeStalenessRequest } from '../../../presentation/http/handlers/handle-get-workflow-run-realtime-staleness-request.js';
 import { handleListSimulationScenariosRequest } from '../../../presentation/http/handlers/handle-list-simulation-scenarios-request.js';
+import { handleGetSimulationScenarioDetailRequest } from '../../../application/use-cases/handle-get-simulation-scenario-detail-request.js';
 
 function resolvePath(request: IncomingMessage): string {
   const requestUrl = request.url ?? '/';
@@ -918,6 +919,17 @@ export function createRouter(
           logger,
           correlationId,
           dependencies.listSimulationScenariosUseCase,
+        );
+        return;
+      }
+
+      if (method === 'GET' && path === '/simulation/scenarios/detail') {
+        await handleGetSimulationScenarioDetailRequest(
+          request,
+          response,
+          logger,
+          correlationId,
+          dependencies.getSimulationScenarioDetailUseCase,
         );
         return;
       }
