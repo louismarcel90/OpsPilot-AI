@@ -946,6 +946,17 @@ export function createRouter(
         return;
       }
 
+      if (method === 'POST' && path === '/simulation/scenarios/run') {
+        await handleRunSimulationScenarioRequest(
+          request,
+          response,
+          logger,
+          correlationId,
+          dependencies.runSimulationScenarioUseCase,
+        );
+        return;
+      }
+
       logger.warn('Route not found', {
         correlationId,
         serviceName: config.serviceName,

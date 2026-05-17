@@ -915,3 +915,17 @@ The `denied_runtime_action` simulation:
 - verifies that runtime security posture escalates
 
 This is the first step from scenario catalog toward executable simulation lab behavior.
+
+## Current Approval Happy Path Simulation Runner
+
+The service now supports an executable approval happy path simulation.
+
+The runner:
+
+- creates a workflow run
+- drains the runtime until an approval gate blocks progression
+- approves the pending request with an approval-authorized actor
+- drains the runtime to completion
+- verifies diagnostics, evidence pack availability, and runtime security posture
+
+This validates the governed workflow happy path from creation to completion.

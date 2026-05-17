@@ -110,6 +110,9 @@ import { GetSimulationScenarioDetailUseCase } from '../../../application/use-cas
 import { ProtectedDrainWorkflowRunUseCase } from '../../../application/use-cases/protected-drain-workflow-run.use-case.js';
 import { RunDeniedRuntimeActionSimulationUseCase } from '../../../application/use-cases/run-denied-runtime-action-simulation.use-case.js';
 import { RunSimulationScenarioUseCase } from '../../../application/use-cases/run-simulation-scenario.use-case.js';
+import { ProtectedApproveApprovalRequestUseCase } from '../../../application/use-cases/protected-approve-approval-request.use-case.js';
+import { RunApprovalHappyPathSimulationUseCase } from '../../../application/use-cases/run-approval-happy-path-simulation.use-case.js';
+
 export interface ServiceDependencies {
   readonly resolveUserByEmailUseCase: ResolveUserByEmailUseCase;
   readonly resolveTenantBySlugUseCase: ResolveTenantBySlugUseCase;
@@ -199,6 +202,8 @@ export interface ServiceDependencies {
   readonly protectedDrainWorkflowRunUseCase: ProtectedDrainWorkflowRunUseCase;
   readonly runDeniedRuntimeActionSimulationUseCase: RunDeniedRuntimeActionSimulationUseCase;
   readonly runSimulationScenarioUseCase: RunSimulationScenarioUseCase;
+  readonly protectedApproveApprovalRequestUseCase: ProtectedApproveApprovalRequestUseCase;
+  readonly runApprovalHappyPathSimulationUseCase: RunApprovalHappyPathSimulationUseCase;
 }
 
 export function createServiceDependencies(
@@ -336,8 +341,45 @@ export function createServiceDependencies(
     getWorkflowRuntimeSecurityPostureUseCase,
   );
 
+  const approveApprovalRequestUseCase = new ApproveApprovalRequestUseCase(
+    approvalRequestReadRepository,
+    approvalRequestWriteRepository,
+    workflowRunStepWriteRepository,
+    workflowRuntimeEventRecorder,
+  );
+
+  const protectedApproveApprovalRequestUseCase = new ProtectedApproveApprovalRequestUseCase(
+    approvalRequestReadRepository,
+    runtimeProtectedActionGuard,
+    approveApprovalRequestUseCase,
+  );
+
+  const getWorkflowRunDiagnosticsUseCase = new GetWorkflowRunDiagnosticsUseCase(
+    workflowRunReadRepository,
+    workflowRunStepReadRepository,
+    approvalRequestReadRepository,
+  );
+
+  const getWorkflowRunEvidencePackUseCase = new GetWorkflowRunEvidencePackUseCase(
+    workflowRunReadRepository,
+    workflowRunStepReadRepository,
+    approvalRequestReadRepository,
+    workflowRuntimeEventWriteRepository,
+  );
+
+  const runApprovalHappyPathSimulationUseCase = new RunApprovalHappyPathSimulationUseCase(
+    createWorkflowRunUseCase,
+    protectedDrainWorkflowRunUseCase,
+    protectedApproveApprovalRequestUseCase,
+    approvalRequestReadRepository,
+    getWorkflowRunDiagnosticsUseCase,
+    getWorkflowRunEvidencePackUseCase,
+    getWorkflowRuntimeSecurityPostureUseCase,
+  );
+
   const runSimulationScenarioUseCase = new RunSimulationScenarioUseCase(
     runDeniedRuntimeActionSimulationUseCase,
+    runApprovalHappyPathSimulationUseCase,
   );
 
   return {
@@ -605,6 +647,8 @@ export function createServiceDependencies(
       workflowRunReadRepository,
       realtimeEventHub,
     ),
+    protectedApproveApprovalRequestUseCase,
+    runApprovalHappyPathSimulationUseCase,
     protectedDrainWorkflowRunUseCase,
     runDeniedRuntimeActionSimulationUseCase,
     runSimulationScenarioUseCase,
