@@ -82,6 +82,7 @@ import { handleGetWorkflowRunRealtimeSnapshotRequest } from '../../../presentati
 import { handleGetWorkflowRunRealtimeStalenessRequest } from '../../../presentation/http/handlers/handle-get-workflow-run-realtime-staleness-request.js';
 import { handleListSimulationScenariosRequest } from '../../../presentation/http/handlers/handle-list-simulation-scenarios-request.js';
 import { handleGetSimulationScenarioDetailRequest } from '../../../application/use-cases/handle-get-simulation-scenario-detail-request.js';
+import { handleRunSimulationScenarioRequest } from '../../../presentation/http/handlers/handle-run-simulation-scenario-request.js';
 
 function resolvePath(request: IncomingMessage): string {
   const requestUrl = request.url ?? '/';
@@ -930,6 +931,17 @@ export function createRouter(
           logger,
           correlationId,
           dependencies.getSimulationScenarioDetailUseCase,
+        );
+        return;
+      }
+
+      if (method === 'POST' && path === '/simulation/scenarios/run') {
+        await handleRunSimulationScenarioRequest(
+          request,
+          response,
+          logger,
+          correlationId,
+          dependencies.runSimulationScenarioUseCase,
         );
         return;
       }

@@ -107,6 +107,9 @@ import { GetWorkflowRunRealtimeSnapshotUseCase } from '../../../application/use-
 import { GetWorkflowRunRealtimeStalenessUseCase } from '../../../application/use-cases/get-workflow-run-realtime-staleness.use-case.js';
 import { ListSimulationScenariosUseCase } from '../../../application/use-cases/list-simulation-scenarios.use-case.js';
 import { GetSimulationScenarioDetailUseCase } from '../../../application/use-cases/get-simulation-scenario-detail.use-case.js';
+import { ProtectedDrainWorkflowRunUseCase } from '../../../application/use-cases/protected-drain-workflow-run.use-case.js';
+import { RunDeniedRuntimeActionSimulationUseCase } from '../../../application/use-cases/run-denied-runtime-action-simulation.use-case.js';
+import { RunSimulationScenarioUseCase } from '../../../application/use-cases/run-simulation-scenario.use-case.js';
 export interface ServiceDependencies {
   readonly resolveUserByEmailUseCase: ResolveUserByEmailUseCase;
   readonly resolveTenantBySlugUseCase: ResolveTenantBySlugUseCase;
@@ -193,6 +196,9 @@ export interface ServiceDependencies {
   readonly getWorkflowRunRealtimeStalenessUseCase: GetWorkflowRunRealtimeStalenessUseCase;
   readonly listSimulationScenariosUseCase: ListSimulationScenariosUseCase;
   readonly getSimulationScenarioDetailUseCase: GetSimulationScenarioDetailUseCase;
+  readonly protectedDrainWorkflowRunUseCase: ProtectedDrainWorkflowRunUseCase;
+  readonly runDeniedRuntimeActionSimulationUseCase: RunDeniedRuntimeActionSimulationUseCase;
+  readonly runSimulationScenarioUseCase: RunSimulationScenarioUseCase;
 }
 
 export function createServiceDependencies(
@@ -250,12 +256,22 @@ export function createServiceDependencies(
     workflowRuntimeEventWriteRepository,
     realtimeEventHub,
   );
+
   const runtimeAuthorizationEventRecorder = new RuntimeAuthorizationEventRecorder(
     workflowRuntimeEventRecorder,
   );
   const startWorkflowRunUseCase = new StartWorkflowRunUseCase(
     workflowRunReadRepository,
     workflowRunWriteRepository,
+    workflowRuntimeEventRecorder,
+  );
+
+  const createWorkflowRunUseCase = new CreateWorkflowRunUseCase(
+    workflowTemplateReadRepository,
+    workflowVersionReadRepository,
+    workflowStepReadRepository,
+    workflowRunWriteRepository,
+    workflowRunStepWriteRepository,
     workflowRuntimeEventRecorder,
   );
 
@@ -293,6 +309,35 @@ export function createServiceDependencies(
   const runtimeProtectedActionGuard = new RuntimeProtectedActionGuard(
     runtimeActorContextResolver,
     runtimeAuthorizationEventRecorder,
+  );
+
+  const protectedDrainWorkflowRunUseCase = new ProtectedDrainWorkflowRunUseCase(
+    workflowRunReadRepository,
+    runtimeProtectedActionGuard,
+    drainWorkflowRunUseCase,
+  );
+
+  const getDeniedRuntimeActionsUseCase = new GetDeniedRuntimeActionsUseCase(
+    workflowRunReadRepository,
+    workflowRuntimeEventWriteRepository,
+  );
+
+  const getWorkflowRuntimeSecurityPostureUseCase = new GetWorkflowRuntimeSecurityPostureUseCase(
+    workflowRunReadRepository,
+    workflowRunStepReadRepository,
+    approvalRequestReadRepository,
+    workflowRuntimeEventWriteRepository,
+  );
+
+  const runDeniedRuntimeActionSimulationUseCase = new RunDeniedRuntimeActionSimulationUseCase(
+    createWorkflowRunUseCase,
+    protectedDrainWorkflowRunUseCase,
+    getDeniedRuntimeActionsUseCase,
+    getWorkflowRuntimeSecurityPostureUseCase,
+  );
+
+  const runSimulationScenarioUseCase = new RunSimulationScenarioUseCase(
+    runDeniedRuntimeActionSimulationUseCase,
   );
 
   return {
@@ -560,6 +605,9 @@ export function createServiceDependencies(
       workflowRunReadRepository,
       realtimeEventHub,
     ),
+    protectedDrainWorkflowRunUseCase,
+    runDeniedRuntimeActionSimulationUseCase,
+    runSimulationScenarioUseCase,
     getSimulationScenarioDetailUseCase: new GetSimulationScenarioDetailUseCase(),
     listSimulationScenariosUseCase: new ListSimulationScenariosUseCase(),
     realtimeEventHub,

@@ -901,3 +901,17 @@ Scenario details include:
 - expected outcome per step
 
 This prepares the Simulation Lab for future controlled scenario execution.
+
+## Current Executable Simulation Runner
+
+The service now supports the first executable simulation runner.
+
+The `denied_runtime_action` simulation:
+
+- creates a workflow run
+- attempts a protected system-level drain using a non-system actor
+- verifies that the runtime guard denies the action
+- verifies that the denial is recorded in investigation projections
+- verifies that runtime security posture escalates
+
+This is the first step from scenario catalog toward executable simulation lab behavior.

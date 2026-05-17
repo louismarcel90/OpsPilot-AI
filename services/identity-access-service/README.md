@@ -82,6 +82,7 @@ At this stage, the service provides:
 - realtime stale stream handling and client reconnect diagnostics
 - simulation scenario catalog foundation
 - simulation scenario detail endpoint and executable plan preview
+- simulation runner for denied runtime action scenario
 
 The authorization parity history endpoint now reads persisted diagnostic events from durable storage.
 
@@ -490,6 +491,10 @@ Returns simulation scenarios filtered by category.
 ### `GET /simulation/scenarios/detail?slug=...`
 
 Returns a simulation scenario detail with an execution plan preview.
+
+### `POST /simulation/scenarios/run?slug=denied_runtime_action`
+
+Runs the denied runtime action simulation scenario.
 
 ## Current Assistant Publication Operation
 
