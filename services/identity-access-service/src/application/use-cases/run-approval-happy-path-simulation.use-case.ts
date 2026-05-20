@@ -14,7 +14,7 @@ import type { ApprovalRequestReadRepository } from '../repositories/approval-req
 const WORKFLOW_TEMPLATE_SLUG = 'incident-escalation-workflow';
 const WORKSPACE_ID = 'wrk_ops_001';
 const SYSTEM_ACTOR_ID = 'system';
-const APPROVER_ACTOR_ID = 'usr_approver_001';
+const APPROVER_ACTOR_ID = 'usr_bob_001';
 
 function buildStatus(checks: SimulationRunCheck[]): 'passed' | 'failed' {
   return checks.every((check) => check.passed) ? 'passed' : 'failed';
@@ -38,7 +38,7 @@ export class RunApprovalHappyPathSimulationUseCase {
   public async execute(): Promise<SimulationRunResult> {
     const workflowRun = await this.createWorkflowRunUseCase.execute({
       slug: WORKFLOW_TEMPLATE_SLUG,
-      versionNumber: 1,
+      versionNumber: 2,
       workspaceId: WORKSPACE_ID,
     });
 

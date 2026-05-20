@@ -17,6 +17,8 @@ const SEED_IDS = {
   workspaceSecurity: 'wrk_sec_001',
   membershipAliceOps: 'mem_alice_ops_001',
   membershipBobSecurity: 'mem_bob_sec_001',
+  membershipSystemOps: 'mem_system_ops_001',
+  membershipBobOps: 'mem_bob_ops_001',
 } as const;
 
 export async function seedIdentityFoundation(connection: PostgresConnection): Promise<void> {
@@ -35,6 +37,12 @@ export async function seedIdentityFoundation(connection: PostgresConnection): Pr
         id: SEED_IDS.userBob,
         email: 'bob@acme.test',
         displayName: 'Bob Smith',
+        isActive: true,
+      },
+      {
+        id: 'system',
+        email: 'system@acme.test',
+        displayName: 'System Actor',
         isActive: true,
       },
     ])
@@ -96,6 +104,24 @@ export async function seedIdentityFoundation(connection: PostgresConnection): Pr
         workspaceId: SEED_IDS.workspaceSecurity,
         userId: SEED_IDS.userBob,
         roleCode: 'workspace_operator',
+        createdByActorId: SEED_IDS.userAlice,
+        updatedByActorId: SEED_IDS.userAlice,
+      },
+      {
+        id: SEED_IDS.membershipSystemOps,
+        tenantId: SEED_IDS.tenantAcme,
+        workspaceId: SEED_IDS.workspaceOperations,
+        userId: 'system',
+        roleCode: 'workspace_admin',
+        createdByActorId: SEED_IDS.userAlice,
+        updatedByActorId: SEED_IDS.userAlice,
+      },
+      {
+        id: SEED_IDS.membershipBobOps,
+        tenantId: SEED_IDS.tenantAcme,
+        workspaceId: SEED_IDS.workspaceOperations,
+        userId: SEED_IDS.userBob,
+        roleCode: 'workspace_admin',
         createdByActorId: SEED_IDS.userAlice,
         updatedByActorId: SEED_IDS.userAlice,
       },

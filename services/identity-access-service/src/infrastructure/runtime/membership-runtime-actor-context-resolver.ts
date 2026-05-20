@@ -6,11 +6,11 @@ import type {
 import type { WorkspaceMembershipReadRepository } from '../../application/repositories/workspace-membership-read-repository.js';
 
 function mapMembershipRoleToRuntimeRole(role: string): RuntimeActorRole {
-  if (role === 'owner' || role === 'admin') {
-    return 'admin';
+  if (role === 'owner' || role === 'admin' || role === 'workspace_admin') {
+    return 'approval_decider';
   }
 
-  if (role === 'approver') {
+  if (role === 'approver' || role === 'approval_decider') {
     return 'approval_decider';
   }
 
@@ -18,9 +18,12 @@ function mapMembershipRoleToRuntimeRole(role: string): RuntimeActorRole {
     return 'system';
   }
 
+  if (role === 'operator' || role === 'workspace_operator') {
+    return 'operator';
+  }
+
   return 'operator';
 }
-
 export class MembershipRuntimeActorContextResolver implements RuntimeActorContextResolver {
   public constructor(
     private readonly workspaceMembershipReadRepository: WorkspaceMembershipReadRepository,
