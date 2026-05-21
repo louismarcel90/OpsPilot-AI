@@ -929,3 +929,18 @@ The runner:
 - verifies diagnostics, evidence pack availability, and runtime security posture
 
 This validates the governed workflow happy path from creation to completion.
+
+## Current Approval Rejection Simulation Runner
+
+The service now supports an executable approval rejection simulation.
+
+The runner:
+
+- creates a workflow run
+- drains the runtime until an approval gate blocks progression
+- rejects the pending approval request
+- verifies that the workflow run transitions to failed
+- verifies that security posture escalates to high
+- verifies evidence pack and diagnostics availability
+
+This validates governed workflow failure behavior after approval rejection.

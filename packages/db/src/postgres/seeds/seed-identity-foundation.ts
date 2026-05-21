@@ -19,6 +19,8 @@ const SEED_IDS = {
   membershipBobSecurity: 'mem_bob_sec_001',
   membershipSystemOps: 'mem_system_ops_001',
   membershipBobOps: 'mem_bob_ops_001',
+  userApprover: 'usr_approver_001',
+  membershipApproverOps: 'mem_approver_ops_001',
 } as const;
 
 export async function seedIdentityFoundation(connection: PostgresConnection): Promise<void> {
@@ -43,6 +45,12 @@ export async function seedIdentityFoundation(connection: PostgresConnection): Pr
         id: 'system',
         email: 'system@acme.test',
         displayName: 'System Actor',
+        isActive: true,
+      },
+      {
+        id: SEED_IDS.userApprover,
+        email: 'approver@acme.test',
+        displayName: 'Approval Manager',
         isActive: true,
       },
     ])
@@ -121,6 +129,15 @@ export async function seedIdentityFoundation(connection: PostgresConnection): Pr
         tenantId: SEED_IDS.tenantAcme,
         workspaceId: SEED_IDS.workspaceOperations,
         userId: SEED_IDS.userBob,
+        roleCode: 'workspace_admin',
+        createdByActorId: SEED_IDS.userAlice,
+        updatedByActorId: SEED_IDS.userAlice,
+      },
+      {
+        id: SEED_IDS.membershipApproverOps,
+        tenantId: SEED_IDS.tenantAcme,
+        workspaceId: SEED_IDS.workspaceOperations,
+        userId: SEED_IDS.userApprover,
         roleCode: 'workspace_admin',
         createdByActorId: SEED_IDS.userAlice,
         updatedByActorId: SEED_IDS.userAlice,

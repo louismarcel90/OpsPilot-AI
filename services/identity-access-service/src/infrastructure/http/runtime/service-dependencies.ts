@@ -112,7 +112,8 @@ import { RunDeniedRuntimeActionSimulationUseCase } from '../../../application/us
 import { RunSimulationScenarioUseCase } from '../../../application/use-cases/run-simulation-scenario.use-case.js';
 import { ProtectedApproveApprovalRequestUseCase } from '../../../application/use-cases/protected-approve-approval-request.use-case.js';
 import { RunApprovalHappyPathSimulationUseCase } from '../../../application/use-cases/run-approval-happy-path-simulation.use-case.js';
-
+import { ProtectedRejectApprovalRequestUseCase } from '../../../application/use-cases/protected-reject-approval-request.use-case.js';
+import { RunApprovalRejectionPathSimulationUseCase } from '../../../application/use-cases/run-approval-rejection-path-simulation.use-case.js';
 export interface ServiceDependencies {
   readonly resolveUserByEmailUseCase: ResolveUserByEmailUseCase;
   readonly resolveTenantBySlugUseCase: ResolveTenantBySlugUseCase;
@@ -204,6 +205,8 @@ export interface ServiceDependencies {
   readonly runSimulationScenarioUseCase: RunSimulationScenarioUseCase;
   readonly protectedApproveApprovalRequestUseCase: ProtectedApproveApprovalRequestUseCase;
   readonly runApprovalHappyPathSimulationUseCase: RunApprovalHappyPathSimulationUseCase;
+  readonly protectedRejectApprovalRequestUseCase: ProtectedRejectApprovalRequestUseCase;
+  readonly runApprovalRejectionPathSimulationUseCase: RunApprovalRejectionPathSimulationUseCase;
 }
 
 export function createServiceDependencies(
@@ -348,10 +351,23 @@ export function createServiceDependencies(
     workflowRuntimeEventRecorder,
   );
 
+  const rejectApprovalRequestUseCase = new RejectApprovalRequestUseCase(
+    approvalRequestReadRepository,
+    approvalRequestWriteRepository,
+    workflowRunWriteRepository,
+    workflowRuntimeEventRecorder,
+  );
+
   const protectedApproveApprovalRequestUseCase = new ProtectedApproveApprovalRequestUseCase(
     approvalRequestReadRepository,
     runtimeProtectedActionGuard,
     approveApprovalRequestUseCase,
+  );
+
+  const protectedRejectApprovalRequestUseCase = new ProtectedRejectApprovalRequestUseCase(
+    approvalRequestReadRepository,
+    runtimeProtectedActionGuard,
+    rejectApprovalRequestUseCase,
   );
 
   const getWorkflowRunDiagnosticsUseCase = new GetWorkflowRunDiagnosticsUseCase(
@@ -377,9 +393,20 @@ export function createServiceDependencies(
     getWorkflowRuntimeSecurityPostureUseCase,
   );
 
+  const runApprovalRejectionPathSimulationUseCase = new RunApprovalRejectionPathSimulationUseCase(
+    createWorkflowRunUseCase,
+    protectedDrainWorkflowRunUseCase,
+    protectedRejectApprovalRequestUseCase,
+    approvalRequestReadRepository,
+    getWorkflowRunDiagnosticsUseCase,
+    getWorkflowRunEvidencePackUseCase,
+    getWorkflowRuntimeSecurityPostureUseCase,
+  );
+
   const runSimulationScenarioUseCase = new RunSimulationScenarioUseCase(
     runDeniedRuntimeActionSimulationUseCase,
     runApprovalHappyPathSimulationUseCase,
+    runApprovalRejectionPathSimulationUseCase,
   );
 
   return {
@@ -647,6 +674,8 @@ export function createServiceDependencies(
       workflowRunReadRepository,
       realtimeEventHub,
     ),
+    protectedRejectApprovalRequestUseCase,
+    runApprovalRejectionPathSimulationUseCase,
     protectedApproveApprovalRequestUseCase,
     runApprovalHappyPathSimulationUseCase,
     protectedDrainWorkflowRunUseCase,
