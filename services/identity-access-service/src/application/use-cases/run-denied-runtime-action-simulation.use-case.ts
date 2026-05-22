@@ -26,7 +26,7 @@ export class RunDeniedRuntimeActionSimulationUseCase {
   public async execute(): Promise<SimulationRunResult> {
     const workflowRun = await this.createWorkflowRunUseCase.execute({
       slug: WORKFLOW_TEMPLATE_SLUG,
-      versionNumber: 1,
+      versionNumber: 2,
       workspaceId: WORKSPACE_ID,
     });
 

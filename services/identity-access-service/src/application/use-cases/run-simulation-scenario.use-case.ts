@@ -1,12 +1,16 @@
 import type { SimulationRunResult } from '../../domain/simulation/simulation-run-result.js';
+
 import type { RunApprovalHappyPathSimulationUseCase } from './run-approval-happy-path-simulation.use-case.js';
-import type { RunDeniedRuntimeActionSimulationUseCase } from './run-denied-runtime-action-simulation.use-case.js';
 import type { RunApprovalRejectionPathSimulationUseCase } from './run-approval-rejection-path-simulation.use-case.js';
+import type { RunDeniedRuntimeActionSimulationUseCase } from './run-denied-runtime-action-simulation.use-case.js';
+import type { RunWorkflowStepFailureSimulationUseCase } from './run-workflow-step-failure-simulation.use-case.js';
+
 export class RunSimulationScenarioUseCase {
   public constructor(
     private readonly runDeniedRuntimeActionSimulationUseCase: RunDeniedRuntimeActionSimulationUseCase,
     private readonly runApprovalHappyPathSimulationUseCase: RunApprovalHappyPathSimulationUseCase,
     private readonly runApprovalRejectionPathSimulationUseCase: RunApprovalRejectionPathSimulationUseCase,
+    private readonly runWorkflowStepFailureSimulationUseCase: RunWorkflowStepFailureSimulationUseCase,
   ) {}
 
   public async execute(input: { readonly slug: string }): Promise<SimulationRunResult> {
@@ -20,6 +24,10 @@ export class RunSimulationScenarioUseCase {
 
     if (input.slug === 'approval_rejection_path') {
       return this.runApprovalRejectionPathSimulationUseCase.execute();
+    }
+
+    if (input.slug === 'workflow_step_failure') {
+      return this.runWorkflowStepFailureSimulationUseCase.execute();
     }
 
     return {

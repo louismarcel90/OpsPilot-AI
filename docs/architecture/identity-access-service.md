@@ -944,3 +944,17 @@ The runner:
 - verifies evidence pack and diagnostics availability
 
 This validates governed workflow failure behavior after approval rejection.
+
+## Current Workflow Step Failure Simulation Runner
+
+The service now supports an executable workflow step failure simulation.
+
+The runner:
+
+- creates a workflow run
+- advances the runtime until a workflow step is running
+- fails the running step
+- verifies workflow failure propagation
+- verifies diagnostics, evidence pack availability, and security posture escalation
+
+This validates governed runtime failure behavior at the workflow step level.

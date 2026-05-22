@@ -85,6 +85,7 @@ At this stage, the service provides:
 - simulation runner for denied runtime action scenario
 - approval happy path simulation runner
 - approval rejection simulation runner
+- workflow step failure simulation runner
 
 The authorization parity history endpoint now reads persisted diagnostic events from durable storage.
 
@@ -505,6 +506,10 @@ Runs the approval happy path simulation scenario.
 ### `POST /simulation/scenarios/run?slug=approval_rejection_path`
 
 Runs the approval rejection simulation scenario.
+
+### `POST /simulation/scenarios/run?slug=workflow_step_failure`
+
+Runs the workflow step failure simulation scenario.
 
 ## Current Assistant Publication Operation
 

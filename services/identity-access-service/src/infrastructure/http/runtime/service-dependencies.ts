@@ -114,6 +114,7 @@ import { ProtectedApproveApprovalRequestUseCase } from '../../../application/use
 import { RunApprovalHappyPathSimulationUseCase } from '../../../application/use-cases/run-approval-happy-path-simulation.use-case.js';
 import { ProtectedRejectApprovalRequestUseCase } from '../../../application/use-cases/protected-reject-approval-request.use-case.js';
 import { RunApprovalRejectionPathSimulationUseCase } from '../../../application/use-cases/run-approval-rejection-path-simulation.use-case.js';
+import { RunWorkflowStepFailureSimulationUseCase } from '../../../application/use-cases/run-workflow-step-failure-simulation.use-case.js';
 export interface ServiceDependencies {
   readonly resolveUserByEmailUseCase: ResolveUserByEmailUseCase;
   readonly resolveTenantBySlugUseCase: ResolveTenantBySlugUseCase;
@@ -383,6 +384,24 @@ export function createServiceDependencies(
     workflowRuntimeEventWriteRepository,
   );
 
+  const failWorkflowRunStepUseCase = new FailWorkflowRunStepUseCase(
+    workflowRunReadRepository,
+    workflowRunWriteRepository,
+    workflowRunStepReadRepository,
+    workflowRunStepWriteRepository,
+    workflowRuntimeEventRecorder,
+  );
+
+  const runWorkflowStepFailureSimulationUseCase = new RunWorkflowStepFailureSimulationUseCase(
+    createWorkflowRunUseCase,
+    protectedDrainWorkflowRunUseCase,
+    failWorkflowRunStepUseCase,
+    workflowRunStepReadRepository,
+    getWorkflowRunDiagnosticsUseCase,
+    getWorkflowRunEvidencePackUseCase,
+    getWorkflowRuntimeSecurityPostureUseCase,
+  );
+
   const runApprovalHappyPathSimulationUseCase = new RunApprovalHappyPathSimulationUseCase(
     createWorkflowRunUseCase,
     protectedDrainWorkflowRunUseCase,
@@ -407,6 +426,7 @@ export function createServiceDependencies(
     runDeniedRuntimeActionSimulationUseCase,
     runApprovalHappyPathSimulationUseCase,
     runApprovalRejectionPathSimulationUseCase,
+    runWorkflowStepFailureSimulationUseCase,
   );
 
   return {
@@ -675,6 +695,7 @@ export function createServiceDependencies(
       realtimeEventHub,
     ),
     protectedRejectApprovalRequestUseCase,
+
     runApprovalRejectionPathSimulationUseCase,
     protectedApproveApprovalRequestUseCase,
     runApprovalHappyPathSimulationUseCase,

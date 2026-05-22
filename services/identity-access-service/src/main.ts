@@ -1,4 +1,7 @@
 import { randomUUID } from 'node:crypto';
+import 'dotenv/config';
+
+// import { bootstrap } from './bootstrap.js';
 
 import { createAppConfig } from '@opspilot/config';
 import { createPostgresConnection } from '@opspilot/db';
