@@ -86,6 +86,7 @@ At this stage, the service provides:
 - approval happy path simulation runner
 - approval rejection simulation runner
 - workflow step failure simulation runner
+- realtime snapshot delta simulation runner
 
 The authorization parity history endpoint now reads persisted diagnostic events from durable storage.
 
@@ -510,6 +511,10 @@ Runs the approval rejection simulation scenario.
 ### `POST /simulation/scenarios/run?slug=workflow_step_failure`
 
 Runs the workflow step failure simulation scenario.
+
+### `POST /simulation/scenarios/run?slug=realtime_snapshot_delta`
+
+Runs the realtime snapshot delta simulation scenario.
 
 ## Current Assistant Publication Operation
 

@@ -958,3 +958,18 @@ The runner:
 - verifies diagnostics, evidence pack availability, and security posture escalation
 
 This validates governed runtime failure behavior at the workflow step level.
+
+## Current Realtime Snapshot Delta Simulation Runner
+
+The service now supports an executable realtime snapshot and delta simulation.
+
+The runner:
+
+- creates a workflow run
+- retrieves an initial realtime snapshot
+- simulates a realtime connection
+- advances workflow runtime state
+- emits simulated runtime deltas
+- validates snapshot and delta coherence
+
+This validates the foundation for realtime workflow runtime synchronization behavior.

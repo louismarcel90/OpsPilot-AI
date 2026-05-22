@@ -115,6 +115,7 @@ import { RunApprovalHappyPathSimulationUseCase } from '../../../application/use-
 import { ProtectedRejectApprovalRequestUseCase } from '../../../application/use-cases/protected-reject-approval-request.use-case.js';
 import { RunApprovalRejectionPathSimulationUseCase } from '../../../application/use-cases/run-approval-rejection-path-simulation.use-case.js';
 import { RunWorkflowStepFailureSimulationUseCase } from '../../../application/use-cases/run-workflow-step-failure-simulation.use-case.js';
+import { RunRealtimeSnapshotDeltaSimulationUseCase } from '../../../application/use-cases/run-realtime-snapshot-delta-simulation.use-case.js';
 export interface ServiceDependencies {
   readonly resolveUserByEmailUseCase: ResolveUserByEmailUseCase;
   readonly resolveTenantBySlugUseCase: ResolveTenantBySlugUseCase;
@@ -208,6 +209,7 @@ export interface ServiceDependencies {
   readonly runApprovalHappyPathSimulationUseCase: RunApprovalHappyPathSimulationUseCase;
   readonly protectedRejectApprovalRequestUseCase: ProtectedRejectApprovalRequestUseCase;
   readonly runApprovalRejectionPathSimulationUseCase: RunApprovalRejectionPathSimulationUseCase;
+  readonly runRealtimeSnapshotDeltaSimulationUseCase: RunRealtimeSnapshotDeltaSimulationUseCase;
 }
 
 export function createServiceDependencies(
@@ -422,11 +424,31 @@ export function createServiceDependencies(
     getWorkflowRuntimeSecurityPostureUseCase,
   );
 
+  const getWorkflowRunRealtimeSnapshotUseCase = new GetWorkflowRunRealtimeSnapshotUseCase(
+    workflowRunReadRepository,
+    workflowRunStepReadRepository,
+    approvalRequestReadRepository,
+    workflowRuntimeEventWriteRepository,
+  );
+
+  const getWorkflowRunTimelineUseCase = new GetWorkflowRunTimelineUseCase(
+    workflowRuntimeEventWriteRepository,
+  );
+
+  const runRealtimeSnapshotDeltaSimulationUseCase = new RunRealtimeSnapshotDeltaSimulationUseCase(
+    createWorkflowRunUseCase,
+    protectedDrainWorkflowRunUseCase,
+    getWorkflowRunRealtimeSnapshotUseCase,
+    getWorkflowRunTimelineUseCase,
+    getWorkflowRunDiagnosticsUseCase,
+  );
+
   const runSimulationScenarioUseCase = new RunSimulationScenarioUseCase(
     runDeniedRuntimeActionSimulationUseCase,
     runApprovalHappyPathSimulationUseCase,
     runApprovalRejectionPathSimulationUseCase,
     runWorkflowStepFailureSimulationUseCase,
+    runRealtimeSnapshotDeltaSimulationUseCase,
   );
 
   return {
@@ -697,6 +719,7 @@ export function createServiceDependencies(
     protectedRejectApprovalRequestUseCase,
 
     runApprovalRejectionPathSimulationUseCase,
+    runRealtimeSnapshotDeltaSimulationUseCase,
     protectedApproveApprovalRequestUseCase,
     runApprovalHappyPathSimulationUseCase,
     protectedDrainWorkflowRunUseCase,
