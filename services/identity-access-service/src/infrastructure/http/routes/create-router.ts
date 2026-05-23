@@ -85,6 +85,7 @@ import { handleGetSimulationScenarioDetailRequest } from '../../../application/u
 import { handleRunSimulationScenarioRequest } from '../../../presentation/http/handlers/handle-run-simulation-scenario-request.js';
 import { handleGetSimulationDiagnosticsRequest } from '../../../presentation/http/handlers/handle-get-simulation-diagnostics-request.js';
 import { handleGetSimulationScenarioComparisonRequest } from '../../../presentation/http/handlers/handle-get-simulation-scenario-comparison-request.js';
+import { handleGetSimulationAuthorizationDiagnosticsRequest } from '../../../presentation/http/handlers/handle-get-simulation-authorization-diagnostics-request.js';
 
 function resolvePath(request: IncomingMessage): string {
   const requestUrl = request.url ?? '/';
@@ -943,29 +944,7 @@ export function createRouter(
           response,
           logger,
           correlationId,
-          dependencies.runSimulationScenarioUseCase,
-        );
-        return;
-      }
-
-      if (method === 'POST' && path === '/simulation/scenarios/run') {
-        await handleRunSimulationScenarioRequest(
-          request,
-          response,
-          logger,
-          correlationId,
-          dependencies.runSimulationScenarioUseCase,
-        );
-        return;
-      }
-
-      if (method === 'POST' && path === '/simulation/scenarios/run') {
-        await handleRunSimulationScenarioRequest(
-          request,
-          response,
-          logger,
-          correlationId,
-          dependencies.runSimulationScenarioUseCase,
+          dependencies.protectedRunSimulationScenarioUseCase,
         );
         return;
       }
@@ -1000,6 +979,17 @@ export function createRouter(
           logger,
           correlationId,
           dependencies.getSimulationScenarioComparisonUseCase,
+        );
+        return;
+      }
+
+      if (method === 'GET' && path === '/simulation/authorization') {
+        await handleGetSimulationAuthorizationDiagnosticsRequest(
+          request,
+          response,
+          logger,
+          correlationId,
+          dependencies.getSimulationAuthorizationDiagnosticsUseCase,
         );
         return;
       }

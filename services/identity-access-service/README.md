@@ -88,6 +88,7 @@ At this stage, the service provides:
 - workflow step failure simulation runner
 - realtime snapshot delta simulation runner
 - simulation diagnostics and scenario comparison views
+- protected simulation endpoints
 
 The authorization parity history endpoint now reads persisted diagnostic events from durable storage.
 

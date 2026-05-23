@@ -118,6 +118,9 @@ import { RunWorkflowStepFailureSimulationUseCase } from '../../../application/us
 import { RunRealtimeSnapshotDeltaSimulationUseCase } from '../../../application/use-cases/run-realtime-snapshot-delta-simulation.use-case.js';
 import { GetSimulationDiagnosticsUseCase } from '../../../application/use-cases/get-simulation-diagnostics.use-case.js';
 import { GetSimulationScenarioComparisonUseCase } from '../../../application/use-cases/get-simulation-scenario-comparison.use-case.js';
+import { SimulationProtectedActionGuard } from '../../../application/services/simulation-protected-action-guard.js';
+import { GetSimulationAuthorizationDiagnosticsUseCase } from '../../../application/use-cases/get-simulation-authorization-diagnostics.use-case.js';
+import { ProtectedRunSimulationScenarioUseCase } from '../../../application/use-cases/protected-run-simulation-scenario.use-case.js';
 export interface ServiceDependencies {
   readonly resolveUserByEmailUseCase: ResolveUserByEmailUseCase;
   readonly resolveTenantBySlugUseCase: ResolveTenantBySlugUseCase;
@@ -214,6 +217,9 @@ export interface ServiceDependencies {
   readonly runRealtimeSnapshotDeltaSimulationUseCase: RunRealtimeSnapshotDeltaSimulationUseCase;
   readonly getSimulationDiagnosticsUseCase: GetSimulationDiagnosticsUseCase;
   readonly getSimulationScenarioComparisonUseCase: GetSimulationScenarioComparisonUseCase;
+  readonly simulationProtectedActionGuard: SimulationProtectedActionGuard;
+  readonly getSimulationAuthorizationDiagnosticsUseCase: GetSimulationAuthorizationDiagnosticsUseCase;
+  readonly protectedRunSimulationScenarioUseCase: ProtectedRunSimulationScenarioUseCase;
 }
 
 export function createServiceDependencies(
@@ -453,6 +459,18 @@ export function createServiceDependencies(
     runApprovalRejectionPathSimulationUseCase,
     runWorkflowStepFailureSimulationUseCase,
     runRealtimeSnapshotDeltaSimulationUseCase,
+  );
+
+  const simulationProtectedActionGuard = new SimulationProtectedActionGuard(
+    runtimeActorContextResolver,
+  );
+
+  const getSimulationAuthorizationDiagnosticsUseCase =
+    new GetSimulationAuthorizationDiagnosticsUseCase(simulationProtectedActionGuard);
+
+  const protectedRunSimulationScenarioUseCase = new ProtectedRunSimulationScenarioUseCase(
+    simulationProtectedActionGuard,
+    runSimulationScenarioUseCase,
   );
 
   return {
@@ -720,11 +738,12 @@ export function createServiceDependencies(
       workflowRunReadRepository,
       realtimeEventHub,
     ),
+    simulationProtectedActionGuard,
+    getSimulationAuthorizationDiagnosticsUseCase,
+    protectedRunSimulationScenarioUseCase,
     getSimulationDiagnosticsUseCase: new GetSimulationDiagnosticsUseCase(),
     getSimulationScenarioComparisonUseCase: new GetSimulationScenarioComparisonUseCase(),
-
     protectedRejectApprovalRequestUseCase,
-
     runApprovalRejectionPathSimulationUseCase,
     runRealtimeSnapshotDeltaSimulationUseCase,
     protectedApproveApprovalRequestUseCase,

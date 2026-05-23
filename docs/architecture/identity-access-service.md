@@ -997,3 +997,16 @@ Scenario comparison exposes:
 - tag count
 
 This makes the Simulation Lab inspectable before adding protected simulation execution controls.
+
+## Current Protected Simulation Endpoints
+
+Simulation execution is now protected by a dedicated simulation control surface.
+
+Protected simulation actions include:
+
+- run_simulation
+- inspect_simulation
+
+Simulation execution requires an actor with admin or system-level authority.
+
+This prevents arbitrary users from triggering mutation-heavy simulation scenarios and prepares the Simulation Lab for production-grade access control.
