@@ -87,6 +87,7 @@ At this stage, the service provides:
 - approval rejection simulation runner
 - workflow step failure simulation runner
 - realtime snapshot delta simulation runner
+- simulation diagnostics and scenario comparison views
 
 The authorization parity history endpoint now reads persisted diagnostic events from durable storage.
 
@@ -515,6 +516,14 @@ Runs the workflow step failure simulation scenario.
 ### `POST /simulation/scenarios/run?slug=realtime_snapshot_delta`
 
 Runs the realtime snapshot delta simulation scenario.
+
+### `GET /simulation/diagnostics`
+
+Returns Simulation Lab diagnostics, including catalog size, executable scenario count, non-executable scenario count, and category distribution.
+
+### `GET /simulation/scenarios/comparison`
+
+Returns a scenario comparison view showing category, difficulty, executable status, expected signal count, and tag count.
 
 ## Current Assistant Publication Operation
 

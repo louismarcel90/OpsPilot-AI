@@ -973,3 +973,27 @@ The runner:
 - validates snapshot and delta coherence
 
 This validates the foundation for realtime workflow runtime synchronization behavior.
+
+## Current Simulation Diagnostics and Comparison Views
+
+The service now exposes Simulation Lab diagnostics and scenario comparison views.
+
+Simulation diagnostics explain:
+
+- how many scenarios exist in the catalog
+- how many scenarios are executable
+- how many are not executable yet
+- category distribution
+- generated timestamp
+
+Scenario comparison exposes:
+
+- scenario slug
+- title
+- category
+- difficulty
+- executable status
+- expected signal count
+- tag count
+
+This makes the Simulation Lab inspectable before adding protected simulation execution controls.

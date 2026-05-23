@@ -116,6 +116,8 @@ import { ProtectedRejectApprovalRequestUseCase } from '../../../application/use-
 import { RunApprovalRejectionPathSimulationUseCase } from '../../../application/use-cases/run-approval-rejection-path-simulation.use-case.js';
 import { RunWorkflowStepFailureSimulationUseCase } from '../../../application/use-cases/run-workflow-step-failure-simulation.use-case.js';
 import { RunRealtimeSnapshotDeltaSimulationUseCase } from '../../../application/use-cases/run-realtime-snapshot-delta-simulation.use-case.js';
+import { GetSimulationDiagnosticsUseCase } from '../../../application/use-cases/get-simulation-diagnostics.use-case.js';
+import { GetSimulationScenarioComparisonUseCase } from '../../../application/use-cases/get-simulation-scenario-comparison.use-case.js';
 export interface ServiceDependencies {
   readonly resolveUserByEmailUseCase: ResolveUserByEmailUseCase;
   readonly resolveTenantBySlugUseCase: ResolveTenantBySlugUseCase;
@@ -210,6 +212,8 @@ export interface ServiceDependencies {
   readonly protectedRejectApprovalRequestUseCase: ProtectedRejectApprovalRequestUseCase;
   readonly runApprovalRejectionPathSimulationUseCase: RunApprovalRejectionPathSimulationUseCase;
   readonly runRealtimeSnapshotDeltaSimulationUseCase: RunRealtimeSnapshotDeltaSimulationUseCase;
+  readonly getSimulationDiagnosticsUseCase: GetSimulationDiagnosticsUseCase;
+  readonly getSimulationScenarioComparisonUseCase: GetSimulationScenarioComparisonUseCase;
 }
 
 export function createServiceDependencies(
@@ -716,6 +720,9 @@ export function createServiceDependencies(
       workflowRunReadRepository,
       realtimeEventHub,
     ),
+    getSimulationDiagnosticsUseCase: new GetSimulationDiagnosticsUseCase(),
+    getSimulationScenarioComparisonUseCase: new GetSimulationScenarioComparisonUseCase(),
+
     protectedRejectApprovalRequestUseCase,
 
     runApprovalRejectionPathSimulationUseCase,

@@ -83,6 +83,8 @@ import { handleGetWorkflowRunRealtimeStalenessRequest } from '../../../presentat
 import { handleListSimulationScenariosRequest } from '../../../presentation/http/handlers/handle-list-simulation-scenarios-request.js';
 import { handleGetSimulationScenarioDetailRequest } from '../../../application/use-cases/handle-get-simulation-scenario-detail-request.js';
 import { handleRunSimulationScenarioRequest } from '../../../presentation/http/handlers/handle-run-simulation-scenario-request.js';
+import { handleGetSimulationDiagnosticsRequest } from '../../../presentation/http/handlers/handle-get-simulation-diagnostics-request.js';
+import { handleGetSimulationScenarioComparisonRequest } from '../../../presentation/http/handlers/handle-get-simulation-scenario-comparison-request.js';
 
 function resolvePath(request: IncomingMessage): string {
   const requestUrl = request.url ?? '/';
@@ -964,6 +966,40 @@ export function createRouter(
           logger,
           correlationId,
           dependencies.runSimulationScenarioUseCase,
+        );
+        return;
+      }
+
+      if (method === 'GET' && path === '/workflow-runs/runtime-snapshot') {
+        await handleGetWorkflowRunRealtimeSnapshotRequest(
+          request,
+          response,
+          logger,
+          correlationId,
+          dependencies.getWorkflowRunRealtimeSnapshotUseCase,
+        );
+
+        return;
+      }
+
+      if (method === 'GET' && path === '/simulation/diagnostics') {
+        await handleGetSimulationDiagnosticsRequest(
+          request,
+          response,
+          logger,
+          correlationId,
+          dependencies.getSimulationDiagnosticsUseCase,
+        );
+        return;
+      }
+
+      if (method === 'GET' && path === '/simulation/scenarios/comparison') {
+        await handleGetSimulationScenarioComparisonRequest(
+          request,
+          response,
+          logger,
+          correlationId,
+          dependencies.getSimulationScenarioComparisonUseCase,
         );
         return;
       }
