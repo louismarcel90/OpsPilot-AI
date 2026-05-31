@@ -121,6 +121,9 @@ import { GetSimulationScenarioComparisonUseCase } from '../../../application/use
 import { SimulationProtectedActionGuard } from '../../../application/services/simulation-protected-action-guard.js';
 import { GetSimulationAuthorizationDiagnosticsUseCase } from '../../../application/use-cases/get-simulation-authorization-diagnostics.use-case.js';
 import { ProtectedRunSimulationScenarioUseCase } from '../../../application/use-cases/protected-run-simulation-scenario.use-case.js';
+import { GetSimulationRunDetailUseCase } from '../../../application/use-cases/get-simulation-run-detail.use-case.js';
+import { ListSimulationRunHistoryUseCase } from '../../../application/use-cases/list-simulation-run-history.use-case.js';
+import { InMemorySimulationRunHistoryStore } from '../../simulation/in-memory-simulation-run-history-store.js';
 export interface ServiceDependencies {
   readonly resolveUserByEmailUseCase: ResolveUserByEmailUseCase;
   readonly resolveTenantBySlugUseCase: ResolveTenantBySlugUseCase;
@@ -220,6 +223,9 @@ export interface ServiceDependencies {
   readonly simulationProtectedActionGuard: SimulationProtectedActionGuard;
   readonly getSimulationAuthorizationDiagnosticsUseCase: GetSimulationAuthorizationDiagnosticsUseCase;
   readonly protectedRunSimulationScenarioUseCase: ProtectedRunSimulationScenarioUseCase;
+  readonly simulationRunHistoryStore: InMemorySimulationRunHistoryStore;
+  readonly listSimulationRunHistoryUseCase: ListSimulationRunHistoryUseCase;
+  readonly getSimulationRunDetailUseCase: GetSimulationRunDetailUseCase;
 }
 
 export function createServiceDependencies(
@@ -465,13 +471,24 @@ export function createServiceDependencies(
     runtimeActorContextResolver,
   );
 
-  const getSimulationAuthorizationDiagnosticsUseCase =
-    new GetSimulationAuthorizationDiagnosticsUseCase(simulationProtectedActionGuard);
+  const simulationRunHistoryStore = new InMemorySimulationRunHistoryStore();
 
   const protectedRunSimulationScenarioUseCase = new ProtectedRunSimulationScenarioUseCase(
     simulationProtectedActionGuard,
     runSimulationScenarioUseCase,
+    simulationRunHistoryStore,
   );
+
+  const listSimulationRunHistoryUseCase = new ListSimulationRunHistoryUseCase(
+    simulationRunHistoryStore,
+  );
+
+  const getSimulationRunDetailUseCase = new GetSimulationRunDetailUseCase(
+    simulationRunHistoryStore,
+  );
+
+  const getSimulationAuthorizationDiagnosticsUseCase =
+    new GetSimulationAuthorizationDiagnosticsUseCase(simulationProtectedActionGuard);
 
   return {
     resolveUserByEmailUseCase: new ResolveUserByEmailUseCase(userReadRepository),
@@ -738,6 +755,9 @@ export function createServiceDependencies(
       workflowRunReadRepository,
       realtimeEventHub,
     ),
+    simulationRunHistoryStore,
+    listSimulationRunHistoryUseCase,
+    getSimulationRunDetailUseCase,
     simulationProtectedActionGuard,
     getSimulationAuthorizationDiagnosticsUseCase,
     protectedRunSimulationScenarioUseCase,

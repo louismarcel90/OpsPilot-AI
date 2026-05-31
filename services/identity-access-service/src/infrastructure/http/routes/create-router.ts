@@ -86,6 +86,8 @@ import { handleRunSimulationScenarioRequest } from '../../../presentation/http/h
 import { handleGetSimulationDiagnosticsRequest } from '../../../presentation/http/handlers/handle-get-simulation-diagnostics-request.js';
 import { handleGetSimulationScenarioComparisonRequest } from '../../../presentation/http/handlers/handle-get-simulation-scenario-comparison-request.js';
 import { handleGetSimulationAuthorizationDiagnosticsRequest } from '../../../presentation/http/handlers/handle-get-simulation-authorization-diagnostics-request.js';
+import { handleGetSimulationRunDetailRequest } from '../../../presentation/http/handlers/handle-get-simulation-run-detail-request.js';
+import { handleListSimulationRunHistoryRequest } from '../../../presentation/http/handlers/handle-list-simulation-run-history-request.js';
 
 function resolvePath(request: IncomingMessage): string {
   const requestUrl = request.url ?? '/';
@@ -990,6 +992,28 @@ export function createRouter(
           logger,
           correlationId,
           dependencies.getSimulationAuthorizationDiagnosticsUseCase,
+        );
+        return;
+      }
+
+      if (method === 'GET' && path === '/simulation/runs/history') {
+        await handleListSimulationRunHistoryRequest(
+          request,
+          response,
+          logger,
+          correlationId,
+          dependencies.listSimulationRunHistoryUseCase,
+        );
+        return;
+      }
+
+      if (method === 'GET' && path === '/simulation/runs/detail') {
+        await handleGetSimulationRunDetailRequest(
+          request,
+          response,
+          logger,
+          correlationId,
+          dependencies.getSimulationRunDetailUseCase,
         );
         return;
       }
